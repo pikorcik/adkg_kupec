@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-10-11T14:54:30
+# Project created by QtCreator 2018-10-11T14:54:13
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = pointQt_point_in_polygon
+TARGET = QTPointInPoly
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
