@@ -30,7 +30,7 @@ void Draw::loadPolygon()
     int cb;
     double x;
     double y;
-    QPolygon polygon;
+    QPolygon *polygon = new QPolygon;
     vector<QPolygon> seznam_polygonu;
     while(!data.eof())
     {
@@ -41,14 +41,15 @@ void Draw::loadPolygon()
 
         if(cislo_pol == c_pol)
         {
-            polygon << QPoint(x, y);
+            *polygon << QPoint(x, y);
         }
         else
         {
             qDebug() << cislo_pol;
-            seznam_polygonu.push_back(polygon);
-            QPolygon polygon;
-            polygon << QPoint(x, y);
+            seznam_polygonu.push_back(*polygon);
+            //QPolygon polygon;
+            //*polygon->clear();
+            *polygon << QPoint(x, y);
             c_pol++;
         }
         qDebug() << c_pol;
@@ -62,7 +63,7 @@ void Draw::loadPolygon()
         //qDebug() << vypis; //na konci souboru vypisuje o jedno cislo navic
         //if(cislo_pol)
     }
-    seznam_polygonu.push_back(polygon);
+    seznam_polygonu.push_back(*polygon);
     qDebug() << "finalni vector" << seznam_polygonu;
 
     data.close();
