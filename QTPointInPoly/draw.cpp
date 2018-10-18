@@ -1,5 +1,6 @@
 #include "draw.h"
 #include <QtGui>
+#include <vector>
 using namespace std;
 
 Draw::Draw(QWidget *parent) : QWidget(parent)
@@ -10,20 +11,59 @@ Draw::Draw(QWidget *parent) : QWidget(parent)
     q.setY(-5);
 }
 
-void Draw::loadPolygon(){
+void Draw::loadPolygon()
+{
     ifstream data; //promenna, kam se nahraji polygony a jejich souradnice
     data.open("..\\polygon.txt");  //relativni cesta k souboru
 
 
-    if (!data.is_open()) {
+    if (!data.is_open())
+    {
         qDebug() << "Unable to open file polygon.txt";
     }
-
-    int vypis;
-    while(!data.eof()){
-        data >> vypis;
-        qDebug() << vypis; //na konci souboru vypisuje o jedno cislo navic
+    else
+    {qDebug() << "Able to open file polygon.txt";
     }
+
+    int c_pol = 1;
+    int cislo_pol;
+    int cb;
+    double x;
+    double y;
+    QPolygon polygon;
+    vector<QPolygon> seznam_polygonu;
+    while(!data.eof())
+    {
+        data >> cislo_pol;
+        data >> cb;
+        data >> x;
+        data >> y;
+
+        if(cislo_pol == c_pol)
+        {
+            polygon << QPoint(x, y);
+        }
+        else
+        {
+            qDebug() << cislo_pol;
+            seznam_polygonu.push_back(polygon);
+            QPolygon polygon;
+            polygon << QPoint(x, y);
+            c_pol++;
+        }
+        qDebug() << c_pol;
+        qDebug() << seznam_polygonu;
+
+
+        //polygon << QPoint(x, y);
+        //qDebug() << cislo_pol;
+        //qDebug() << polygon;
+
+        //qDebug() << vypis; //na konci souboru vypisuje o jedno cislo navic
+        //if(cislo_pol)
+    }
+    seznam_polygonu.push_back(polygon);
+    qDebug() << "finalni vector" << seznam_polygonu;
 
     data.close();
 
