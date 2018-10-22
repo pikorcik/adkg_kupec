@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <QDebug>
+#include <vector>
 
 
 class Draw : public QWidget
@@ -24,6 +25,8 @@ public:
     void clearCanvas();
     void setDrawPoint();
     void loadPolygon();
+    QPoint getQ() {return q;}
+    std::vector<QPoint> getPolygon() {return pol;}
 
 signals:
 
