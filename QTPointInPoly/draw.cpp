@@ -15,71 +15,81 @@ Draw::Draw(QWidget *parent) : QWidget(parent)
 
 void Draw::loadPolygon()
 {
-    ifstream data; //promenna, kam se nahraji polygony a jejich souradnice
-    data.open("..\\polygon.txt");  //relativni cesta k souboru
+    //Open polygon file
+    ifstream input_data; //promenna, kam se nahraji polygony a jejich souradnice
+    input_data.open("..\\polygon.txt");  //relativni cesta k souboru
 
-
-    if (!data.is_open())
+    //Check whether file is open
+    if (!input_data.is_open())
     {
-        qDebug() << "Unable to open file polygon.txt";
-    }
-    else
-    {qDebug() << "Able to open file polygon.txt";
+        input_data.close();
+        qDebug() << "Unable to open file.";
     }
 
-    int c_pol = 1;
-    int cislo_pol;
-    int cb;
-    double x;
-    double y;
-    QPolygon *polygon = new QPolygon;
-    vector<QPolygon> seznam_polygonu;
-    while(!data.eof())
+    //Number of polygons
+    int poly_count;
+    input_data >> poly_count;
+
+    //Check whether number of polygons is > 0
+    if(poly_count < 1)
     {
-        data >> cislo_pol;
-        data >> cb;
-        data >> x;
-        data >> y;
+        input_data.close();
+        qDebug() << "No polygon in the file.";
+    }
 
-        if(cislo_pol == c_pol)
+    //Declare variables
+    int num_poly = 1;
+    int num_poly_current;
+    int num_points = 0;
+    double x, y;
+
+    //Declare vector for points in one polygon
+    std::vector<QPoint> one_poly;
+
+    while(!input_data.eof())
+    {
+        input_data >> num_poly_current;
+        input_data >> x;
+        input_data >> y;
+
+        //Insert point into polygon
+        if(num_poly_current == num_poly)
         {
-            *polygon << QPoint(x, y);
+            one_poly.push_back(QPoint(x, y));
+            num_points++;
         }
+
+        //Insert polygon into list of polygons and go to another
         else
         {
-            qDebug() << cislo_pol;
-            seznam_polygonu.push_back(*polygon);
-            //QPolygon polygon;
-            //*polygon->clear();
-            *polygon << QPoint(x, y);
-            c_pol++;
+            //Check for invalid polygons
+            if(num_points < 3)
+            {
+                input_data.close();
+                qDebug() << "Invalid polygon detected!";
+            }
+
+            //Insert polygon into list
+            poly_list.push_back(one_poly);
+
+            one_poly.clear();
+
+            //Add point to new polygon
+            one_poly.push_back(QPoint(x, y));
+            num_points = 1;
+            num_poly++;
         }
-        qDebug() << c_pol;
-        qDebug() << seznam_polygonu;
-
-
-        //polygon << QPoint(x, y);
-        //qDebug() << cislo_pol;
-        //qDebug() << polygon;
-
-        //qDebug() << vypis; //na konci souboru vypisuje o jedno cislo navic
-        //if(cislo_pol)
     }
-    seznam_polygonu.push_back(*polygon);
-    qDebug() << "finalni vector" << seznam_polygonu;
 
-    data.close();
+    //Insert last polygon into list
+    poly_list.push_back(one_poly);
 
-    QPolygon poly; // polygon, do ktereho budeme davat body polygonu
-    //int numOfPoly = vypis[0]; // nemuzu najit, jak dostat prvni element z file --> nefunguje
-    //qDebug() << numOfPoly;
+    one_poly.clear();
 
-   /* for (int i = 0; i < numOfPoly; i++) {
+    qDebug() << "finalni vector" << poly_list;
 
-    }*/
-    //mineno pro nacitani jednotlivych polygonu
-    //pri vykreslovani si ohlidat si pocet bodu a skoncit cyklus, az budeme mit vsechny polygony
-
+    input_data.close();
+    qDebug() << "File successfully open.";
 }
 
 void Draw::paintEvent(QPaintEvent *e)
