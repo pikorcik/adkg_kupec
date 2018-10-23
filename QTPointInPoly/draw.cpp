@@ -11,7 +11,7 @@ Draw::Draw(QWidget *parent) : QWidget(parent)
     q.setY(-5);
 }
 
-void Draw::loadPolygon(const char* path)
+QString Draw::loadPolygon(const char* path)
 {
     //Open polygon file
     ifstream input_data; //promenna, kam se nahraji polygony a jejich souradnice
@@ -21,7 +21,7 @@ void Draw::loadPolygon(const char* path)
     if (!input_data.is_open())
     {
         input_data.close();
-        qDebug() << "Unable to open file.";
+        return "Unable to open file.";
     }
 
     //Number of polygons
@@ -32,7 +32,7 @@ void Draw::loadPolygon(const char* path)
     if(poly_count < 1)
     {
         input_data.close();
-        qDebug() << "No polygon in the file.";
+        return "No polygon in the file.";
     }
 
     //Declare variables
@@ -64,7 +64,7 @@ void Draw::loadPolygon(const char* path)
             if(num_points < 3)
             {
                 input_data.close();
-                qDebug() << "Invalid polygon detected!";
+                return "Invalid polygon detected!";
             }
 
             //Insert polygon into list
@@ -84,10 +84,8 @@ void Draw::loadPolygon(const char* path)
 
     one_poly.clear();
 
-    qDebug() << "finalni vector" << poly_list;
-
     input_data.close();
-    qDebug() << "File successfully open.";
+    return "File successfully open.";
 }
 
 void Draw::paintEvent(QPaintEvent *e)

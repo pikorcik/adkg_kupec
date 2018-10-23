@@ -35,7 +35,10 @@ void Widget::on_load_button_clicked()
     const char* poly_path_char = poly_path.toLatin1().data();
 
     //Load polygons to vector
-    ui->canvas->loadPolygon(poly_path_char);
+    QString load_message = ui->canvas->loadPolygon(poly_path_char);
+
+    //Write load message
+    ui->load_label->setText(load_message);
 }
 
 void Widget::on_draw_button_clicked()
