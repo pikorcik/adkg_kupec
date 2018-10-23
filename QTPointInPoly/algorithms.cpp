@@ -1,14 +1,14 @@
 #include "algorithms.h"
 #include <cmath>
 
-algorithms::algorithms()
+Algorithms::Algorithms()
 {
 
 
 }
 
 
-int algorithms::getPositionRay(QPoint q, std::vector <QPoint> pol) {
+int Algorithms::getPositionRay(QPoint q, std::vector <QPoint> pol) {
     int k = 0;
     int n = pol.size();
     double xir = pol[0].x()-q.x();
@@ -34,7 +34,7 @@ int algorithms::getPositionRay(QPoint q, std::vector <QPoint> pol) {
     return k%2;
 }
 
-int algorithms::getPositionWinding(QPoint q, std::vector <QPoint> pol)
+int Algorithms::getPositionWinding(QPoint q, std::vector <QPoint> pol)
 {
     double sum_fi = 0;
     double eps = 1.0e-10;
@@ -85,7 +85,7 @@ int algorithms::getPositionWinding(QPoint q, std::vector <QPoint> pol)
 }
 
 
-int algorithms::getPointLinePosition(double xq, double yq, double x1, double y1, double x2, double y2)
+int Algorithms::getPointLinePosition(double xq, double yq, double x1, double y1, double x2, double y2)
 {
     double eps = 1.0e-10; //zápis v semilogaritmickém tvaru
 
@@ -115,7 +115,7 @@ int algorithms::getPointLinePosition(double xq, double yq, double x1, double y1,
     }
 }
 
-double algorithms::getTwoVectorsAngle(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
+double Algorithms::getTwoVectorsAngle(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
 {
     //Get vectors
     double ux = x2-x1;
