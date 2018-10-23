@@ -18,8 +18,6 @@ public:
 private slots:
     void on_load_button_clicked();
 
-    void on_draw_button_clicked();
-
     void on_analyze_button_clicked();
 
     void on_clear_button_clicked();

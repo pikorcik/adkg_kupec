@@ -41,21 +41,18 @@ void Widget::on_load_button_clicked()
     ui->load_label->setText(load_message);
 }
 
-void Widget::on_draw_button_clicked()
-{
-    ui->canvas->setDrawPoint();
-}
-
 void Widget::on_analyze_button_clicked()
 {
     //Analyze point and polygon position
     QPoint q = ui->canvas->getPoint();
+    /*
     std::vector<QPoint> pol = ui->canvas->getPolygon();
     int res = Algorithms::getPositionRay(q, pol);
     if(res == 1)
         ui->analyze_label->setText("Inside");
     else
         ui->analyze_label->setText("Outside");
+    */
 }
 
 void Widget::on_clear_button_clicked()
