@@ -1,6 +1,7 @@
 #include "widget.h"
 #include "ui_widget.h"
 #include "algorithms.h"
+#include <QFileDialog>
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -16,7 +17,25 @@ Widget::~Widget()
 
 void Widget::on_load_button_clicked()
 {
+    //Get path to current directory
+    QDir cur_path = QDir::currentPath();
+    QString dir_path = cur_path.path();
 
+    //Open file dialog and select path to polygon file
+    QString poly_path = QFileDialog::getOpenFileName(
+                this,
+                tr("Select file to open"),
+                dir_path,
+                "Text file (*.txt)");
+
+    //Write selected path to UI
+    ui->load_line->setText(poly_path);
+
+    //Convert path from QString to char* to use in ifstream
+    const char* poly_path_char = poly_path.toLatin1().data();
+
+    //Load polygons to vector
+    ui->canvas->loadPolygon(poly_path_char);
 }
 
 void Widget::on_draw_button_clicked()

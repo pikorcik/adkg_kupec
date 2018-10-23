@@ -5,19 +5,17 @@ using namespace std;
 
 Draw::Draw(QWidget *parent) : QWidget(parent)
 {
-    loadPolygon(); //konstruktor na predani cesty k souboru???
-
     //Set the initial values
     draw_point = false; //constructor
     q.setX(-5); // set the initial point of the canvas resulting in removing the ugly fragments of point in the corner
     q.setY(-5);
 }
 
-void Draw::loadPolygon()
+void Draw::loadPolygon(const char* path)
 {
     //Open polygon file
     ifstream input_data; //promenna, kam se nahraji polygony a jejich souradnice
-    input_data.open("..\\polygon.txt");  //relativni cesta k souboru
+    input_data.open(path);
 
     //Check whether file is open
     if (!input_data.is_open())

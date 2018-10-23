@@ -24,7 +24,7 @@ public:
     void mousePressEvent(QMouseEvent *e);
     void clearCanvas();
     void setDrawPoint();
-    void loadPolygon();
+    void loadPolygon(const char* path);
     QPoint getPoint() {return q;}
     std::vector<QPoint> getPolygon() {return pol;}
     explicit Draw(QWidget *parent = nullptr);
