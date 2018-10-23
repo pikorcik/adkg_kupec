@@ -6,15 +6,17 @@ using namespace std;
 Draw::Draw(QWidget *parent) : QWidget(parent)
 {
     //Set the initial values
-    draw_point = false; //constructor
-    q.setX(-5); // set the initial point of the canvas resulting in removing the ugly fragments of point in the corner
+    draw_point = false;
+
+    //Set the initial point of the canvas resulting in removing the ugly fragments of point in the corner
+    q.setX(-5);
     q.setY(-5);
 }
 
 QString Draw::loadPolygon(const char* path)
 {
     //Open polygon file
-    ifstream input_data; //promenna, kam se nahraji polygony a jejich souradnice
+    ifstream input_data;
     input_data.open(path);
 
     //Check whether file is open
@@ -79,7 +81,7 @@ QString Draw::loadPolygon(const char* path)
         }
     }
 
-    //Insert last polygon into list
+    //Insert last polygon into the list
     poly_list.push_back(one_poly);
 
     one_poly.clear();

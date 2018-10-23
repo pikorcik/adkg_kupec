@@ -63,4 +63,5 @@ void Widget::on_clear_button_clicked()
     //ui je globální něco, co umožňuje přistupovat ke všem grafickým komponentám
     ui->canvas->clearCanvas();
     ui->analyze_label->clear();
+    ui->load_label->clear();
 }

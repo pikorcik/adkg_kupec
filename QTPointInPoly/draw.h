@@ -20,6 +20,7 @@ private:
     std::vector<QPoint> pol;                        //pozdeji zahodit
 
 public:
+    explicit Draw(QWidget *parent = nullptr);
     void paintEvent(QPaintEvent *e);
     void mousePressEvent(QMouseEvent *e);
     void clearCanvas();
@@ -27,7 +28,6 @@ public:
     QString loadPolygon(const char* path);
     QPoint getPoint() {return q;}
     std::vector<QPoint> getPolygon() {return pol;}
-    explicit Draw(QWidget *parent = nullptr);
 
 signals:
 
