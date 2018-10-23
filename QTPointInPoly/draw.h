@@ -14,19 +14,19 @@ class Draw : public QWidget
     Q_OBJECT
 
 private:
+    bool draw_point;            //Switch, whether to draw a point or a polygon
+    QPoint q;                   //The analyzed point q
+    std::vector<QPoint> pol;    //The polygon
 
-    bool draw_point;
-    QPoint q;
-    std::vector<QPoint> pol;
 public:
     void paintEvent(QPaintEvent *e);
     void mousePressEvent(QMouseEvent *e);
-    explicit Draw(QWidget *parent = nullptr);
     void clearCanvas();
     void setDrawPoint();
     void loadPolygon();
-    QPoint getQ() {return q;}
+    QPoint getPoint() {return q;}
     std::vector<QPoint> getPolygon() {return pol;}
+    explicit Draw(QWidget *parent = nullptr);
 
 signals:
 

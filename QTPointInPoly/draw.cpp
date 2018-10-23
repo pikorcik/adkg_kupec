@@ -6,6 +6,8 @@ using namespace std;
 Draw::Draw(QWidget *parent) : QWidget(parent)
 {
     loadPolygon(); //konstruktor na predani cesty k souboru???
+
+    //Set the initial values
     draw_point = false; //constructor
     q.setX(-5); // set the initial point of the canvas resulting in removing the ugly fragments of point in the corner
     q.setY(-5);
@@ -82,49 +84,51 @@ void Draw::loadPolygon()
 
 void Draw::paintEvent(QPaintEvent *e)
 {
-    //Draw polygons and point
+    //Draw the polygon and the point
     QPainter painter(this);                         //this ukazuje na ten volající objekt?
-
 
     //Start drawing
     painter.begin(this);
 
-    //Create polygon
+    //Create the polygon
     QPolygon p;
 
     //Add points to the polygon
     for(int i=0; i<pol.size(); i++)
         p.append(pol[i]);
 
-    //Draw polygon
+    //Draw the polygon
     painter.drawPolygon(p);
 
-    //Draw points
+    //Draw the points
     for(int i=0; i<pol.size(); i++)
         painter.drawEllipse(pol[i].x()-5, pol[i].y()-5, 10, 10);
 
     //Draw q
     painter.drawEllipse(q.x()-2.5, q.y()-2.5, 5, 5);
 
+    //Stop drawing
     painter.end();
 }
 
 
-
 void Draw::mousePressEvent(QMouseEvent *e)
 {
-    //
+    //Set point q
     if(draw_point)
     {
         q.setX(e->x());
         q.setY(e->y());
     }
+
+    //Add point to the polygon
     else
     {
         QPoint point_click(e->x(), e->y());
         pol.push_back(point_click);
     }
 
+    //Repaint the screen
     repaint();
 
 }
@@ -132,17 +136,18 @@ void Draw::mousePressEvent(QMouseEvent *e)
 
 void Draw::clearCanvas()
 {
-    //Delete polygon a clean canvas
+    //Clear the canvas
     pol.clear();
     q.setX(-5);
     q.setY(-5);
+
     repaint();
 }
 
 
 void Draw::setDrawPoint()
 {
-    //switching between drawing point and polygon
+    //Switch, whether to draw a point or a polygon
     draw_point = !draw_point;
 
 }

@@ -28,7 +28,7 @@ void Widget::on_pushButton_clicked()
 void Widget::on_pushButton_2_clicked()
 {
     //Analyze point and polygon position
-    QPoint q = ui->canvas->getQ();
+    QPoint q = ui->canvas->getPoint();
     std::vector<QPoint> pol = ui->canvas->getPolygon();
     int res = Algorithms::getPositionRay(q, pol);
     if(res == 1)
