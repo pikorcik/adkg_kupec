@@ -16,11 +16,13 @@ public:
     ~Widget();
 
 private slots:
-    void on_pushButton_3_clicked();
+    void on_load_button_clicked();
 
-    void on_pushButton_clicked();
+    void on_draw_button_clicked();
 
-    void on_pushButton_2_clicked();
+    void on_analyze_button_clicked();
+
+    void on_clear_button_clicked();
 
 private:
     Ui::Widget *ui;

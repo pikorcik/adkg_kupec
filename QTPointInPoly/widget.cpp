@@ -14,25 +14,31 @@ Widget::~Widget()
     delete ui;
 }
 
-void Widget::on_pushButton_3_clicked()
+void Widget::on_load_button_clicked()
 {
-    //ui je globální něco, co umožňuje přistupovat ke všem grafickým komponentám
-    ui->canvas->clearCanvas();
+
 }
 
-void Widget::on_pushButton_clicked()
+void Widget::on_draw_button_clicked()
 {
     ui->canvas->setDrawPoint();
 }
 
-void Widget::on_pushButton_2_clicked()
+void Widget::on_analyze_button_clicked()
 {
     //Analyze point and polygon position
     QPoint q = ui->canvas->getPoint();
     std::vector<QPoint> pol = ui->canvas->getPolygon();
     int res = Algorithms::getPositionRay(q, pol);
     if(res == 1)
-        ui->label_2->setText("Inside");
+        ui->analyze_label->setText("Inside");
     else
-        ui->label_2->setText("Outside");
+        ui->analyze_label->setText("Outside");
+}
+
+void Widget::on_clear_button_clicked()
+{
+    //ui je globální něco, co umožňuje přistupovat ke všem grafickým komponentám
+    ui->canvas->clearCanvas();
+    ui->analyze_label->clear();
 }
