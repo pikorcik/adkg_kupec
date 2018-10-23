@@ -93,24 +93,30 @@ QString Draw::loadPolygon(const char* path)
 void Draw::paintEvent(QPaintEvent *e)
 {
     //Draw the polygon and the point
-    QPainter painter(this);                         //this ukazuje na ten volající objekt?
+    QPainter painter(this);
 
-    //Start drawing
-    painter.begin(this);
+    //Define how lines and outlines of shapes should be painted
+    QPen pen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    painter.setPen(pen);
 
-    //Create the polygon
-    QPolygon p;
+    //Draw polygons from file
+    for(int i = 0; i < poly_list.size(); i++)
+    {
+        //Create the polygon
+        QPolygon p;
 
-    //Add points to the polygon
-    for(int i=0; i<pol.size(); i++)
-        p.append(pol[i]);
+        //Get one polygon from file
+        vector<QPoint> one_poly = poly_list[i];
 
-    //Draw the polygon
-    painter.drawPolygon(p);
+        //Add points to the polygon
+        for(int j = 0; j < one_poly.size(); j++)
+        {
+            p.append(one_poly[j]);
+        }
 
-    //Draw the points
-    for(int i=0; i<pol.size(); i++)
-        painter.drawEllipse(pol[i].x()-5, pol[i].y()-5, 10, 10);
+        //Draw the polygon
+        painter.drawPolygon(p);
+    }
 
     //Draw q
     painter.drawEllipse(q.x()-2.5, q.y()-2.5, 5, 5);
