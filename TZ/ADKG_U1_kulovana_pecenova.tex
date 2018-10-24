@@ -87,7 +87,7 @@ Markéta Pecenová \\
 \clearpage
 
 \section{Popis a rozbor problému}
-Úloha \textit{Geometrické vyhledávání bodu} se zabývá vytvořením aplikace, která umožní uživateli zjistit polohu jím zvoleného bodu \textit{q} vzhledem k příslušnému mnohoúhelníku. Jako vhodné řešení bylo vzhledem k náročnosti problému zvoleno opakované určovnání polohy  bodu \textit{q} a mnohoúhelníku.
+Úloha \textit{Geometrické vyhledávání bodu} se zabývá vytvořením aplikace, která umožní uživateli zjistit polohu jím zvoleného bodu $q$ vzhledem k příslušnému mnohoúhelníku. Jako vhodné řešení bylo vzhledem k náročnosti problému zvoleno opakované určovnání polohy bodu $q$ a mnohoúhelníku.
 
 Existují dva základní druhy mnohoúhelníků (pro účely této úlohy je nazývejme polygony), konvexní a nekonvexní. Konvexní polygon je takový polygon, jehož všechny diagonály leží uvnitř polygonu a žádná z nich neprotíná jeho hranu. Konkávní polygon tuto podmínku nesplňuje. Pro představu je níže přiložen obrázek obou druhů polygonů.
 
@@ -97,12 +97,12 @@ Existují dva základní druhy mnohoúhelníků (pro účely této úlohy je naz
 	\caption{Ukázka konvexního (vlevo) a konkávního polygonu (vpravo) (\href{https://www.nextgurukul.in/nganswers/ask-question/answer/What-is-concave-38-convex-polygon-/Understanding-Quadrilaterals/75323.htm}{\textsl{zdroj}})}
 \end{figure}
 
-Z výše uvedeného vyplývá, že bod \textit{q} může vůči polygonu \textit{P} zaujímat 4 pozice:
+Z výše uvedeného vyplývá, že bod $q$ může vůči polygonu $P$ zaujímat 4 pozice:
 \begin{enumerate}
-\item Bod \textit{q} se nalézá uvnitř polygonu \textit{P}.
-\item Bod \textit{q} se nalézá vně polygonu \textit{P}.
-\item Bod \textit{q} se nalézá na hraně polygonu \textit{P}.
-\item Bod \textit{q} se nalézá ve vrcholu polygonu \textit{P}.
+\item Bod $q$ se nalézá uvnitř polygonu $P$.
+\item Bod $q$ se nalézá vně polygonu $P$.
+\item Bod $q$ se nalézá na hraně polygonu $P$.
+\item Bod $q$ se nalézá ve vrcholu polygonu $P$.
 \end{enumerate}
 
 Pro účely této aplikace byly zvoleny výpočetní algoritmy \textit{Ray Crossing} a \textit{Winding Number}, jejichž princip je vysvětlen v následující kapitole.
@@ -113,10 +113,10 @@ Tato kapitola se zabývá popisem algoritmů, které byly v aplikaci implementov
 \subsection{Ray Crossing Algorithm}
 Prvním zvoleným algoritmem je tzv. \textit{Ray Crossing Algorithm} neboli \textit{Paprskový algoritmus}. Svůj název získal po metodě, jež využívá pro nalezení řešení polohy bodu vůči polygonu. Tento algoritmus je primárně využíván pro konvexní polygony, lze ho však zobecnit a využít ho i pro nekonvexní polygony. 
 
-Mějme polygon \textit{P} a daný bod \textit{q}. Z bodu \textit{q} veďme libovolný počet polopřímek (paprsků). Princip algoritmu je založen na vyhodnocení počtu průsečíků \textit{k}, které vzniknou protnutím paprsků vedených z bodu \textit{q} s hranami polygonu \textit{P}. Pro \textit{k} mohou nastat dvě situace:
+Mějme polygon $P$ a daný bod $q$. Z bodu $q$ veďme libovolný počet polopřímek (paprsků). Princip algoritmu je založen na vyhodnocení počtu průsečíků $k$, které vzniknou protnutím paprsků vedených z bodu $q$ s hranami polygonu $P$. Pro $k$ mohou nastat dvě situace:
 \begin{enumerate}
-\item Hodnota \textit{k} je rovna lichému číslu $\rightarrow$ bod q se nachází uvnitř polygonu  \textit{P}.
-\item Hodnota \textit{k} je rovna sudému číslu $\rightarrow$ bod q se nachází vně polygonu \textit{P}.
+\item Hodnota $k$ je rovna lichému číslu $\rightarrow$ bod $q$ se nachází uvnitř polygonu $P$.
+\item Hodnota $k$ je rovna sudému číslu $\rightarrow$ bod $q$ se nachází vně polygonu $P$.
 \end{enumerate}
 
 Základní varianta algoritmu neošetřuje problémové situace, které mohou během výpočtu nastat. Konkrétně se jedná o situace, kdy je bod $q$ totožný s jedním z vrcholů polygonu $P$ nebo pokud bod $q$ leží na jedné z hran polygonu $P$. Pro eliminaci těchto tzv. singularit je vhodné použít modifikovanou variantu algoritmu, která redukuje souřadnice bodů polygonu k bodu $q$. 
@@ -193,7 +193,7 @@ V následují kapitole je představen vizuální vzhled vytvořené aplikace tak
 Tato kapitola obsahuje dokumentaci k jednotlivým třídám.
 
 \subsection{Algorithms}
-Třída \textsl{Algorithms} obsahuje metody, které určují polohu zvoleného bodu q vzhledem k polygonu. Dále obsahuje pomocné metody pro výpočet úhlu mezi třemi body a na zjištění polohy bodu vzhledem k přímce. 
+Třída \textsl{Algorithms} obsahuje metody, které určují polohu zvoleného bodu $q$ vzhledem k polygonu. Dále obsahuje pomocné metody pro výpočet úhlu mezi třemi body a na zjištění polohy bodu vzhledem k přímce. 
 
 \subsubsection{getPositionRay}
 Metoda \textbf{getPositionRay} určuje polohu bodu $q$ vzhledem k polygonu za použití algoritmu \textsl{Ray Crossing}. Na vstupu je bod třídy QPoint a vektor bodů polygonu. Návratová hodnota je typu \textsl{int}.
@@ -226,6 +226,7 @@ Metoda \textbf{getPositionWinding} určuje polohu bodu $q$ vzhledem k polygonu z
 \item -1 $\rightarrow$ bod se nachází na hraně polygonu
 \end{itemize}
 
+\subsubsection{getPointLinePosition}
 Metoda \textbf{getPointLinePosition} určuje polohu bodu $q$ vzhledem k přímce tvořené dvěma body. Na vstupu jsou souřadnice X a Y pro 3 body typu \textit{double}, návratová hodnota je typu \textit{int} podle výsledku. 
 
 \textbf{Input}:
@@ -245,6 +246,7 @@ Metoda \textbf{getPointLinePosition} určuje polohu bodu $q$ vzhledem k přímce
 \item -1 $\rightarrow$ bod se nachází na přímce
 \end{itemize}
 
+\subsubsection{getTwoVectorsAngle}
 Metoda \textbf{getTwoVectorsAngle} počítá úhel mezi dvěma vektory. Na vstupu jsou souřadnice $x$ a $y$ pro 4 body typu \textit{double}, návratová hodnota typu \textit{double} vrací velikost úhlu v radiánech.
 
 \textbf{Input}:
@@ -264,9 +266,51 @@ Metoda \textbf{getTwoVectorsAngle} počítá úhel mezi dvěma vektory. Na vstup
 \item double 
 \end{itemize}
 
-\subsection{draw}
+\subsection{Draw}
+Třída \textsl{Draw} obsahuje metody, které slouží k vykreslení polygonů, analyzovaného bodu $q$ a výstupních dat.
 
-Metoda \textbf{getTwoVectorsAngle} počítá úhel mezi dvěma vektory. Na vstupu jsou souřadnice $x$ a $y$ pro 4 body typu \textit{double}, návratová hodnota typu \textit{double} vrací velikost úhlu v radiánech.
+\subsubsection{paintEvent}
+Metoda \textbf{paintEvent} vykresluje polygony analyzovaný bod $q$. Návratová hodnota je typu \textsl{void}.
+
+\textbf{Input}:
+\begin{itemize}
+\item QPaintEvent *e
+\end{itemize}
+
+\subsubsection{mousePressEvent}
+Metoda \textbf{mousePressEvent} slouží k načtení souřadnic bodu $q$. Návratová hodnota je typu \textsl{void}.
+
+\textbf{Input}:
+\begin{itemize}
+\item QMouseEvent *e
+\end{itemize}
+
+\subsubsection{clearCanvas}
+Metoda \textbf{clearCanvas} slouží k vymazání všech vykreslených dat. Metoda neobsahuje žádné proměnné na vstupu a návratová hodnota je typu \textsl{void}.
+
+\subsubsection{setDrawPoint???????????}
+Metoda \textbf{setDrawPoint} počítá úhel mezi dvěma vektory. Na vstupu jsou souřadnice $x$ a $y$ pro 4 body typu \textit{double}, návratová hodnota typu \textit{double} vrací velikost úhlu v radiánech. Návratová hodnota je typu \textsl{void}.
+
+\textbf{Input}:
+\begin{itemize}
+\item 
+\end{itemize}
+
+\subsubsection{loadPolygon}
+Metoda \textbf{loadPolygon} slouží k nahrání bodů jednotlivých polygonů do aplikace.  Součástí metody je i kontrola, zda se soubor úspěšně nahrál, zda vůbec obsahuje nějaké polygony a zda jsou polygony tvořeny aspoň 3 body. Návratová hodnota je typu \textsl{QString} vrací hlášku, zda byly polygony úspěšně nahrány.
+
+\textbf{Input}:
+\begin{itemize}
+\item const char* path
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item QString
+\end{itemize}
+
+\subsubsection{getPoint????}
+Metoda \textbf{getPoint}
 
 \textbf{Input}:
 \begin{itemize}
@@ -278,7 +322,17 @@ Metoda \textbf{getTwoVectorsAngle} počítá úhel mezi dvěma vektory. Na vstup
 \item 
 \end{itemize}
 
+\subsection{Widget}
+Třída \textbf{Widget} slouží pro práci s GUI. Všechny metody této třídy na vstupu nemají nic a návratová hodnota metod je typu \textsl{void}.
 
+\subsubsection{on load button clicked}
+Metoda \textbf{on load button clicked} načítá data z textového formátu. Uživatel sám vyhledává cestu k požadovanému souboru.
+
+\subsubsection{on analyze button clicked}
+Metoda \textbf{on analyze button clicked} vypisuje na obrazovku polohu bodu q vzhledem k polygonům po zvolení požadovaného algoritmu a kliknutí na tlačítko \textbf{Analyze}.
+
+\subsubsection{on clear button clicked}
+Metoda \textbf{on clear button clicked} vrací aplikaci do výchozí polohy. 
 
 \clearpage
 \section{Závěr}
