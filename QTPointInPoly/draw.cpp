@@ -5,9 +5,6 @@ using namespace std;
 
 Draw::Draw(QWidget *parent) : QWidget(parent)
 {
-    //Set the initial values
-    draw_point = false;
-
     //Set the initial point of the canvas resulting in removing the ugly fragments of point in the corner
     q.setX(-5);
     q.setY(-5);
@@ -129,39 +126,20 @@ void Draw::paintEvent(QPaintEvent *e)
 void Draw::mousePressEvent(QMouseEvent *e)
 {
     //Set point q
-    if(draw_point)
-    {
-        q.setX(e->x());
-        q.setY(e->y());
-    }
-
-    //Add point to the polygon
-    else
-    {
-        QPoint point_click(e->x(), e->y());
-        pol.push_back(point_click);
-    }
+    q.setX(e->x());
+    q.setY(e->y());
 
     //Repaint the screen
     repaint();
-
 }
 
 
 void Draw::clearCanvas()
 {
     //Clear the canvas
-    pol.clear();
+    poly_list.clear();
     q.setX(-5);
     q.setY(-5);
 
     repaint();
-}
-
-
-void Draw::setDrawPoint()
-{
-    //Switch, whether to draw a point or a polygon
-    draw_point = !draw_point;
-
 }
