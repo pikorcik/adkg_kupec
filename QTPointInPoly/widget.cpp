@@ -2,6 +2,7 @@
 #include "ui_widget.h"
 #include "algorithms.h"
 #include <QFileDialog>
+#include <vector>
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -43,16 +44,103 @@ void Widget::on_load_button_clicked()
 
 void Widget::on_analyze_button_clicked()
 {
+    //Vector of polygons which contain point q or is on their boundary
+    std::vector<std::vector<QPoint>> poly_fill;
+
+    //Final result for writing output after all polygons are analyzed
+    int final_res = 0;
+
+    //Get number of polygons
+    int n = ui->canvas->getPolygonCount();
+
     //Analyze point and polygon position
     QPoint q = ui->canvas->getPoint();
-    /*
-    std::vector<QPoint> pol = ui->canvas->getPolygon();
-    int res = Algorithms::getPositionRay(q, pol);
-    if(res == 1)
-        ui->analyze_label->setText("Inside");
+
+    //Ray algorithm selected
+    if(ui->method_combobox->currentIndex())
+    {
+        //Go through all polygons from file
+        for(int i = 0; i < n; i++)
+        {
+            //Get one polygon
+            std::vector<QPoint> pol = ui->canvas->getPolygon(i);
+
+            //Get relation of point and polygon
+            int res = Algorithms::getPositionRay(q, pol);
+
+            //Quit if point inside of polygon is found
+            if(res == 1)
+            {
+                final_res = 1;
+                poly_fill.push_back(pol);
+                break;
+            }
+
+            //Append polygon to polygons to fill
+            if(res == -1)
+            {
+                final_res = -1;
+                poly_fill.push_back(pol);
+            }
+        }
+
+        //Write result of analysis
+        writeResult(final_res);
+        ui->canvas->fillPolygon(poly_fill);
+    }
+
+    //Winding algorithm selected
     else
-        ui->analyze_label->setText("Outside");
-    */
+    {
+        //Go through all polygons from file
+        for(int i = 0; i < n; i++)
+        {
+            //Get one polygon
+            std::vector<QPoint> pol = ui->canvas->getPolygon(i);
+
+            //Get relation of point and polygon
+            int res = Algorithms::getPositionWinding(q, pol);
+
+            //Quit if point inside of polygon is found
+            if(res == 1)
+            {
+                final_res = 1;
+                poly_fill.push_back(pol);
+                qDebug() << "point uvnitr";
+                qDebug() << final_res;
+                writeResult(final_res);
+                break;
+            }
+
+            //Append polygon to polygons to fill
+            if(res == -1)
+            {
+                qDebug() << "point on the boundary";
+                final_res = -1;
+                poly_fill.push_back(pol);
+                writeResult(final_res);
+            }
+        }
+        ui->canvas->fillPolygon(poly_fill);
+    }
+    poly_fill.clear();
+}
+
+void Widget::writeResult(int res)
+{
+    //Write result of analysis to window
+
+    //Point q inside P
+    if(res == 1)
+        ui->analyze_label->setText("Point is inside of polygon.");
+
+    //Point q outside P
+    else if (res == 0)
+        ui->analyze_label->setText("Point is outside of polygon.");
+
+    //Point q on the boundary
+    else
+        ui->analyze_label->setText("Point is on the boundary.");
 }
 
 void Widget::on_clear_button_clicked()

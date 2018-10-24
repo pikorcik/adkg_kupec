@@ -14,6 +14,7 @@ class Widget : public QWidget
 public:
     explicit Widget(QWidget *parent = nullptr);
     ~Widget();
+    void writeResult(int res);
 
 private slots:
     void on_load_button_clicked();
