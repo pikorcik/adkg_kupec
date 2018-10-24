@@ -152,4 +152,5 @@ void Widget::on_clear_button_clicked()
     ui->canvas->clearCanvas();
     ui->analyze_label->clear();
     ui->load_label->clear();
+    ui->load_line->clear();
 }
