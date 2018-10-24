@@ -92,7 +92,7 @@ void Draw::paintEvent(QPaintEvent *e)
     //Draw the polygon and the point
     QPainter painter(this);
 
-    //Define how lines and outlines of shapes should be painted
+    //Define how lines should be painted
     QPen pen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     painter.setPen(pen);
 
@@ -115,7 +115,40 @@ void Draw::paintEvent(QPaintEvent *e)
         painter.drawPolygon(p);
     }
 
+    //Change how lines should be painted
+    QPen pen_fill(Qt::red, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    painter.setPen(pen_fill);
+
+    //Define how to fill polygons containing point q
+    QBrush brush(Qt::red, Qt::DiagCrossPattern);
+    QPainterPath path;
+
+    //Draw and fill polygons containg point q
+    for(int i = 0; i < poly_fill.size(); i++)
+    {
+        //Create the polygon
+        QPolygon p2;
+
+        //Get one polygon from list of polygons to fill
+        std::vector<QPoint> one_poly2 = poly_fill[i];
+
+        //Add points to the polygon
+        for(int j = 0; j < one_poly2.size(); j++)
+        {
+            p2.append(one_poly2[j]);
+        }
+
+        //Draw the polygon
+        painter.drawPolygon(p2);
+
+        //Fill the polygon
+        path.addPolygon(p2);
+        painter.fillPath(path, brush);
+        p2.clear();
+    }
+
     //Draw q
+    painter.setPen(pen);
     painter.drawEllipse(q.x()-2.5, q.y()-2.5, 5, 5);
 
     //Stop drawing
@@ -138,8 +171,17 @@ void Draw::clearCanvas()
 {
     //Clear the canvas
     poly_list.clear();
+    poly_fill.clear();
     q.setX(-5);
     q.setY(-5);
+
+    repaint();
+}
+
+
+void Draw::fillPolygon(std::vector<std::vector<QPoint>> poly)
+{
+    poly_fill = poly;
 
     repaint();
 }
