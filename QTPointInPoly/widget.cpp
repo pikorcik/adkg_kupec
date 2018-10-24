@@ -86,6 +86,8 @@ void Widget::on_analyze_button_clicked()
 
         //Write result of analysis
         writeResult(final_res);
+
+        //Fill polygons containing point q
         ui->canvas->fillPolygon(poly_fill);
     }
 
@@ -106,23 +108,24 @@ void Widget::on_analyze_button_clicked()
             {
                 final_res = 1;
                 poly_fill.push_back(pol);
-                qDebug() << "point uvnitr";
-                qDebug() << final_res;
-                writeResult(final_res);
                 break;
             }
 
             //Append polygon to polygons to fill
             if(res == -1)
             {
-                qDebug() << "point on the boundary";
                 final_res = -1;
                 poly_fill.push_back(pol);
-                writeResult(final_res);
             }
         }
+
+        //Write result of analysis
+        writeResult(final_res);
+
+        //Fill polygons containing point q
         ui->canvas->fillPolygon(poly_fill);
     }
+
     poly_fill.clear();
 }
 
