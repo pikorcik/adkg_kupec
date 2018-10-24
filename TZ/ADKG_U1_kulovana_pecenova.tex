@@ -44,15 +44,18 @@
 
 \begin{titlepage}
 \begin{center}
-%\noindent
 \Huge
-\vspace{4cm}
+\vspace*{4.5cm}
 Algoritmy v digitální kartografii \\
 \vspace{0.2cm}
 
 \Large  
 Geometrické vyhledávání bodu\\
-\vspace{20cm}
+\vspace{0.2cm}
+
+\normalsize  
+Zimní semestr 2018/2019\\
+\vspace{14cm}
 \end{center}
 
 \begin{flushright}
@@ -72,18 +75,10 @@ Markéta Pecenová \\
 
 \section{Zadání}
 \begin{figure}[h!]
-	%\centering
 	\includegraphics[clip, trim=0cm 10cm 0cm 3cm, width=1.0\textwidth]{./pictures/zadani.pdf}
 \end{figure}
 
-\subsection{Řešené bonusové úlohy}
-\begin{enumerate}
-\item 
-%\item
-%\item
-\end{enumerate}
-
-
+V rámci této úlohy byly implementovány bonusové úlohy č. 1-3. Poslední bonusovou úlohu, generování nekonvexních polygonů, tato aplikace neposkytuje.
 \clearpage
 
 \section{Popis a rozbor problému}
@@ -120,19 +115,22 @@ Mějme polygon $P$ a daný bod $q$. Z bodu $q$ veďme libovolný počet polopř�
 \end{enumerate}
 
 Základní varianta algoritmu neošetřuje problémové situace, které mohou během výpočtu nastat. Konkrétně se jedná o situace, kdy je bod $q$ totožný s jedním z vrcholů polygonu $P$ nebo pokud bod $q$ leží na jedné z hran polygonu $P$. Pro eliminaci těchto tzv. singularit je vhodné použít modifikovanou variantu algoritmu, která redukuje souřadnice bodů polygonu k bodu $q$. 
+OŠETŘENÍ SINGULARITY
 
 Zjednodušený zápis takto modifikovaného algoritmu lze zapsat způsobem uvedeným níže:
 \begin{enumerate}
 \item Načtení bodů polygonu $p_i$, počet průsečíků $k$ = 0
-\item Postupně pro všechny $p_i$ opakuj kroky 3-6
+\item Postupně pro všechny $p_i$ opakuj kroky I–IV:
+\begin{enumerate}[label=\Roman*.]
 \item 	Redukce souřadnic bodu $p_i$ k bodu $q$:\\
 $x'_i = x_i - x_q$\\
 $y'_i = y_i - y_q$
-\item 	Podmínka $(y'_i > 0)\&\&(y'_{i-1} <= 0)\|(y'_{i-1} > 0)\&\&(y'_{i} <= 0)$
+\item 	Podmínka $(y'_i > 0)\&\&(y'_{i-1} \leq 0)\|(y'_{i-1} > 0)\&\&(y'_{i} \leq 0)$
 \item 	Je-li podmínka splněna: $x'_m = \frac{x'_i y'_{i-1} - x'_{i-1} y'_i}{y'_i - y'_{i-1}}$
 \item Splněno $(x'_m > 0) \rightarrow k = k + 1$ 
+\end{enumerate}
 \item Výpočet $k\%2$
-\item Vyhodnocení $k$ (liché $k$: $q$ náleží $P$, sudé $k$: $q$ nenáleží $P$)
+\item Vyhodnocení $k$ (liché $k \rightarrow q$ náleží $P$; sudé $k \rightarrow q$ nenáleží $P$)
 \end{enumerate}
 
 \subsection{Winding Number Algorithm}
@@ -148,20 +146,21 @@ Z výše uvedených vztahů vyplývá:
 \end{enumerate}
 
 Mezi singularity pro tento algoritmus patří pouze případ, je-li $q\approx p_i$.\\
+OŠETŘENÍ SINGULARITY
 
 Zjednodušený zápis algoritmu:
 
 \begin{enumerate}
 \item Načtení bodů polygonu, úhel $\omega = 0$, tolerance $\epsilon = 1e-10$
-\item Postupně pro všechny orientované trojice $p_i, q, p_{i+1}$ opakuj kroky 3-5
-\item 	Výpočet úhlu $\omega_i = \sphericalangle p_i, q, p_{i+1}$
-\item 	Podmínka ($q$ je vlevo) $\rightarrow \omega = \omega + \omega_i$
-\item 	Jinak $\omega = \omega - \omega_i$
+\item Postupně pro všechny orientované trojice $p_i, q, p_{i+1}$ opakuj kroky I-III:
+\begin{enumerate}[label=\Roman*.]
+\item Výpočet úhlu $\omega_i = \sphericalangle p_i, q, p_{i+1}$
+\item Podmínka ($q$ je vlevo) $\rightarrow \omega = \omega + \omega_i$
+\item Jinak $\omega = \omega - \omega_i$
+\end{enumerate}
 \item Podmínka $(\mid \omega - 2\pi \mid) < \epsilon \rightarrow q$ náleží $P$
 \item Jinak  $q$ nenáleží $P$
 \end{enumerate}
-
-\subsection{•}
 
 \section{Vstupní data}
 Aplikace požaduje dva druhy vstupních dat:
@@ -182,12 +181,20 @@ Seznam bodů jednotlivých polygonů je uložen v textovém souboru polygon.txt.
 Bod $q$ není součástí textového souboru, do aplikace vstupuje na základě ručního zadání uživatelem. Pro zadání bodu je nutné v aplikaci kliknout na tlačítko \textsl{Draw point} a levým tlačítkem myši kliknout do oblasti s polygony.
 
 \section{Výstupní data}
-Výstup z aplikace je
-
+Výstupem úlohy je vypsání v grafickém okně aplikace, v jaké poloze se analyzovaný bod vůči polygonům nachází. Polygony, kterým bod náleží, jsou barevně zvýrazněny.
 
 \section{Aplikace}
 V následují kapitole je představen vizuální vzhled vytvořené aplikace tak, jak ji vidí prostý uživatel.
 
+Aplikace ve výchozím stavu
+
+Aplikace po nahrání polygonů
+
+Volba výpočetního algoritmu
+
+Výstup při použití \textit{Ray Crossing Algorithm}
+
+Výstup při použití \textit{Winding Number Algorithm} 
 
 \section{Dokumentace}
 Tato kapitola obsahuje dokumentaci k jednotlivým třídám.
@@ -200,8 +207,8 @@ Metoda \textbf{getPositionRay} určuje polohu bodu $q$ vzhledem k polygonu za po
 
 \textbf{Input}:
 \begin{itemize}
-\item QPoint $q$
-\item $std::vector<QPoint> pol$
+\item $QPoint$ q
+\item $std::vector<QPoint>$ pol
 \end{itemize}
 
 \textbf{Output}:
@@ -215,8 +222,8 @@ Metoda \textbf{getPositionWinding} určuje polohu bodu $q$ vzhledem k polygonu z
 
 \textbf{Input}:
 \begin{itemize}
-\item QPoint $q$
-\item $std::vector<QPoint> pol$
+\item $QPoint$ q
+\item $std::vector<QPoint>$ pol
 \end{itemize}
 
 \textbf{Output}:
@@ -227,16 +234,16 @@ Metoda \textbf{getPositionWinding} určuje polohu bodu $q$ vzhledem k polygonu z
 \end{itemize}
 
 \subsubsection{getPointLinePosition}
-Metoda \textbf{getPointLinePosition} určuje polohu bodu $q$ vzhledem k přímce tvořené dvěma body. Na vstupu jsou souřadnice X a Y pro 3 body typu \textit{double}, návratová hodnota je typu \textit{int} podle výsledku. 
+Metoda \textbf{getPointLinePosition} určuje polohu bodu $q$ vzhledem k přímce tvořené dvěma body. Na vstupu jsou souřadnice $x$ a $y$ pro 3 body typu \textit{double}, návratová hodnota je typu \textit{int} podle výsledku. 
 
 \textbf{Input}:
 \begin{itemize}
-\item double $xq$
-\item double $yq$
-\item double $x1$
-\item double $y1$
-\item double $x2$
-\item double $y2$
+\item $double$ $x_q$
+\item $double$ $y_q$
+\item $double$ $x_1$
+\item $double$ $y_1$
+\item $double$ $x_2$
+\item $double$ $y_2$
 \end{itemize}
 
 \textbf{Output}:
@@ -251,14 +258,14 @@ Metoda \textbf{getTwoVectorsAngle} počítá úhel mezi dvěma vektory. Na vstup
 
 \textbf{Input}:
 \begin{itemize}
-\item double $x1$
-\item double $y1$
-\item double $x2$
-\item double $y2$
-\item double $x3$
-\item double $y3$
-\item double $x4$
-\item double $y4$
+\item $double$ $x_1$
+\item $double$ $y_1$
+\item $double$ $x_2$
+\item $double$ $y_2$
+\item $double$ $x_3$
+\item $double$ $y_3$
+\item $double$ $x_4$
+\item $double$ $y_4$
 \end{itemize}
 
 \textbf{Output}:
@@ -270,7 +277,7 @@ Metoda \textbf{getTwoVectorsAngle} počítá úhel mezi dvěma vektory. Na vstup
 Třída \textsl{Draw} obsahuje metody, které slouží k vykreslení polygonů, analyzovaného bodu $q$ a výstupních dat.
 
 \subsubsection{paintEvent}
-Metoda \textbf{paintEvent} vykresluje polygony analyzovaný bod $q$. Návratová hodnota je typu \textsl{void}.
+Metoda \textbf{paintEvent} vykresluje polygony a analyzovaný bod $q$. Návratová hodnota je typu \textsl{void}.
 
 \textbf{Input}:
 \begin{itemize}
@@ -288,13 +295,14 @@ Metoda \textbf{mousePressEvent} slouží k načtení souřadnic bodu $q$. Návra
 \subsubsection{clearCanvas}
 Metoda \textbf{clearCanvas} slouží k vymazání všech vykreslených dat. Metoda neobsahuje žádné proměnné na vstupu a návratová hodnota je typu \textsl{void}.
 
-\subsubsection{setDrawPoint???????????}
-Metoda \textbf{setDrawPoint} počítá úhel mezi dvěma vektory. Na vstupu jsou souřadnice $x$ a $y$ pro 4 body typu \textit{double}, návratová hodnota typu \textit{double} vrací velikost úhlu v radiánech. Návratová hodnota je typu \textsl{void}.
+\subsubsection{setDrawPoint}
+Metoda \textbf{setDrawPoint} slouží k vykreslení bodu. Návratová hodnota je typu \textsl{void}.
 
 \textbf{Input}:
 \begin{itemize}
 \item 
 \end{itemize}
+!!!!!asi už nepoužíváme
 
 \subsubsection{loadPolygon}
 Metoda \textbf{loadPolygon} slouží k nahrání bodů jednotlivých polygonů do aplikace.  Součástí metody je i kontrola, zda se soubor úspěšně nahrál, zda vůbec obsahuje nějaké polygony a zda jsou polygony tvořeny aspoň 3 body. Návratová hodnota je typu \textsl{QString} vrací hlášku, zda byly polygony úspěšně nahrány.
@@ -323,22 +331,28 @@ Metoda \textbf{getPoint}
 \end{itemize}
 
 \subsection{Widget}
-Třída \textbf{Widget} slouží pro práci s GUI. Všechny metody této třídy na vstupu nemají nic a návratová hodnota metod je typu \textsl{void}.
+Metody třídy \textbf{Widget} slouží pro práci uživatele s aplikací. Všechny metody na vstupu nemají nic a návratová hodnota metod je typu \textsl{void}.
 
-\subsubsection{on load button clicked}
-Metoda \textbf{on load button clicked} načítá data z textového formátu. Uživatel sám vyhledává cestu k požadovanému souboru.
+\subsubsection{on\_load\_button\_clicked}
+Metoda \textbf{on\_load\_button\_clicked} načítá data z textového formátu. Uživatel sám vyhledává cestu k požadovanému souboru.
 
-\subsubsection{on analyze button clicked}
-Metoda \textbf{on analyze button clicked} vypisuje na obrazovku polohu bodu q vzhledem k polygonům po zvolení požadovaného algoritmu a kliknutí na tlačítko \textbf{Analyze}.
+\subsubsection{on\_analyze\_button\_clicked}
+Metoda \textbf{on\_analyze\_button\_clicked} vypisuje na obrazovku polohu bodu $q$ vzhledem k polygonům po zvolení požadovaného algoritmu a kliknutí na tlačítko \textsl{Analyze}.
 
-\subsubsection{on clear button clicked}
-Metoda \textbf{on clear button clicked} vrací aplikaci do výchozí polohy. 
+\subsubsection{on\_clear\_button\_clicked}
+Metoda \textbf{on\_clear\_button\_clicked} vrací aplikaci do výchozí polohy smazáním všeho, co bylo vykresleno. 
 
 \clearpage
 \section{Závěr}
+V rámci úlohy \textit{Geometrické vyhledávání bodu} byla vytvořena aplikace, která určuje polohu analyzovaného bodu $q$ vzhledem k polygonu. V důsledku časové zaneprázdněnosti obou autorek nebyly implementovány všechny bonusové úlohy a některé části kódu mohly být řešeny lépe.  
+
+Jedná se například o použití tříd QPoint a QPolygon, které na vstupu mají hodnoty typu \textit{integer} a které mohly být nahrazeny třídami QPointF a QPolygonF, jež na vstupu mají hodnot typu \textit{float}, což je pro práci se souřadnicemi bodů praktičtější. Dále jako ne zrovna nejšťastnější řešení hodnotíme množství vstupních hodnot, které mají na vstupu metody \textit{getPointLinePosition} a \textit{getTwoVectorsAngle} třídy \textbf{Algorithms}. Vhodné by nahradit jednotlivé souřadnice třídou QPoint, resp. QPointF. 
+
+Úloha přinesla i pozitivní přínos v tom směru, že se autorky mohly potrénovat v psaní kódu v jazyce C++ a oprášit své znalosti psaní v prostředí LaTeX.
 
 \clearpage
-\section{Literatura}
+
+\section{Zdroje}
 \begin{enumerate}
 \item  \textsl{BAYER, Tomáš. Geometrické vyhledávání bodů} [online][cit. 24. 10. 2018]. \\
 Dostupné z: \href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk3.pdf}{https://web.natur.cuni.cz}
@@ -351,9 +365,7 @@ Dostupné z: \href{https://mobilefish.com/services/record_mouse_coordinates/reco
 \end{document}
 
 
-%odkazy
-%literatura
+
+
 %problematická situace na hrane a jeji ošetření winding
-% osetřeno,aby polygony měli min 3 body
-%zlepšní: nahradi QPoint QpPointF které bere double, na riózdíl od QPoint, které bere int
- 
+%osetřeno,aby polygony měli min 3 body
