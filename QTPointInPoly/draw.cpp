@@ -97,7 +97,7 @@ void Draw::paintEvent(QPaintEvent *e)
     painter.setPen(pen);
 
     //Draw polygons from file
-    for(int i = 0; i < poly_list.size(); i++)
+    for(unsigned i = 0; i < poly_list.size(); i++)
     {
         //Create the polygon
         QPolygon p;
@@ -106,7 +106,7 @@ void Draw::paintEvent(QPaintEvent *e)
         vector<QPoint> one_poly = poly_list[i];
 
         //Add points to the polygon
-        for(int j = 0; j < one_poly.size(); j++)
+        for(unsigned j = 0; j < one_poly.size(); j++)
         {
             p.append(one_poly[j]);
         }
@@ -124,7 +124,7 @@ void Draw::paintEvent(QPaintEvent *e)
     QPainterPath path;
 
     //Draw and fill polygons containg point q
-    for(int i = 0; i < poly_fill.size(); i++)
+    for(unsigned i = 0; i < poly_fill.size(); i++)
     {
         //Create the polygon
         QPolygon p2;
@@ -133,7 +133,7 @@ void Draw::paintEvent(QPaintEvent *e)
         std::vector<QPoint> one_poly2 = poly_fill[i];
 
         //Add points to the polygon
-        for(int j = 0; j < one_poly2.size(); j++)
+        for(unsigned j = 0; j < one_poly2.size(); j++)
         {
             p2.append(one_poly2[j]);
         }
@@ -165,6 +165,7 @@ void Draw::mousePressEvent(QMouseEvent *e)
     //Repaint the screen
     repaint();
 }
+
 
 
 void Draw::clearCanvas()
