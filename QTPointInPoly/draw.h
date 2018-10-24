@@ -24,7 +24,6 @@ public:
     void paintEvent(QPaintEvent *e);
     void mousePressEvent(QMouseEvent *e);
     void clearCanvas();
-    void setDrawPoint();
     void fillPolygon(std::vector<std::vector<QPoint>> poly_fill);
     QString loadPolygon(const char* path);
     QPoint getPoint() {return q;}

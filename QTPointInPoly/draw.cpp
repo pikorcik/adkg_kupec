@@ -84,6 +84,7 @@ QString Draw::loadPolygon(const char* path)
     one_poly.clear();
 
     input_data.close();
+
     return "File successfully open.";
 }
 
@@ -165,7 +166,6 @@ void Draw::mousePressEvent(QMouseEvent *e)
     //Repaint the screen
     repaint();
 }
-
 
 
 void Draw::clearCanvas()
