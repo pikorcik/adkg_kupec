@@ -23,6 +23,12 @@ int Algorithms::getPositionRay(QPoint q, std::vector<QPoint> pol)
         double xiir = pol[i%n].x()-q.x(); //yiir =yi+1
         double yiir = pol[i%n].y()-q.y();
 
+        //Check whether the point is on the boundary
+        int boundary = getDistanceEdgeQ(xir, yir, xiir, yiir);
+
+        if(boundary == -1)
+            return -1;
+
         //Upper half-plane?
         if(((yiir>0)&&(yir<=0))||((yir>0)&&(yiir<=0)))
         {
@@ -138,3 +144,23 @@ double Algorithms::getTwoVectorsAngle(double x1, double y1, double x2, double y2
     return acos(dot/(nu*nv))*180/M_PI;
 }
 
+int Algorithms::getDistanceEdgeQ(double x1, double y1, double x2, double y2)
+{
+    //Check whether the point is on the boundary
+
+    double eps = 1.0e-6;
+
+    //Distance of the edge between p1 and p2
+    double d_p1_p2 = sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+
+    //Sum of distances between (p_i and q) plus (p_ii and q)
+    double d_p1_q_p2 = sqrt(x1*x1+y1*y1)+sqrt(x2*x2+y2*y2);
+
+    //Is point on the boundary?
+    if(fabs(d_p1_p2-d_p1_q_p2) < eps)
+    {
+        return -1;
+    }
+
+    return 2;
+}
