@@ -162,6 +162,10 @@ Zjednodušený zápis algoritmu:
 \item Jinak  $q$ nenáleží $P$
 \end{enumerate}
 
+\section{Problematické situace}
+
+
+
 \section{Vstupní data}
 Aplikace požaduje dva druhy vstupních dat:
 
@@ -178,7 +182,7 @@ Seznam bodů jednotlivých polygonů je uložen v textovém souboru polygon.txt.
 \textsl{Sloupec 2}: souřadnice X daného bodu polygonu\\
 \textsl{Sloupec 3}: souřadnice Y daného bodu polygonu\\
 
-Bod $q$ není součástí textového souboru, do aplikace vstupuje na základě ručního zadání uživatelem. Pro zadání bodu je nutné v aplikaci kliknout na tlačítko \textsl{Draw point} a levým tlačítkem myši kliknout do oblasti s polygony.
+Bod $q$ není součástí textového souboru, do aplikace vstupuje na základě ručního zadání uživatelem. Pro zadání bodu je nutné v aplikaci kliknout levým tlačítkem myši do okna s polygony.
 
 \section{Výstupní data}
 Výstupem úlohy je vypsání v grafickém okně aplikace, v jaké poloze se analyzovaný bod vůči polygonům nachází. Polygony, kterým bod náleží, jsou barevně zvýrazněny.
@@ -186,16 +190,32 @@ Výstupem úlohy je vypsání v grafickém okně aplikace, v jaké poloze se ana
 \section{Aplikace}
 V následují kapitole je představen vizuální vzhled vytvořené aplikace tak, jak ji vidí prostý uživatel.
 
-Aplikace ve výchozím stavu
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=13cm]{./pictures/gui_default.png}
+	\caption{Aplikace ve výchozím stavu}
+\end{figure}
 
-Aplikace po nahrání polygonů
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=13cm]{./pictures/gui_load.png}
+	\caption{Aplikace po nahrání polygonů}
+\end{figure}
 
-Volba výpočetního algoritmu
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=13cm]{./pictures/gui_ray.png}
+	\caption{Výstup při použití \textit{Ray Crossing Algorithm}}
+\end{figure}
 
-Výstup při použití \textit{Ray Crossing Algorithm}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=13cm]{./pictures/gui_winding.png}
+	\caption{Výstup při použití \textit{Winding Number Algorithm} pro $q$ ležící ve více vrcholech polygonů}
+\end{figure}
 
-Výstup při použití \textit{Winding Number Algorithm} 
-
+\clearpage
+ 
 \section{Dokumentace}
 Tato kapitola obsahuje dokumentaci k jednotlivým třídám.
 
@@ -208,7 +228,7 @@ Metoda \textbf{getPositionRay} určuje polohu bodu $q$ vzhledem k polygonu za po
 \textbf{Input}:
 \begin{itemize}
 \item $QPoint$ q
-\item $std::vector<QPoint>$ pol
+\item $std::vector\textless QPoint\textgreater$ pol
 \end{itemize}
 
 \textbf{Output}:
@@ -223,7 +243,7 @@ Metoda \textbf{getPositionWinding} určuje polohu bodu $q$ vzhledem k polygonu z
 \textbf{Input}:
 \begin{itemize}
 \item $QPoint$ q
-\item $std::vector<QPoint>$ pol
+\item $std::vector\textless QPoint\textgreater$ pol
 \end{itemize}
 
 \textbf{Output}:
@@ -295,14 +315,13 @@ Metoda \textbf{mousePressEvent} slouží k načtení souřadnic bodu $q$. Návra
 \subsubsection{clearCanvas}
 Metoda \textbf{clearCanvas} slouží k vymazání všech vykreslených dat. Metoda neobsahuje žádné proměnné na vstupu a návratová hodnota je typu \textsl{void}.
 
-\subsubsection{setDrawPoint}
-Metoda \textbf{setDrawPoint} slouží k vykreslení bodu. Návratová hodnota je typu \textsl{void}.
+\subsubsection{fillPolygon}
+Metoda \textbf{fillPolygon} barevně vyšrafuje polygon, ve kterém se nachází analyzovaný bod $q$. Návratová hodnota je typu \textsl{void}.
 
 \textbf{Input}:
 \begin{itemize}
-\item 
+\item $std::vector\textless std::vector\textless QPoint\textgreater \textgreater$ poly\_fill
 \end{itemize}
-!!!!!asi už nepoužíváme
 
 \subsubsection{loadPolygon}
 Metoda \textbf{loadPolygon} slouží k nahrání bodů jednotlivých polygonů do aplikace.  Součástí metody je i kontrola, zda se soubor úspěšně nahrál, zda vůbec obsahuje nějaké polygony a zda jsou polygony tvořeny aspoň 3 body. Návratová hodnota je typu \textsl{QString} vrací hlášku, zda byly polygony úspěšně nahrány.
@@ -331,7 +350,15 @@ Metoda \textbf{getPoint}
 \end{itemize}
 
 \subsection{Widget}
-Metody třídy \textbf{Widget} slouží pro práci uživatele s aplikací. Všechny metody na vstupu nemají nic a návratová hodnota metod je typu \textsl{void}.
+Metody třídy \textbf{Widget} slouží pro práci uživatele s aplikací. Až na jednu výjimku nemá žádná metoda nic na vstupu, návratové hodnoty všech metod jsou typu \textsl{void}.
+
+\subsubsection{writeResult}
+Metoda \textbf{writeResult} vrací polohu bodu $q$ vzhledem k polygonu na základě vstupní hodnoty typu \textit{int}.
+
+\textbf{Input}:
+\begin{itemize}
+\item int
+\end{itemize}
 
 \subsubsection{on\_load\_button\_clicked}
 Metoda \textbf{on\_load\_button\_clicked} načítá data z textového formátu. Uživatel sám vyhledává cestu k požadovanému souboru.
