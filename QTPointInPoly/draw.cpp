@@ -94,7 +94,7 @@ void Draw::paintEvent(QPaintEvent *e)
     QPainter painter(this);
 
     //Define how lines should be painted
-    QPen pen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    QPen pen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     painter.setPen(pen);
 
     //Draw polygons from file
@@ -150,7 +150,7 @@ void Draw::paintEvent(QPaintEvent *e)
 
     //Draw q
     painter.setPen(pen);
-    painter.drawEllipse(q.x()-2.5, q.y()-2.5, 5, 5);
+    painter.drawEllipse(q.x()-5, q.y()-5, 10, 10);
 
     //Stop drawing
     painter.end();

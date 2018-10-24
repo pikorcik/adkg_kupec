@@ -47,7 +47,7 @@ int Algorithms::getPositionWinding(QPoint q, std::vector<QPoint> pol)
 {
     int n = pol.size();
     double sum_fi = 0.0;
-    double eps = 1.0e-10;
+    double eps = 1.0e-3;
 
     double xir = pol[0].x();
     double yir = pol[0].y();
@@ -95,7 +95,7 @@ int Algorithms::getPositionWinding(QPoint q, std::vector<QPoint> pol)
 int Algorithms::getPointLinePosition(double xq, double yq, double x1, double y1, double x2, double y2)
 {
     //Point and line position
-    double eps = 1.0e-10; //zápis v semilogaritmickém tvaru
+    double eps = 1.0e-3;
 
     //Get vectors
     double ux = x2-x1;
