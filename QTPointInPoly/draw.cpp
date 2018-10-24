@@ -63,6 +63,7 @@ QString Draw::loadPolygon(const char* path)
             if(num_points < 3)
             {
                 input_data.close();
+                poly_list.clear();
                 return "Invalid polygon detected!";
             }
 
@@ -76,6 +77,14 @@ QString Draw::loadPolygon(const char* path)
             num_points = 1;
             num_poly++;
         }
+    }
+
+    //Check for invalid polygons
+    if(num_points < 3)
+    {
+        input_data.close();
+        poly_list.clear();
+        return "Invalid polygon detected!";
     }
 
     //Insert last polygon into the list
