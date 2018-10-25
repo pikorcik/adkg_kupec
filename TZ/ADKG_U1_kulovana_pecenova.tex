@@ -106,7 +106,7 @@ Pro účely této aplikace byly zvoleny výpočetní algoritmy \textit{Ray Cross
 Tato kapitola se zabývá popisem algoritmů, které byly v aplikaci implementovány. 
 
 \subsection{Ray Crossing Algorithm}
-Prvním zvoleným algoritmem je tzv. \textit{Ray Crossing Algorithm} neboli \textit{Paprskový algoritmus}. Svůj název získal po metodě, jež využívá pro nalezení řešení polohy bodu vůči polygonu. Tento algoritmus je primárně využíván pro konvexní polygony, lze ho však zobecnit a využít ho i pro nekonvexní polygony. 
+Prvním zvoleným algoritmem je tzv. \textit{Ray Crossing Algorithm} neboli \textit{Paprskový algoritmus}. Svůj název získal po způsobu, jakým řeší nalezení polohy bodu vůči polygonu. Tento algoritmus je primárně využíván pro konvexní polygony, lze ho však zobecnit a využít ho i pro nekonvexní polygony. 
 
 Mějme polygon $P$ a daný bod $q$. Z bodu $q$ veďme libovolný počet polopřímek (paprsků). Princip algoritmu je založen na vyhodnocení počtu průsečíků $k$, které vzniknou protnutím paprsků vedených z bodu $q$ s hranami polygonu $P$. Pro $k$ mohou nastat dvě situace:
 \begin{enumerate}
@@ -115,7 +115,6 @@ Mějme polygon $P$ a daný bod $q$. Z bodu $q$ veďme libovolný počet polopř�
 \end{enumerate}
 
 Základní varianta algoritmu neošetřuje problémové situace, které mohou během výpočtu nastat. Konkrétně se jedná o situace, kdy je bod $q$ totožný s jedním z vrcholů polygonu $P$ nebo pokud bod $q$ leží na jedné z hran polygonu $P$. Pro eliminaci těchto tzv. singularit je vhodné použít modifikovanou variantu algoritmu, která redukuje souřadnice bodů polygonu k bodu $q$. 
-OŠETŘENÍ SINGULARITY
 
 Zjednodušený zápis takto modifikovaného algoritmu lze zapsat způsobem uvedeným níže:
 \begin{enumerate}
@@ -127,7 +126,7 @@ $x'_i = x_i - x_q$\\
 $y'_i = y_i - y_q$
 \item 	Podmínka $(y'_i > 0)\&\&(y'_{i-1} \leq 0)\|(y'_{i-1} > 0)\&\&(y'_{i} \leq 0)$
 \item 	Je-li podmínka splněna: $x'_m = \frac{x'_i y'_{i-1} - x'_{i-1} y'_i}{y'_i - y'_{i-1}}$
-\item Splněno $(x'_m > 0) \rightarrow k = k + 1$ 
+\item Podmínka $(x'_m > 0) \rightarrow k = k + 1$ 
 \end{enumerate}
 \item Výpočet $k\%2$
 \item Vyhodnocení $k$ (liché $k \rightarrow q$ náleží $P$; sudé $k \rightarrow q$ nenáleží $P$)
@@ -138,20 +137,20 @@ Druhý algoritmus použitý v aplikaci je tzv. \textit{Winding Number Algorithm}
 
 Mějme polygon $P$ a bod $q$, na kterém stojí pozorovatel. Nachází-li se $q$ uvnitř $P$, pak pozorovatel, který by si přál postupně vidět všechny vrcholy polygonu, se musí otočit celkem o $2\pi$. Výsledkem algoritmu je pak tzv. Winding number $\omega$, které říká, o kolik otáček se pozorovatel otočil: \\ \\
 $\Omega = \frac{1}{2\pi} \sum_{i=1}^n \omega_i$\\ \\
-Zde se hodí zdůraznit, že záleží na zvoleném směru otáčení. Otáčí-li se pozorovatel ve směru chodu hodinových ručiček, uhly se sčítají. V opačném směru se od sebe úhly odečítají a $\omega$ by vyšlo záporné. Během výpočtů je také nutno zavést určitou toleranci $\epsilon$, která pokrývá chyby způsobené zaokrouhlováním.
+Zde se hodí zdůraznit, že záleží na zvoleném směru otáčení. Otáčí-li se pozorovatel ve směru chodu hodinových ručiček, úhly se sčítají. V opačném směru se od sebe úhly odečítají a $\omega$ by vyšlo záporné. Během výpočtů je také nutno zavést určitou toleranci $\epsilon$, která pokrývá chyby způsobené zaokrouhlováním.
 Z výše uvedených vztahů vyplývá:
 \begin{enumerate} 
 \item $w = 2\pi \rightarrow$ $q$ se nachází uvnitř $P$
 \item  $w < 2\pi \rightarrow$ $q$ se nachází vně $P$
 \end{enumerate}
 
-Mezi singularity pro tento algoritmus patří pouze případ, je-li $q\approx p_i$.\\
-OŠETŘENÍ SINGULARITY
+Mezi singularity pro tento algoritmus patří pouze případ, je-li $q\approx p_i$. Tento problém byl vyřešen zavedením návratové hodnoty -1 z metody.\\
 
 Zjednodušený zápis algoritmu:
 
 \begin{enumerate}
 \item Načtení bodů polygonu, úhel $\omega = 0$, tolerance $\epsilon = 1e-10$
+\item Orientace $o_i$ bodu $q$ ke straně $p_i, p_{i+1}$
 \item Postupně pro všechny orientované trojice $p_i, q, p_{i+1}$ opakuj kroky I-III:
 \begin{enumerate}[label=\Roman*.]
 \item Výpočet úhlu $\omega_i = \sphericalangle p_i, q, p_{i+1}$
@@ -163,8 +162,7 @@ Zjednodušený zápis algoritmu:
 \end{enumerate}
 
 \section{Problematické situace}
-
-
+V úloze byly nutné ošetřit sigularity, zda bod $q$ neleží v hraně některého z polygonů či v jejich vrcholech. Pro vyřešení tohoto problému byla použita metoda \textsl{getDistanceEdgeQ} třídy \textbf{Algorithms}, která zjišťuje, zda bod neleží velmi blízko přímce (rozdíl vzdáleností je porovnáván s mezní hodnotou $\epsilon$).
 
 \section{Vstupní data}
 Aplikace požaduje dva druhy vstupních dat:
@@ -174,7 +172,7 @@ Aplikace požaduje dva druhy vstupních dat:
 \item daný bod $q$
 \end{enumerate}
 
-Seznam bodů jednotlivých polygonů je uložen v textovém souboru polygon.txt. Pro vykreslení jednotlivých polygonů v aplikaci je nutno tento soubor do aplikace nahrát pomocí tlačítka \textsl{Load}. K vygenerování bodů byla použita online aplikace ze stránek mobilefish.com. Struktura souboru s polygony je následující:\\
+Seznam bodů jednotlivých polygonů je uložen v textovém souboru polygon.txt. Pro vykreslení jednotlivých polygonů v aplikaci je nutno tento soubor do aplikace nahrát pomocí tlačítka \textsl{Load}. K vygenerování souřadnic bodů byla použita online aplikace ze stránek mobilefish.com. Struktura souboru s polygony je následující:\\
 
 \noindent
 \textsl{První řádek}: počet polygonů v souboru\\
@@ -192,25 +190,25 @@ V následují kapitole je představen vizuální vzhled vytvořené aplikace tak
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=13cm]{./pictures/gui_default.png}
+	\includegraphics[width=10cm]{./pictures/gui_default.png}
 	\caption{Aplikace ve výchozím stavu}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=13cm]{./pictures/gui_load.png}
+	\includegraphics[width=10cm]{./pictures/gui_load.png}
 	\caption{Aplikace po nahrání polygonů}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=13cm]{./pictures/gui_ray.png}
+	\includegraphics[width=11cm]{./pictures/gui_ray.png}
 	\caption{Výstup při použití \textit{Ray Crossing Algorithm}}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=13cm]{./pictures/gui_winding.png}
+	\includegraphics[width=11cm]{./pictures/gui_winding.png}
 	\caption{Výstup při použití \textit{Winding Number Algorithm} pro $q$ ležící ve více vrcholech polygonů}
 \end{figure}
 
@@ -293,6 +291,23 @@ Metoda \textbf{getTwoVectorsAngle} počítá úhel mezi dvěma vektory. Na vstup
 \item double 
 \end{itemize}
 
+\subsubsection{getDistanceEdgeQ}
+Metoda \textbf{getDistanceEdgeQ} počítá, zda se bod nenachází na přímce na základě porovnání vzdálenosti mezi dvěma body na přímce se sumou vzdáleností těchto bodů k bodu $q$. Je-li rozdíl menší než zadané $\epsilon$, bod leží na přímce. Návratová hodnota je typu \textsl{int}.
+
+\textbf{Input}:
+\begin{itemize}
+\item $double$ $x_1$
+\item $double$ $y_1$
+\item $double$ $x_2$
+\item $double$ $y_2$	
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item -1 $\rightarrow$ bod $q$ leží na přímce
+\item 2 $\rightarrow$ bod $q$ neleží na přímce
+\end{itemize}
+
 \subsection{Draw}
 Třída \textsl{Draw} obsahuje metody, které slouží k vykreslení polygonů, analyzovaného bodu $q$ a výstupních dat.
 
@@ -336,21 +351,8 @@ Metoda \textbf{loadPolygon} slouží k nahrání bodů jednotlivých polygonů d
 \item QString
 \end{itemize}
 
-\subsubsection{getPoint????}
-Metoda \textbf{getPoint}
-
-\textbf{Input}:
-\begin{itemize}
-\item 
-\end{itemize}
-
-\textbf{Output}:
-\begin{itemize}
-\item 
-\end{itemize}
-
 \subsection{Widget}
-Metody třídy \textbf{Widget} slouží pro práci uživatele s aplikací. Až na jednu výjimku nemá žádná metoda nic na vstupu, návratové hodnoty všech metod jsou typu \textsl{void}.
+Metody třídy \textbf{Widget} slouží pro práci uživatele s aplikací. Až na jednu výjimku nemají metody na vstupu nic, návratové hodnoty všech metod jsou typu \textsl{void}.
 
 \subsubsection{writeResult}
 Metoda \textbf{writeResult} vrací polohu bodu $q$ vzhledem k polygonu na základě vstupní hodnoty typu \textit{int}.
@@ -371,9 +373,11 @@ Metoda \textbf{on\_clear\_button\_clicked} vrací aplikaci do výchozí polohy s
 
 \clearpage
 \section{Závěr}
-V rámci úlohy \textit{Geometrické vyhledávání bodu} byla vytvořena aplikace, která určuje polohu analyzovaného bodu $q$ vzhledem k polygonu. V důsledku časové zaneprázdněnosti obou autorek nebyly implementovány všechny bonusové úlohy a některé části kódu mohly být řešeny lépe.  
+V rámci úlohy \textit{Geometrické vyhledávání bodu} byla vytvořena aplikace, která určuje polohu analyzovaného bodu $q$ vzhledem k polygonu. Z důvodu větší časové náročnosti úlohy než obě autorky původně očekávaly nebyly implementovány všechny bonusové úlohy a některé části kódu mohly být řešeny lépe.  
 
-Jedná se například o použití tříd QPoint a QPolygon, které na vstupu mají hodnoty typu \textit{integer} a které mohly být nahrazeny třídami QPointF a QPolygonF, jež na vstupu mají hodnot typu \textit{float}, což je pro práci se souřadnicemi bodů praktičtější. Dále jako ne zrovna nejšťastnější řešení hodnotíme množství vstupních hodnot, které mají na vstupu metody \textit{getPointLinePosition} a \textit{getTwoVectorsAngle} třídy \textbf{Algorithms}. Vhodné by nahradit jednotlivé souřadnice třídou QPoint, resp. QPointF. 
+Jedná se například o použití tříd QPoint a QPolygon, které na vstupu mají hodnoty typu \textit{int} a které mohly být nahrazeny třídami QPointF a QPolygonF, jež na vstupu mají hodnot typu \textit{float}, což je pro práci se souřadnicemi bodů praktičtější. Dále jako ne zrovna nejšťastnější řešení hodnotíme množství vstupních hodnot, které mají na vstupu metody \textit{getPointLinePosition}, \textit{getTwoVectorsAngle} a \textit{getDistanceEdgeQ} třídy \textbf{Algorithms}. Vhodné by bylo nahradit jednotlivé souřadnice třídou QPoint, resp. QPointF. 
+
+Dále mohlo být implementováno více kontrolních podmínek pro načítání bodů polygonu z textového souboru, například ošetření, zda soubor neobsahuje text, zda všechny body mají $x$ a $y$ souřadnici apod. Přesnost výsledné aplikace také není zrovna nejlepší. Umisťování bodu $q$ do hran či vrcholů polygonů vyžaduje notnou dávku trpělivosti, aby se zobrazil korektní výsledek. Experimentálně bylo zjištěno, že aplikace zvládá lépe (tzn. je potřeba méně pokusů na kliknutí) zobrazovat polohu bodu $q$ ve vrcholech než v hranách, ač obě situace jsou v kódu ošetřené. 
 
 Úloha přinesla i pozitivní přínos v tom směru, že se autorky mohly potrénovat v psaní kódu v jazyce C++ a oprášit své znalosti psaní v prostředí LaTeX.
 
