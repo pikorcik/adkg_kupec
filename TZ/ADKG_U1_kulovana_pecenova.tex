@@ -233,6 +233,7 @@ Metoda \textbf{getPositionRay} určuje polohu bodu $q$ vzhledem k polygonu za po
 \begin{itemize}
 \item 0 $\rightarrow$ bod se nachází vně polygonu
 \item 1 $\rightarrow$ bod se nachází uvnitř nebo na hraně polygonu
+\item -1 $\rightarrow$ bod se nachází na hraně polygonu
 \end{itemize}
 
 \subsubsection{getPositionWinding}
@@ -377,7 +378,7 @@ V rámci úlohy \textit{Geometrické vyhledávání bodu} byla vytvořena aplika
 
 Jedná se například o použití tříd QPoint a QPolygon, které na vstupu mají hodnoty typu \textit{int} a které mohly být nahrazeny třídami QPointF a QPolygonF, jež na vstupu mají hodnot typu \textit{float}, což je pro práci se souřadnicemi bodů praktičtější. Dále jako ne zrovna nejšťastnější řešení hodnotíme množství vstupních hodnot, které mají na vstupu metody \textit{getPointLinePosition}, \textit{getTwoVectorsAngle} a \textit{getDistanceEdgeQ} třídy \textbf{Algorithms}. Vhodné by bylo nahradit jednotlivé souřadnice třídou QPoint, resp. QPointF. 
 
-Dále mohlo být implementováno více kontrolních podmínek pro načítání bodů polygonu z textového souboru, například ošetření, zda soubor neobsahuje text, zda všechny body mají $x$ a $y$ souřadnici apod. Přesnost výsledné aplikace také není zrovna nejlepší. Umisťování bodu $q$ do hran či vrcholů polygonů vyžaduje notnou dávku trpělivosti, aby se zobrazil korektní výsledek. Experimentálně bylo zjištěno, že aplikace zvládá lépe (tzn. je potřeba méně pokusů na kliknutí) zobrazovat polohu bodu $q$ ve vrcholech než v hranách, ač obě situace jsou v kódu ošetřené. 
+Dále mohlo být implementováno více kontrolních podmínek pro načítání bodů polygonu z textového souboru, například ošetření, zda soubor neobsahuje text, zda všechny body mají $x$ a $y$ souřadnici apod. Umisťování bodu $q$ do hran či vrcholů polygonů vyžaduje notnou dávku trpělivosti, aby se zobrazil korektní výsledek. Experimentálně bylo zjištěno, že aplikace zvládá lépe (tzn. je potřeba méně pokusů na kliknutí) zobrazovat polohu bodu $q$ ve vrcholech než v hranách, ač obě situace jsou v kódu ošetřené. 
 
 Úloha přinesla i pozitivní přínos v tom směru, že se autorky mohly potrénovat v psaní kódu v jazyce C++ a oprášit své znalosti psaní v prostředí LaTeX.
 
