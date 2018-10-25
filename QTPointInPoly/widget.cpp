@@ -44,6 +44,8 @@ void Widget::on_load_button_clicked()
 
 void Widget::on_analyze_button_clicked()
 {
+    //Analyze relation of all polygons and point q
+
     //Vector of polygons which contain point q or is on their boundary
     std::vector<std::vector<QPoint>> poly_fill;
 
@@ -148,7 +150,7 @@ void Widget::writeResult(int res)
 
 void Widget::on_clear_button_clicked()
 {
-    //ui je globální něco, co umožňuje přistupovat ke všem grafickým komponentám
+    //Clear canvas and texts
     ui->canvas->clearCanvas();
     ui->analyze_label->clear();
     ui->load_label->clear();

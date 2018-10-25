@@ -191,6 +191,7 @@ void Draw::clearCanvas()
 
 void Draw::fillPolygon(std::vector<std::vector<QPoint>> poly)
 {
+    //Fill polygon containing point q
     poly_fill = poly;
 
     repaint();
