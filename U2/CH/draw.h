@@ -17,6 +17,7 @@ public:
     void mousePressEvent(QMouseEvent *e);
     void setCH( QPolygon ch_) {ch = ch_;}
     std::vector<QPoint> getPoints(){return points;}
+    void clear();
 
 signals:
 

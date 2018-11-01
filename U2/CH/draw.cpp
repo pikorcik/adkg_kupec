@@ -34,3 +34,9 @@ void Draw::mousePressEvent(QMouseEvent *e)
     repaint();
 
 }
+
+void Draw::clear()
+{
+    points.clear();
+    ch.clear();
+}

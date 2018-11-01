@@ -1,3 +1,5 @@
+#include <cmath>
+#include <vector>
 #include "algorithms.h"
 #include "sortbyxasc.h"
 #include "sortbyyasc.h"
@@ -51,6 +53,22 @@ double Algorithms::get2LinesAngle(QPoint &p1,QPoint &p2,QPoint &p3, QPoint &p4)
     return fabs(acos(dot/(nu * nv)))*(180/M_PI);
 }
 
+double Algorithms::getPointLineDistance(QPoint &q, QPoint &a, QPoint &b)
+{
+    //Point and line distance
+
+    double x12 = b.x()-a.x();
+    double y12 = b.y()-a.y();
+
+    double y1a = q.y()-a.y();
+    double y2a = b.y()-q.y();
+
+    double numerator = -q.x()*y12 + a.x()*y2a + b.x()*y1a;
+    double denominator = sqrt(x12*x12+y12*y12);
+
+    return fabs(numerator)/denominator;
+}
+
 QPolygon Algorithms::CHJarvis (vector<QPoint> &points)
 {
     QPolygon ch;
@@ -99,5 +117,85 @@ QPolygon Algorithms::CHJarvis (vector<QPoint> &points)
     } while (!(pj == q));
 
     return ch;
+}
+
+QPolygon Algorithms::QHull (vector<QPoint> &points)
+{
+    QPolygon ch;
+    vector<QPoint> su, sl;
+
+    //Find q1, q3
+    std::sort(points.begin(), points.end(), SortByXAsc());
+    QPoint q1 = points[0];
+    QPoint q3 = points[points.size()-1];
+
+    //Add to SU, SL
+    su.push_back(q1);
+    su.push_back(q3);
+    sl.push_back(q1);
+    sl.push_back(q3);
+
+    //Split into SU, SL
+    for(unsigned int i=0; i<points.size(); i++)
+    {
+        //Add to SU
+        if(getPointLinePosition(points[i], q1, q3)==LEFT)
+            su.push_back(points[i]);
+        if(getPointLinePosition(points[i], q1, q3)==RIGHT)
+            sl.push_back(points[i]);
+    }
+
+    //Add q3 to convex hull
+    ch.push_back(q3);
+
+    //Process SU
+    qh_loc(1, 0, su, ch);
+
+    //Add q1 to convex hull
+    ch.push_back(q1);
+
+    //Process SL
+    qh_loc(0, 1, sl, ch);
+
+    return ch;
+}
+
+
+void Algorithms::qh_loc (int s, int e, vector<QPoint> &ss, QPolygon &h)
+{
+    //Recursive procedure of QHull
+    int i_max = -1;
+    double d_max = 0;
+
+    //Browse all points
+    for(unsigned int i=2; i<ss.size(); i++)
+    {
+        //Is the point in the right half-plane?
+        if(getPointLinePosition(ss[i], ss[s], ss[e])==RIGHT)
+        {
+            double d = getPointLineDistance(ss[i], ss[s], ss[e]);
+
+            //Remember the farthest point
+            if(d>d_max)
+            {
+                d_max = d;
+                i_max = i;
+            }
+
+        }
+    }
+
+    //Point in the right half-plane exists
+    if(i_max > 1)
+    {
+        //Process first interval
+        qh_loc(s, i_max, ss, h);
+
+        //Add the point to convex hull
+        h.push_back(ss[i_max]);
+
+        //Process second interval
+        qh_loc(i_max, e, ss, h);
+    }
 }
 
