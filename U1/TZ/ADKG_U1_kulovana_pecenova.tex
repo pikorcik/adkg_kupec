@@ -55,6 +55,7 @@ Geometrické vyhledávání bodu\\
 
 \normalsize  
 Zimní semestr 2018/2019\\
+(oprava: 4. 11. 2018)
 \vspace{14cm}
 \end{center}
 
@@ -74,6 +75,8 @@ Markéta Pecenová \\
 \newpage
 
 \section{Zadání}
+Zadání úlohy bylo staženo ze stránek předmětu \href{https://web.natur.cuni.cz/~bayertom/index.php/teaching/algoritmy-v-digitalni-kartografii}{155ADKG}.
+
 \begin{figure}[h!]
 	\includegraphics[clip, trim=0cm 10cm 0cm 3cm, width=1.0\textwidth]{./pictures/zadani.pdf}
 \end{figure}
@@ -114,7 +117,14 @@ Mějme polygon $P$ a daný bod $q$. Z bodu $q$ veďme libovolný počet polopř�
 \item Hodnota $k$ je rovna sudému číslu $\rightarrow$ bod $q$ se nachází vně polygonu $P$.
 \end{enumerate}
 
-Základní varianta algoritmu neošetřuje problémové situace, které mohou během výpočtu nastat. Konkrétně se jedná o situace, kdy je bod $q$ totožný s jedním z vrcholů polygonu $P$ nebo pokud bod $q$ leží na jedné z hran polygonu $P$. Pro eliminaci těchto tzv. singularit je vhodné použít modifikovanou variantu algoritmu, která redukuje souřadnice bodů polygonu k bodu $q$. 
+Základní varianta algoritmu neošetřuje problémové situace, které mohou během výpočtu nastat. Konkrétně se jedná o dvě níže uvedené situace:
+
+\begin{enumerate}
+\item $q == P_i$
+\item $q$ leží v hraně polygonu tvořené vrcholy $P_i$ a $P_{ii}$
+\end{enumerate}
+
+Pro eliminaci těchto tzv. singularit je vhodné použít modifikovanou variantu algoritmu, která redukuje souřadnice bodů polygonu k bodu $q$ (viz krok 2(I.) níže). 
 
 Zjednodušený zápis takto modifikovaného algoritmu lze zapsat způsobem uvedeným níže:
 \begin{enumerate}
@@ -144,7 +154,7 @@ Z výše uvedených vztahů vyplývá:
 \item  $w < 2\pi \rightarrow$ $q$ se nachází vně $P$
 \end{enumerate}
 
-Mezi singularity pro tento algoritmus patří pouze případ, je-li $q\approx p_i$. Tento problém byl vyřešen zavedením návratové hodnoty -1 z metody.\\
+Mezi singularity pro tento algoritmus patří pouze případ, je-li $q\approx p_i$. Tento problém byl vyřešen zavedením speciální třetí návratové hodnoty, která ošetřuje tento případ.\\
 
 Zjednodušený zápis algoritmu:
 
@@ -162,7 +172,9 @@ Zjednodušený zápis algoritmu:
 \end{enumerate}
 
 \section{Problematické situace}
-V úloze byly nutné ošetřit sigularity, zda bod $q$ neleží v hraně některého z polygonů či v jejich vrcholech. Pro vyřešení tohoto problému byla použita metoda \textsl{getDistanceEdgeQ} třídy \textbf{Algorithms}, která zjišťuje, zda bod neleží velmi blízko přímce (rozdíl vzdáleností je porovnáván s mezní hodnotou $\epsilon$).
+V úloze bylo nutné ošetřit sigularity, zda bod $q$ neleží v hraně některého z polygonů či v jejich vrcholech. Pro vyřešení tohoto problému byla použita metoda \textsl{getDistanceEdgeQ} třídy \textbf{Algorithms}, která porovnává vzdálenost dvou bodů na přímce ($p_1$ a $p_2$) se sumou vzdáleností těchto bodů k danému bod $q$. Je-li rozdíl vzdáleností menší než mezní hodnota $\epsilon$, je bod $q$ vyhodnocen, že leží na přímce.\\
+
+$\mid d_{p_1,p_2} - \sum(d_{p_1,q} + d_{q,p_2}) \mid  < \epsilon \rightarrow q$ náleží přímce $p$.
 
 \section{Vstupní data}
 Aplikace požaduje dva druhy vstupních dat:
@@ -374,7 +386,7 @@ Metoda \textbf{on\_clear\_button\_clicked} vrací aplikaci do výchozí polohy s
 
 \clearpage
 \section{Závěr}
-V rámci úlohy \textit{Geometrické vyhledávání bodu} byla vytvořena aplikace, která určuje polohu analyzovaného bodu $q$ vzhledem k polygonu. Z důvodu větší časové náročnosti úlohy než obě autorky původně očekávaly nebyly implementovány všechny bonusové úlohy a některé části kódu mohly být řešeny lépe.  
+V rámci úlohy \textit{Geometrické vyhledávání bodu} byla vytvořena aplikace, která určuje polohu analyzovaného bodu $q$ vzhledem k polygonu. Z důvodu větší časové náročnosti úlohy než obě autorky původně očekávaly nebyly implementovány všechny bonusové úlohy a některé části kódu mohly být řešeny lépe. Tato opravená verze technické zprávy je aktualizována o několik vzorců a o text v sekci Zadání. 
 
 Jedná se například o použití tříd QPoint a QPolygon, které na vstupu mají hodnoty typu \textit{int} a které mohly být nahrazeny třídami QPointF a QPolygonF, jež na vstupu mají hodnot typu \textit{float}, což je pro práci se souřadnicemi bodů praktičtější. Dále jako ne zrovna nejšťastnější řešení hodnotíme množství vstupních hodnot, které mají na vstupu metody \textit{getPointLinePosition}, \textit{getTwoVectorsAngle} a \textit{getDistanceEdgeQ} třídy \textbf{Algorithms}. Vhodné by bylo nahradit jednotlivé souřadnice třídou QPoint, resp. QPointF. 
 
