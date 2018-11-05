@@ -55,7 +55,7 @@ Geometrické vyhledávání bodu\\
 
 \normalsize  
 Zimní semestr 2018/2019\\
-(oprava: 4. 11. 2018)
+(oprava: 5. 11. 2018)
 \vspace{14cm}
 \end{center}
 
@@ -120,8 +120,8 @@ Mějme polygon $P$ a daný bod $q$. Z bodu $q$ veďme libovolný počet polopř�
 Základní varianta algoritmu neošetřuje problémové situace, které mohou během výpočtu nastat. Konkrétně se jedná o dvě níže uvedené situace:
 
 \begin{enumerate}
-\item $q == P_i$
-\item $q$ leží v hraně polygonu tvořené vrcholy $P_i$ a $P_{ii}$
+\item $q == p_i$
+\item $q$ leží na polygonové hraně tvořené vrcholy $p_i$ a $p_{i+1}$
 \end{enumerate}
 
 Pro eliminaci těchto tzv. singularit je vhodné použít modifikovanou variantu algoritmu, která redukuje souřadnice bodů polygonu k bodu $q$ (viz krok 2(I.) níže). 
@@ -172,7 +172,7 @@ Zjednodušený zápis algoritmu:
 \end{enumerate}
 
 \section{Problematické situace}
-V úloze bylo nutné ošetřit sigularity, zda bod $q$ neleží v hraně některého z polygonů či v jejich vrcholech. Pro vyřešení tohoto problému byla použita metoda \textsl{getDistanceEdgeQ} třídy \textbf{Algorithms}, která porovnává vzdálenost dvou bodů na přímce ($p_1$ a $p_2$) se sumou vzdáleností těchto bodů k danému bod $q$. Je-li rozdíl vzdáleností menší než mezní hodnota $\epsilon$, je bod $q$ vyhodnocen, že leží na přímce.\\
+V úloze bylo nutné ošetřit sigularity, zda bod $q$ neleží v hraně některého z polygonů či v jejich vrcholech. Pro vyřešení tohoto problému byla použita metoda \textsl{getDistanceEdgeQ} třídy \textbf{Algorithms}, která porovnává vzdálenost dvou bodů $p_1$ a $p_2$ na přímce $p$ se sumou vzdáleností těchto bodů k danému bod $q$. Je-li rozdíl vzdáleností menší než mezní hodnota $\epsilon$, je bod $q$ vyhodnocen, že leží na přímce.\\
 
 $\mid d_{p_1,p_2} - \sum(d_{p_1,q} + d_{q,p_2}) \mid  < \epsilon \rightarrow q$ náleží přímce $p$.
 
