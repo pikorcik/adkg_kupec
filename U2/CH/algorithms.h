@@ -16,9 +16,9 @@ public:
     static TPosition getPointLinePosition(QPoint &q, QPoint &a, QPoint &b);
     static double get2LinesAngle(QPoint &p1,QPoint &p2,QPoint &p3, QPoint &p4);
     static double getPointLineDistance(QPoint &q, QPoint &a, QPoint &b);
-    static QPolygon CHJarvis (vector<QPoint> &points);
-    static QPolygon QHull (vector<QPoint> &points);
-    static void qh_loc (int s, int e, vector<QPoint> &ss, QPolygon &h);
+    static QPolygon CHJarvis(vector<QPoint> &points);
+    static QPolygon QHull(vector<QPoint> &points);
+    static void qh_loc(int s, int e, vector<QPoint> &ss, QPolygon &h);
 };
 
 #endif // ALGORITHMS_H

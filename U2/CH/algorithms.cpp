@@ -121,6 +121,7 @@ QPolygon Algorithms::CHJarvis (vector<QPoint> &points)
 
 QPolygon Algorithms::QHull (vector<QPoint> &points)
 {
+    //Create convex hull using the qhull procedure
     QPolygon ch;
     vector<QPoint> su, sl;
 
@@ -139,9 +140,11 @@ QPolygon Algorithms::QHull (vector<QPoint> &points)
     for(unsigned int i=0; i<points.size(); i++)
     {
         //Add to SU
-        if(getPointLinePosition(points[i], q1, q3)==LEFT)
+        if(getPointLinePosition(points[i],q1,q3)==LEFT)
             su.push_back(points[i]);
-        if(getPointLinePosition(points[i], q1, q3)==RIGHT)
+
+        // Add to SL
+        if(getPointLinePosition(points[i],q1,q3)==RIGHT)
             sl.push_back(points[i]);
     }
 
@@ -161,7 +164,7 @@ QPolygon Algorithms::QHull (vector<QPoint> &points)
 }
 
 
-void Algorithms::qh_loc (int s, int e, vector<QPoint> &ss, QPolygon &h)
+void Algorithms::qh_loc(int s, int e, vector<QPoint> &ss, QPolygon &h)
 {
     //Recursive procedure of QHull
     int i_max = -1;
@@ -181,7 +184,6 @@ void Algorithms::qh_loc (int s, int e, vector<QPoint> &ss, QPolygon &h)
                 d_max = d;
                 i_max = i;
             }
-
         }
     }
 
@@ -198,4 +200,3 @@ void Algorithms::qh_loc (int s, int e, vector<QPoint> &ss, QPolygon &h)
         qh_loc(i_max, e, ss, h);
     }
 }
-
