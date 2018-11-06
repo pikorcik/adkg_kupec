@@ -14,7 +14,7 @@ void Draw::paintEvent(QPaintEvent *e)
    painter.drawPolygon(ch);
 
    //Draw points
-   for(int i = 0; i < points.size(); i++)
+   for(unsigned int i = 0; i < points.size(); i++)
    {
        painter.drawEllipse(points[i].x()-5, points[i].y()-5, 10, 10);
    }

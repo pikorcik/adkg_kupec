@@ -94,7 +94,7 @@ QPolygon Algorithms::CHJarvis (vector<QPoint> &points)
         double fi_max = 0;
 
         //Find pi = arg max angle(pi, pj, pjj)
-        for(int i = 0; i<points.size();i++)
+        for(unsigned int i = 0; i<points.size();i++)
         {
             //Get angle betwwen 2 segments
             double fi = get2LinesAngle(pj, pjj, pj, points[i]);
