@@ -28,6 +28,8 @@ void Widget::on_pushButton_clicked()
         ch = Algorithms::CHJarvis(points);
     else if(ui->comboBox->currentIndex()==1)
         ch = Algorithms::QHull(points);
+    else
+        ch = Algorithms::CHSweepLine(points);
 
     //End time
     clock_t e = std::clock();

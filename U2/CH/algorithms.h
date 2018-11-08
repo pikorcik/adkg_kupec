@@ -19,6 +19,7 @@ public:
     static QPolygon CHJarvis(vector<QPoint> &points);
     static QPolygon QHull(vector<QPoint> &points);
     static void qh_loc(int s, int e, vector<QPoint> &ss, QPolygon &h);
+    static QPolygon CHSweepLine(vector<QPoint> &points);
 };
 
 #endif // ALGORITHMS_H
