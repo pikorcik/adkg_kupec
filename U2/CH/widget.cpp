@@ -8,6 +8,9 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
+    ui->points_spinBox->setRange(1000, 1000000);
+    ui->points_spinBox->setValue(1000);
+    ui->points_spinBox->setSingleStep(1000);
 }
 
 Widget::~Widget()
@@ -18,7 +21,13 @@ Widget::~Widget()
 void Widget::on_ch_button_clicked()
 {
     QPolygon ch;
-    std::vector<QPoint> points = ui->Canvas->getPoints();
+
+    //Get chosen set parameters
+    int shape_index = ui->shape_comboBox->currentIndex();
+    int num_of_points = ui->points_spinBox->value();
+
+    //Generate set of points
+    std::vector<QPoint> points = ui->Canvas->generateSet(shape_index, num_of_points);
 
     //Start time
     clock_t s = std::clock();

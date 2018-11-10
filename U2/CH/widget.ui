@@ -80,13 +80,13 @@
     </property>
    </item>
   </widget>
-  <widget class="QLineEdit" name="points_lineEdit">
+  <widget class="QSpinBox" name="points_spinBox">
    <property name="geometry">
     <rect>
      <x>810</x>
-     <y>130</y>
+     <y>140</y>
      <width>81</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

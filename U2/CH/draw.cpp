@@ -35,6 +35,11 @@ void Draw::mousePressEvent(QMouseEvent *e)
 
 }
 
+std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points)
+{
+    return points;
+}
+
 void Draw::clear()
 {
     points.clear();
