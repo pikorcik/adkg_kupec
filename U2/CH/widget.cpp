@@ -15,7 +15,7 @@ Widget::~Widget()
     delete ui;
 }
 
-void Widget::on_pushButton_clicked()
+void Widget::on_ch_button_clicked()
 {
     QPolygon ch;
     std::vector<QPoint> points = ui->Canvas->getPoints();
@@ -24,9 +24,9 @@ void Widget::on_pushButton_clicked()
     clock_t s = std::clock();
 
     //Construct convex hull
-    if(ui->comboBox->currentIndex()==0)
+    if(ui->method_comboBox->currentIndex()==0)
         ch = Algorithms::CHJarvis(points);
-    else if(ui->comboBox->currentIndex()==1)
+    else if(ui->method_comboBox->currentIndex()==1)
         ch = Algorithms::QHull(points);
     else
         ch = Algorithms::CHSweepLine(points);
