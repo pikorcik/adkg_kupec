@@ -71,6 +71,7 @@ double Algorithms::getPointLineDistance(QPoint &q, QPoint &a, QPoint &b)
 
 QPolygon Algorithms::CHJarvis (vector<QPoint> &points)
 {
+    //Create convex hull using the Jarvis Scan procedure
     QPolygon ch;
 
     //Find pivot q
@@ -166,7 +167,7 @@ QPolygon Algorithms::QHull (vector<QPoint> &points)
 
 void Algorithms::qh_loc(int s, int e, vector<QPoint> &ss, QPolygon &h)
 {
-    //Recursive procedure of QHull
+    //Local recursive procedure of QHull
     int i_max = -1;
     double d_max = 0;
 
@@ -176,9 +177,10 @@ void Algorithms::qh_loc(int s, int e, vector<QPoint> &ss, QPolygon &h)
         //Is the point in the right half-plane?
         if(getPointLinePosition(ss[i], ss[s], ss[e])==RIGHT)
         {
+            //Compute the distance between point and the given segment
             double d = getPointLineDistance(ss[i], ss[s], ss[e]);
 
-            //Remember the farthest point
+            //Remember the furthest point and its index
             if(d>d_max)
             {
                 d_max = d;
@@ -190,13 +192,13 @@ void Algorithms::qh_loc(int s, int e, vector<QPoint> &ss, QPolygon &h)
     //Point in the right half-plane exists
     if(i_max > 1)
     {
-        //Process first interval
+        //Process the first interval
         qh_loc(s, i_max, ss, h);
 
         //Add the point to convex hull
         h.push_back(ss[i_max]);
 
-        //Process second interval
+        //Process the second interval
         qh_loc(i_max, e, ss, h);
     }
 }
@@ -216,12 +218,15 @@ QPolygon Algorithms::CHSweepLine(vector<QPoint> &points)
     std::vector<int> n(points.size());
 
     /*
-    //Create triangle from the first 3 points
+    //Create triangle (0, 1, 2) from the first 3 points
+    //Change i to 3 in the next for loop
     if(getPointLinePosition(points[2], points[0], points[1])==LEFT)
     {
          n[0] = 1; n[1] = 2; n[2] = 0;
          p[0] = 2; p[1] = 0; p[2] = 1;
     }
+
+    //Create triangle (0, 2, 1) from the first 3 points
     else
     {
         n[0] = 2; n[2] = 1; n[1] = 0;
@@ -229,7 +234,8 @@ QPolygon Algorithms::CHSweepLine(vector<QPoint> &points)
     }
     */
 
-    //Create an initial bi
+    //Create an initial biangle (0,1)
+    //Change i to 2 in the next for loop
     n[0] = 1;
     n[1] = 0;
 
@@ -240,9 +246,7 @@ QPolygon Algorithms::CHSweepLine(vector<QPoint> &points)
     {
         //Point in the upper half-plane
         //Link i with predcessor/successor
-
-        if(getPointLinePosition(points[i], points[p[i-1]], points[i-1]) == LEFT)
-        //if(points[i].y() >= points[i-1].y())
+        if(points[i].y() > points[i-1].y())
         {
             p[i] = i-1;
             n[i] = n[i-1];
@@ -251,22 +255,22 @@ QPolygon Algorithms::CHSweepLine(vector<QPoint> &points)
         //Point in the lower half-plane
         else
         {
-            p[i] = p[i-1];
             n[i] = i-1;
+            p[i] = p[i-1];
         }
 
-        //Link predecessor/successor with i
+        //Link predecessor/successor with i-th point
         n[p[i]] = i;
         p[n[i]] = i;
 
-        //Fix upper tangent
+        //Fix the upper tangent
         while(getPointLinePosition(points[n[n[i]]], points[i], points[n[i]]) == RIGHT)
         {
-            n[i] = n[n[i]];
             p[n[n[i]]] = i;
+            n[i] = n[n[i]];
         }
 
-        //Fix lower tangent
+        //Fix the lower tangent
         while(getPointLinePosition(points[p[p[i]]], points[i], points[p[i]]) == LEFT)
         {
             n[p[p[i]]] = i;
@@ -274,7 +278,7 @@ QPolygon Algorithms::CHSweepLine(vector<QPoint> &points)
         }
     }
 
-    //Convert to polygon
+    //Convert to the polygon
     ch.push_back(points[0]);
     int index = n[0];
 
