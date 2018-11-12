@@ -61,7 +61,8 @@ void Widget::on_ch_button_clicked()
 
 void Widget::on_clear_button_clicked()
 {
-    //Clear canvas
+    //Clear canvas and measured time
     ui->Canvas->clearAll();
+    ui->time_label->clear();
     repaint();
 }
