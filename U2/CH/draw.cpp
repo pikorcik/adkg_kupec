@@ -35,12 +35,20 @@ void Draw::mousePressEvent(QMouseEvent *e)
 
 }
 
-std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points)
+std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int canvas_width, int canvas_height)
 {
+    //Generate random set according to size of canvas
+    for (int i = 0; i < num_of_points; i++)
+    {
+        int x =  std::rand() % canvas_width + 5;
+        int y =  std::rand() % canvas_height + 5;
+        points.push_back(QPoint(x,	y));
+    }
+
     return points;
 }
 
-void Draw::clear()
+void Draw::clearAll()
 {
     points.clear();
     ch.clear();

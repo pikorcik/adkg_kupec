@@ -20,14 +20,21 @@ Widget::~Widget()
 
 void Widget::on_ch_button_clicked()
 {
+    //Clear canvas
+    ui->Canvas->clearAll();
+
     QPolygon ch;
 
     //Get chosen set parameters
     int shape_index = ui->shape_comboBox->currentIndex();
     int num_of_points = ui->points_spinBox->value();
 
+    //Get size of canvas
+    int canvas_width = ui->Canvas->width()-5;
+    int canvas_height = ui->Canvas->height()-5;
+
     //Generate set of points
-    std::vector<QPoint> points = ui->Canvas->generateSet(shape_index, num_of_points);
+    std::vector<QPoint> points = ui->Canvas->generateSet(shape_index, num_of_points, canvas_width, canvas_height);
 
     //Start time
     clock_t s = std::clock();
@@ -55,6 +62,6 @@ void Widget::on_ch_button_clicked()
 void Widget::on_clear_button_clicked()
 {
     //Clear canvas
-    ui->Canvas->clear();
+    ui->Canvas->clearAll();
     repaint();
 }

@@ -16,8 +16,8 @@ public:
     void paintEvent(QPaintEvent *e);
     void mousePressEvent(QMouseEvent *e);
     void setCH( QPolygon ch_) {ch = ch_;}
-    std::vector<QPoint> generateSet(int shape_index, int num_of_points);
-    void clear();
+    std::vector<QPoint> generateSet(int shape_index, int num_of_points, int canvas_width, int canvas_height);
+    void clearAll();
 
 signals:
 
