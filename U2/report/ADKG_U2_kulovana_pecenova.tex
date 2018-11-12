@@ -95,7 +95,7 @@ Své využití konvexní obálky nalézají v mnoha oborech. V kartografii se ho
 	\caption{Ukázka konvexní obálky (\href{http://mind.cs.byu.edu/courses/312/projects/project2_files/ConvexHull_python.php}{\textsl{zdroj}})}
 \end{figure}
 
-Vzniklá aplikace k tvorbě konvexní obálek využívá čtyř výpočetních algoritmů: \textit{Jarvis Scan}, \textit{Quick Hull}, \textit{Sweep line} a \textit{Graham Scan}. Čtvrtý z uvedených algoritmů patří mezi bonusové úlohy, které bylo možno implementovat.
+Vzniklá aplikace k tvorbě konvexní obálek využívá čtyř výpočetních algoritmů: \textit{Jarvis Scan}, \textit{Quick Hull}, \textit{Sweep Line} a \textit{Graham Scan}. Čtvrtý z uvedených algoritmů patří mezi bonusové úlohy, které bylo možno implementovat.
 
 \section{Algoritmy}
 Tato kapitola se zabývá popisem algoritmů, které byly v aplikaci implementovány. 
@@ -186,7 +186,7 @@ Singularity
 \subsection{!Graham Scan}
 
 \section{!Problematické situace}
-V úloze bylo nutné ošetřit sigularity, zda bod $q$ neleží v hraně některého z polygonů či v jejich vrcholech. Pro vyřešení tohoto problému byla použita metoda \textsl{getDistanceEdgeQ} třídy \textbf{Algorithms}, která porovnává vzdálenost dvou bodů $p_1$ a $p_2$ na přímce $p$ se sumou vzdáleností těchto bodů k danému bod $q$. Je-li rozdíl vzdáleností menší než mezní hodnota $\epsilon$, je bod $q$ vyhodnocen, že leží na přímce.\\
+V úloze bylo nutné ošetřit sigularity, zda bod $q$ neleží v hraně některého z polygonů či v jejich vrcholech. Pro vyřešení tohoto problému byla použita metoda \textit{getDistanceEdgeQ} třídy \textbf{Algorithms}, která porovnává vzdálenost dvou bodů $p_1$ a $p_2$ na přímce $p$ se sumou vzdáleností těchto bodů k danému bod $q$. Je-li rozdíl vzdáleností menší než mezní hodnota $\epsilon$, je bod $q$ vyhodnocen, že leží na přímce.\\
 
 $\mid d_{p_1,p_2} - \sum(d_{p_1,q} + d_{q,p_2}) \mid  < \epsilon \rightarrow q$ náleží přímce $p$.
 
@@ -198,7 +198,7 @@ Aplikace požaduje dva druhy vstupních dat:
 \item daný bod $q$
 \end{enumerate}
 
-Seznam bodů jednotlivých polygonů je uložen v textovém souboru polygon.txt. Pro vykreslení jednotlivých polygonů v aplikaci je nutno tento soubor do aplikace nahrát pomocí tlačítka \textsl{Load}. K vygenerování souřadnic bodů byla použita online aplikace ze stránek mobilefish.com. Struktura souboru s polygony je následující:\\
+Seznam bodů jednotlivých polygonů je uložen v textovém souboru polygon.txt. Pro vykreslení jednotlivých polygonů v aplikaci je nutno tento soubor do aplikace nahrát pomocí tlačítka \textit{Load}. K vygenerování souřadnic bodů byla použita online aplikace ze stránek mobilefish.com. Struktura souboru s polygony je následující:\\
 
 \noindent
 \textsl{První řádek}: počet polygonů v souboru\\
@@ -229,8 +229,58 @@ V následují kapitole je představen vizuální vzhled vytvořené aplikace tak
 \section{!Dokumentace}
 Tato kapitola obsahuje dokumentaci k jednotlivým třídám.
 
-\subsection{!Algorithms}
-Třída \textsl{Algorithms} obsahuje metody, které určují polohu zvoleného bodu $q$ vzhledem k polygonu. Dále obsahuje pomocné metody pro výpočet úhlu mezi třemi body a na zjištění polohy bodu vzhledem k přímce. 
+\subsection{Algorithms}
+Třída \textit{Algorithms} obsahuje tři základní metody, které nad vstupní množinou bodů vytváří konvexní obálky. Dále obsahuje pomocné metody k výpočtu úhlu mezi dvěma přímkami a metody k určování vztahu bodu a přímky.
+
+\subsubsection{CHJarvis}
+Metoda \textbf{CHJarvis} vytváří konvexní obálku obálku nad vstupní množinou bodů za použití algoritmu \textit{Jarvis Scan}. Na vstupu je vektor bodů třídy \texttt{QPoint}. Návratová hodnota je polygon třídy \texttt{QPolygon}, který obsahuje uspořádané body tvořící konvexní obálku.\\
+
+\textbf{Input}:
+\begin{itemize}
+\item \textsl{vector} $\textless$\texttt{QPoint}$\textgreater$ $points$
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item \texttt{QPolygon}
+\end{itemize}
+
+\subsubsection{QHull}
+Metoda \textbf{QHull} vytváří konvexní obálku obálku nad vstupní množinou bodů za použití algoritmu \textit{Quick Hull}. Na vstupu je vektor bodů třídy \texttt{QPoint}. Návratová hodnota je polygon třídy \texttt{QPolygon}, který obsahuje uspořádané body tvořící konvexní obálku.\\
+
+\textbf{Input}:
+\begin{itemize}
+\item \textsl{vector} $\textless$\texttt{QPoint}$\textgreater$ $points$
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item \texttt{QPolygon}
+\end{itemize}
+
+\subsubsection{qh\_loc}
+Metoda \textbf{qh\_loc} je lokální procedura algoritmu \textbf{QHull}, která se volá rekurzivně a hledá nejvzdálenější bod od přímky v dané polorovině a přidává jej do konvexní obálky poloroviny $H_i$. Na vstupu jsou dvě proměnné typu \texttt{int}, které obsahují index počátečního ($s$) a koncového bodu ($e$) dané přímky, vektor bodů vstupní poloroviny třídy \texttt{QPoint} a polygon třídy \texttt{QPolygon}, ve kterém jsou uloženy body konvexní obálky. Návratová hodnota je typu \texttt{void}.\\
+
+\textbf{Input}:
+\begin{itemize}
+\item \texttt{int} $s$
+\item \texttt{int} $e$
+\item \textsl{vector} $\textless$\texttt{QPoint}$\textgreater$ $ss$
+\item \texttt{QPolygon} $h$
+\end{itemize}
+
+\subsubsection{CHSweepLine}
+Metoda \textbf{CHSweepLine} vytváří konvexní obálku obálku nad vstupní množinou bodů za použití algoritmu \textit{Sweep Line}. Na vstupu je vektor bodů třídy \texttt{QPoint}. Návratová hodnota je polygon třídy \texttt{QPolygon}, který obsahuje uspořádané body tvořící konvexní obálku.\\
+
+\textbf{Input}:
+\begin{itemize}
+\item \textit{vector}<\texttt{QPoint}> $points$
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item \texttt{QPolygon}
+\end{itemize}
 
 \subsubsection{get2LinesAngle}
 Metoda \textbf{get2LinesAngle} počítá úhel mezi dvěma přímkami. Na vstupu jsou 4 body typu \texttt{QPoint}, návratová hodnota typu \texttt{double} vrací velikost úhlu v radiánech. Body $p_1$ a $p_2$ definují první přímku, zbylé dva body druhou přímku.\\
@@ -249,9 +299,19 @@ Metoda \textbf{get2LinesAngle} počítá úhel mezi dvěma přímkami. Na vstupu
 \end{itemize}
 
 \subsubsection{getPointLineDistance}
+Metoda \textbf{getPointLineDistance} počítá nejkratší (kolmou) vzdálenost bodu $q$ od přímky tvořené dvěma body. Na vstupu jsou 3 body typu \texttt{QPoint}, návratová hodnota typu \texttt{double} vrací vzdálenost bodu $q$ od přímky.\\ 
 
+\textbf{Input}:
+\begin{itemize}
+\item \texttt{QPoint} $q$ 
+\item \texttt{QPoint} $a$ 
+\item \texttt{QPoint} $b$
+\end{itemize}
 
-
+\textbf{Output}:
+\begin{itemize}
+\item \texttt{double} 
+\end{itemize}
 
 \subsubsection{getPointLinePosition}
 Metoda \textbf{getPointLinePosition} určuje polohu bodu $q$ vzhledem k přímce tvořené dvěma body. Na vstupu jsou 3 body typu \texttt{QPoint}, návratová hodnota je nově definovaný typ \texttt{TPosition}.\\
@@ -270,28 +330,11 @@ Metoda \textbf{getPointLinePosition} určuje polohu bodu $q$ vzhledem k přímce
 \item \texttt{ON} $\rightarrow$ bod se nachází na přímce
 \end{itemize}
 
-
-\subsubsection{CHJarvis}
-
-
-
-\subsubsection{QHull}
-
-
-
-
-\subsubsection{q\_hloc}
-
-
-
-\subsubsection{CHSweepLine}
-
-
-\subsection{!Draw}
-Třída \textsl{Draw} obsahuje metody, které slouží k vykreslení polygonů, analyzovaného bodu $q$ a výstupních dat.
+\subsection{Draw}
+Třída \textit{Draw} obsahuje metody, které slouží ke generaci vstupní množiny bodů a k jejímu vykreslení. Dále vykresluje konvexní obálku dané množiny. 
 
 \subsubsection{!paintEvent}
-Metoda \textbf{paintEvent} vykresluje polygony a analyzovaný bod $q$. Návratová hodnota je typu \textsl{void}.
+Metoda \textbf{paintEvent} vykresluje polygony a analyzovaný bod $q$. Návratová hodnota je typu \textit{void}.
 
 \textbf{Input}:
 \begin{itemize}
@@ -299,18 +342,18 @@ Metoda \textbf{paintEvent} vykresluje polygony a analyzovaný bod $q$. Návratov
 \end{itemize}
 
 \subsubsection{!mousePressEvent}
-Metoda \textbf{mousePressEvent} slouží k načtení souřadnic bodu $q$. Návratová hodnota je typu \textsl{void}.
+Metoda \textbf{mousePressEvent} slouží k načtení souřadnic bodu $q$. Návratová hodnota je typu \textit{void}.
 
 \textbf{Input}:
 \begin{itemize}
 \item QMouseEvent *e
 \end{itemize}
 
-\subsubsection{!clearCanvas}
-Metoda \textbf{clearCanvas} slouží k vymazání všech vykreslených dat. Metoda neobsahuje žádné proměnné na vstupu a návratová hodnota je typu \textsl{void}.
+\subsubsection{!clearAll}
+Metoda \textbf{clearCanvas} slouží k vymazání všech vykreslených dat. Metoda neobsahuje žádné proměnné na vstupu a návratová hodnota je typu \textit{void}.
 
 \subsubsection{!fillPolygon}
-Metoda \textbf{fillPolygon} barevně vyšrafuje polygon, ve kterém se nachází analyzovaný bod $q$. Návratová hodnota je typu \textsl{void}.
+Metoda \textbf{fillPolygon} barevně vyšrafuje polygon, ve kterém se nachází analyzovaný bod $q$. Návratová hodnota je typu \textit{void}.
 
 \textbf{Input}:
 \begin{itemize}
@@ -318,7 +361,7 @@ Metoda \textbf{fillPolygon} barevně vyšrafuje polygon, ve kterém se nachází
 \end{itemize}
 
 \subsubsection{!loadPolygon}
-Metoda \textbf{loadPolygon} slouží k nahrání bodů jednotlivých polygonů do aplikace.  Součástí metody je i kontrola, zda se soubor úspěšně nahrál, zda vůbec obsahuje nějaké polygony a zda jsou polygony tvořeny aspoň 3 body. Návratová hodnota je typu \textsl{QString} vrací hlášku, zda byly polygony úspěšně nahrány.
+Metoda \textbf{loadPolygon} slouží k nahrání bodů jednotlivých polygonů do aplikace. Součástí metody je i kontrola, zda se soubor úspěšně nahrál, zda vůbec obsahuje nějaké polygony a zda jsou polygony tvořeny aspoň 3 body. Návratová hodnota je typu \textit{QString} vrací hlášku, zda byly polygony úspěšně nahrány.
 
 \textbf{Input}:
 \begin{itemize}
@@ -361,7 +404,7 @@ Třída obsahuje jedinou metodu(??konstruktor) \textbf{SortByYAsc}, která má n
 \end{itemize}
 
 \subsection{!Widget}
-Metody třídy \textbf{Widget} slouží pro práci uživatele s aplikací. Až na jednu výjimku nemají metody na vstupu nic, návratové hodnoty všech metod jsou typu \textsl{void}.
+Metody třídy \textbf{Widget} slouží pro práci uživatele s aplikací. Až na jednu výjimku nemají metody na vstupu nic, návratové hodnoty všech metod jsou typu \textit{void}.
 
 \subsubsection{!writeResult}
 Metoda \textbf{writeResult} vrací polohu bodu $q$ vzhledem k polygonu na základě vstupní hodnoty typu \textit{int}.\\
