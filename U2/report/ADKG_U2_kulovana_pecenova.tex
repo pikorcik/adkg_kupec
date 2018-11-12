@@ -85,7 +85,7 @@ V rámci této úlohy byly implementovány bonusové úlohy č. xx.
 \clearpage
 
 \section{Popis a rozbor problému}
-Úloha \textbf{Konvexní obálky} se zabývá vytvořením aplikace, která nad vybranou vstupní množinou $S$ vytvoří tzv. konvexní obálku. Konvexní obálka je nejmenší konvexní mnohoúhelník $C$ obsahující všechny body z množiny $S$. V rámci úlohy se testuje výpočetní rychlost použitých algoritmů při konstrukci obálek nad danými vstupními množinami bodů. 
+Úloha \textbf{Konvexní obálky} se zabývá vytvořením aplikace, která nad vybranou vstupní množinou $S$ vytvoří tzv. konvexní obálku. Konvexní obálka je nejmenší konvexní mnoho\-úhelník $C$ obsahující všechny body z množiny $S$. V rámci úlohy se testuje výpočetní rychlost použitých algoritmů při konstrukci obálek nad danými vstupními množinami bodů. 
 
 Své využití konvexní obálky nalézají v mnoha oborech. V kartografii se hojně využívají při detekci tvarů a natočení budov pro tvorbu minimálních ohraničujících obdélníků (???). Dále jsou vhodné pro analýzu tvarů či shluků. Konvexní obálky lze sestrojit v libovolném $\mathbb{R}^n$ prostoru, avšak pro účely této úlohy byl uvažován pouze prostor $\mathbb{R}^2$.
 
@@ -128,7 +128,7 @@ Druhý algoritmus použitý v aplikaci je \textit{Quick Hull}, který k výpočt
 
 Mějme body $q_1$, resp. $q_3$, jejichž souřadnice X je minimální, resp. maximální ze všech bodů z množiny $S$. Veďme těmito body pomyslnou přímku, která prostor rozdělí na horní ($S_U$) a dolní ($S_L$) polorovinu. Zbylé body množiny $S$ roztřídíme do daných polorovin podle jejich pozice od přímky. V polorovině následně hledáme bod, který je od dané přímky nejvzdálenější, přidáme ho do konvexní obálky dané poloroviny a přímkami spojíme bod s krajními body přímky předchozí. Proces opakujeme, dokud od nově vzniklých přímek již neexistují vhodné body. Na závěr do konvexní obálky $H$ přidáme bod $q_3$, body konvexní obálky $H_U$ z poloroviny $S_U$, bod $q_1$ a nakonec body konvexní obálky $H_L$ poloroviny $S_L$. Do konvexní obálky $H$ je důležité přidávat body v tomto pořadí, jinak by došlo k nesprávnému vykreslení konvexní obálky $H$. \\
 
-Algoritmus \textit{Quick Hull} se skládá z globální a lokální procedury. Globální část zahrnuje rozdělení množiny na dvě poloroviny a spojení již nalezených bodů konvexních obálek polorovin do jediné $H$. V lokální části se rekurzivně volá metoda, která hledá nejvzdálenější body od přímky v dané polorovině.\\
+Algoritmus \textit{Quick Hull} se skládá z globální a lokální procedury. Globální část zahrnuje rozdělení množiny na dvě poloroviny a spojení již nalezených bodů konvexních obálek polorovin do jediné $H$. V lokální části se rekurzivně volá metoda, která hledá nejvzdálenější body od přímky v dané polorovině a přidává je do konvexní obálky dané poloroviny $H_i$.\\
 
 Mezi singularity!!!\\
 
@@ -157,8 +157,31 @@ Mezi singularity!!!\\
 \subitem opakuj krok I. nad druhou nově vzniklou přímku
 \end{enumerate}
 
-\subsection{!Sweep Line}
+\subsection{Sweep Line}
+Algoritmus \textit{Sweep Line} neboli \textit{Metoda zametací přímky} je dalším z algoritmů, které byly pro vytváření konvexních obálek implementovány. Jeho princip je založen na imaginární přímce, která se postupně přesouvá zleva doprava nad všem body množiny $S$. Body, které \uv{přejede}, přidá do dočasné konvexní obálky \={H}, která je následně upravena, aby byla konvexní. Pro tento algoritmus je opět nutné předzpracování vstupních dat (seřadit body $\in S$ podle souřadnice X) s náročností $O(n.$log$(n))$. Další nevýhodou je citlivost algoritmu na singularity, konkrétně na duplicitní body. Ty je vhodné během předzpracování odstranit.\\ 
 
+Algoritmus je postaven na znalosti pozice již vyhodnocených bodů vůči nově přidá\-vanému bodu ukládáním jejich indexů do proměnných $p$ (předchůdce) a $n$ (následník). Zároveň je pro správné fungování algoritmu nutné dodržovat CCW orientaci (proti směru hodinových ručiček). Algoritmus má celkem tři fáze: iniciální a dvě iterativní.\\
+
+V první fázi seřadíme body $p_i$ z množiny $S$ vzestupně podle souřadnice X. Následně z prvních dvou bodů vytvoříme přímku, jejíž koncové body umístíme do konvexní obálky $H$ a indexy bodů umístíme do $n$ a $p$. V první iterativní fázi vyhodnotíme, zda další přidávaný bod leží v horní či dolní polorovině v závislosti na jeho souřadnici Y vzhledem k předchozímu bodu, a opět obousměrně vyhodnotíme indexy $n$ a $p$. Ve druhé iterativní fázi opravujeme dočasnou konvexní obálku \={H} na konvexní $H$ vložením horních a dolních tečen a vynecháním nekonvexních vrcholů.\\
+
+Zjednodušený zápis algoritmu: 
+\begin{enumerate}
+\item Seřazení $p_i$ podle souřadnice X
+\item Pro body $p_0$, $p_1$ proveď:
+\subitem $n$[0] = 1, $n$[1] = 0
+\subitem $p$[0] = 1, $p$[1] = 0
+\item Pro všechna $p_i \in S$, $i > 1$ proveď:
+\subitem Podmínka ($y_i > y_{i-1}$) $\rightarrow$ $S_U$: $p$[i] = i-1, $n$[i] = $n$[i-1]
+\subitem Jinak $\rightarrow$ $S_L$: $n$[i] = i-1 $p$[i] = $p$[i-1]
+\subitem Oprava indexů: $n$[$p$[i]] = i, $p$[$n$[i]] = i
+\subitem Dokud $n$[$n$[i]] je vpravo od i, $n$[i]:
+\subsubitem $p$[$n$[$n$[i]]] = i, $n$[i] = $n$[$n$[i]]
+\subitem Dokud $p$[$p$[i]] je vlevo od i, $p$[i]:
+\subsubitem $n$[$p$[$p$[i]]] = i, $p$[i] = $p$[$p$[i]]
+\end{enumerate}
+%%vypsání polygonu z nasledníku??
+
+Singularity
 
 \subsection{!Graham Scan}
 
@@ -210,7 +233,7 @@ Tato kapitola obsahuje dokumentaci k jednotlivým třídám.
 Třída \textsl{Algorithms} obsahuje metody, které určují polohu zvoleného bodu $q$ vzhledem k polygonu. Dále obsahuje pomocné metody pro výpočet úhlu mezi třemi body a na zjištění polohy bodu vzhledem k přímce. 
 
 \subsubsection{get2LinesAngle}
-Metoda \textbf{get2LinesAngle} počítá úhel mezi dvěma přímkami. Na vstupu jsou 4 body typu \texttt{QPoint}, návratová hodnota typu \texttt{double} vrací velikost úhlu v radiánech. Body $p_1$ a $p_2$ definují první přímku, zbylé dva body druhou přímku. 
+Metoda \textbf{get2LinesAngle} počítá úhel mezi dvěma přímkami. Na vstupu jsou 4 body typu \texttt{QPoint}, návratová hodnota typu \texttt{double} vrací velikost úhlu v radiánech. Body $p_1$ a $p_2$ definují první přímku, zbylé dva body druhou přímku.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -231,7 +254,7 @@ Metoda \textbf{get2LinesAngle} počítá úhel mezi dvěma přímkami. Na vstupu
 
 
 \subsubsection{getPointLinePosition}
-Metoda \textbf{getPointLinePosition} určuje polohu bodu $q$ vzhledem k přímce tvořené dvěma body. Na vstupu jsou 3 body typu \texttt{QPoint}, návratová hodnota je nově definovaný typ \texttt{TPosition}.
+Metoda \textbf{getPointLinePosition} určuje polohu bodu $q$ vzhledem k přímce tvořené dvěma body. Na vstupu jsou 3 body typu \texttt{QPoint}, návratová hodnota je nově definovaný typ \texttt{TPosition}.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -257,7 +280,11 @@ Metoda \textbf{getPointLinePosition} určuje polohu bodu $q$ vzhledem k přímce
 
 
 
-\subsubsection{qhloc!!!!!podrtzitko}
+\subsubsection{q\_hloc}
+
+
+
+\subsubsection{CHSweepLine}
 
 
 \subsection{!Draw}
@@ -304,7 +331,7 @@ Metoda \textbf{loadPolygon} slouží k nahrání bodů jednotlivých polygonů d
 \end{itemize}
 
 \subsection{SortByXAsc}
-Třída obsahuje jedinou metodu(??konstruktor) \textbf{SortByXAsc}, která má na vstupu dva body typu \texttt{QPoint}, návratová hodnota je typu \texttt{bool}. Metoda vrací bod s nižší  souřadnicí X. Mají-li oba body shodnou souřadnici X, vrací bod s nižší souřadnicí Y.
+Třída obsahuje jedinou metodu(??konstruktor) \textbf{SortByXAsc}, která má na vstupu dva body typu \texttt{QPoint}, návratová hodnota je typu \texttt{bool}. Metoda vrací bod s nižší  souřadnicí X. Mají-li oba body shodnou souřadnici X, vrací bod s nižší souřadnicí Y.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -319,7 +346,7 @@ Třída obsahuje jedinou metodu(??konstruktor) \textbf{SortByXAsc}, která má n
 \end{itemize}
 
 \subsection{SortByYAsc}
-Třída obsahuje jedinou metodu(??konstruktor) \textbf{SortByYAsc}, která má na vstupu dva body typu \texttt{QPoint}, návratová hodnota je typu \texttt{bool}. Metoda vrací bod s nižší  souřadnicí Y. Mají-li oba body shodnou souřadnici Y, vrací bod s nižší souřadnicí X.
+Třída obsahuje jedinou metodu(??konstruktor) \textbf{SortByYAsc}, která má na vstupu dva body typu \texttt{QPoint}, návratová hodnota je typu \texttt{bool}. Metoda vrací bod s nižší  souřadnicí Y. Mají-li oba body shodnou souřadnici Y, vrací bod s nižší souřadnicí X.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -337,20 +364,17 @@ Třída obsahuje jedinou metodu(??konstruktor) \textbf{SortByYAsc}, která má n
 Metody třídy \textbf{Widget} slouží pro práci uživatele s aplikací. Až na jednu výjimku nemají metody na vstupu nic, návratové hodnoty všech metod jsou typu \textsl{void}.
 
 \subsubsection{!writeResult}
-Metoda \textbf{writeResult} vrací polohu bodu $q$ vzhledem k polygonu na základě vstupní hodnoty typu \textit{int}.
+Metoda \textbf{writeResult} vrací polohu bodu $q$ vzhledem k polygonu na základě vstupní hodnoty typu \textit{int}.\\
 
 \textbf{Input}:
 \begin{itemize}
 \item int
 \end{itemize}
 
-\subsubsection{!on\_load\_button\_clicked}
-Metoda \textbf{on\_load\_button\_clicked} načítá data z textového formátu. Uživatel sám vyhledává cestu k požadovanému souboru.
+\subsubsection{on\_ch\_button\_clicked}
+Metoda \textbf{on\_ch\_button\_clicked} načítá data z textového formátu. Uživatel sám vyhledává cestu k požadovanému souboru.
 
-\subsubsection{!on\_analyze\_button\_clicked}
-Metoda \textbf{on\_analyze\_button\_clicked} vypisuje na obrazovku polohu bodu $q$ vzhledem k polygonům po zvolení požadovaného algoritmu a kliknutí na tlačítko \textsl{Analyze}.
-
-\subsubsection{!on\_clear\_button\_clicked}
+\subsubsection{on\_clear\_button\_clicked}
 Metoda \textbf{on\_clear\_button\_clicked} vrací aplikaci do výchozí polohy smazáním všeho, co bylo vykresleno. 
 
 \clearpage
@@ -367,11 +391,15 @@ Dále mohlo být implementováno více kontrolních podmínek pro načítání b
 
 \section{Zdroje}
 \begin{enumerate}
-\item  \textsl{BAYER, Tomáš. Geometrické vyhledávání bodů} [online][cit. 24. 10. 2018]. \\
+\item  \textsl{BAYER, Tomáš. Geometrické vyhledávání bodů} [online][cit. 24. 10. 2018].\\
 Dostupné z: \href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk4.pdf}{https://web.natur.cuni.cz}
 
-\item  \textsl{CS 312 - Convex Hull Project} [online][cit. 10. 11. 2018]. \\
+\item  \textsl{CS 312 - Convex Hull Project} [online][cit. 10. 11. 2018].\\
 Dostupné z: \href{http://mind.cs.byu.edu/courses/312/projects/project2_files/ConvexHull_python.php}{http://mind.cs.byu.edu}
+
+\item  \textsl{SOPUCH, Pavel. LaTeX v kostce} [online][cit. 12. 11. 2018].\\
+Dostupné z: \href{http://www.it.cas.cz/manual/latex/}{http://www.it.cas.cz}
+
 
 \end{enumerate}
 \end{document}
