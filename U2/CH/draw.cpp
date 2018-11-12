@@ -37,12 +37,61 @@ void Draw::mousePressEvent(QMouseEvent *e)
 
 std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int canvas_width, int canvas_height)
 {
-    //Generate random set according to size of canvas
-    for (int i = 0; i < num_of_points; i++)
+    //Generate set of chosen shape
+    //Proporsions of set according to the size of canvas
+
+    //Generate random set
+    if(shape_index == 0)
     {
-        int x =  std::rand() % canvas_width + 5;
-        int y =  std::rand() % canvas_height + 5;
-        points.push_back(QPoint(x,	y));
+        for (int i = 0; i < num_of_points; i++)
+        {
+            int x =  std::rand() % canvas_width + 5;
+            int y =  std::rand() % canvas_height + 5;
+            points.push_back(QPoint(x, y));
+        }
+    }
+
+    //Generate raster set
+    else if(shape_index == 1)
+    {
+        //Number of points on one raster edge
+        double edge = sqrt(num_of_points);
+
+        //Step between point coordinates
+        double x_size = canvas_width/edge;
+        double y_size = canvas_height/edge;
+
+        //Coordinate variables
+        int x;
+        int y;
+
+        //Number of points to be added to raster
+        int num = num_of_points;
+
+        //Raster rows
+        for(int i = 0; i < edge; i++)
+        {
+            y = i*y_size;
+
+            //Raster columns
+            for(int j = 0; j < edge; j++)
+            {
+                x = j*x_size;
+
+                //Add point until value num_of_points
+                if(num != 0)
+                {
+                    points.push_back(QPoint(x, y));
+                    num--;
+                }
+            }
+        }
+    }
+
+    //Generate points in circle
+    else
+    {
+
     }
 
     return points;
