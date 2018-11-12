@@ -38,7 +38,7 @@ void Draw::mousePressEvent(QMouseEvent *e)
 std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int canvas_width, int canvas_height)
 {
     //Generate set of chosen shape
-    //Proporsions of set according to the size of canvas
+    //Proportions of set according to the size of canvas
 
     //Generate random set
     if(shape_index == 0)
@@ -55,7 +55,7 @@ std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int ca
     else if(shape_index == 1)
     {
         //Number of points on one raster edge
-        double edge = sqrt(num_of_points);
+        double edge = ceil(sqrt(num_of_points));
 
         //Step between point coordinates
         double x_size = canvas_width/edge;
@@ -78,12 +78,7 @@ std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int ca
             {
                 x = j*x_size;
 
-                //Add point until value num_of_points
-                if(num != 0)
-                {
-                    points.push_back(QPoint(x, y));
-                    num--;
-                }
+                points.push_back(QPoint(x, y));
             }
         }
     }
