@@ -20,8 +20,11 @@ private slots:
 
     void on_clear_button_clicked();
 
+    void on_set_button_clicked();
+
 private:
     Ui::Widget *ui;
+    std::vector<QPoint> points;
 };
 
 #endif // WIDGET_H
