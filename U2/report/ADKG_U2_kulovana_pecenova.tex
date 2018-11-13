@@ -81,7 +81,7 @@ Zadání úlohy bylo staženo ze stránek předmětu \href{https://web.natur.cun
 	\includegraphics[clip, trim=0cm 10cm 0cm 3cm, width=1.0\textwidth]{./pictures/zadani02.pdf}
 \end{figure}
 
-V rámci této úlohy byly implementovány bonusové úlohy č. xx.
+V rámci této úlohy byly implementovány bonusové úlohy č. 1-3. Bonusová úloha č. 5 byla částečně implementována v rámci základního zadání.
 \clearpage
 
 \section{Popis a rozbor problému}
@@ -183,34 +183,36 @@ Zjednodušený zápis algoritmu:
 
 Singularity
 
-\subsection{!Graham Scan}
-
 \section{!Problematické situace}
+V algoritmu \textit{Sweep Line} bylo nutné ošetřit singularitu, která způsobovala generování nekonvexní obálky. Konkrétně bylo nutné odstranit duplicitní body.\\
+
+Podmínka ($p_i == p_j$) $\rightarrow$ bod $p_j$ odstraněn
+
+\begin{figure} [h!]
+    \centering
+      \includegraphics[width=7.5cm]{./pictures/app_sweep_wrong.png}
+      \includegraphics[width=7.5cm]{./pictures/app_sweep_right.png}
+      \caption{Neopravený (vlevo) vs. opravený (vpravo) Sweep Line algoritmus}
+\end{figure}
+
 V úloze bylo nutné ošetřit sigularity, zda bod $q$ neleží v hraně některého z polygonů či v jejich vrcholech. Pro vyřešení tohoto problému byla použita metoda \textit{getDistanceEdgeQ} třídy \textbf{Algorithms}, která porovnává vzdálenost dvou bodů $p_1$ a $p_2$ na přímce $p$ se sumou vzdáleností těchto bodů k danému bod $q$. Je-li rozdíl vzdáleností menší než mezní hodnota $\epsilon$, je bod $q$ vyhodnocen, že leží na přímce.\\
 
-$\mid d_{p_1,p_2} - \sum(d_{p_1,q} + d_{q,p_2}) \mid  < \epsilon \rightarrow q$ náleží přímce $p$.
+$\mid d_{p_1,p_2} - \sum(d_{p_1,q} + d_{q,p_2}) \mid  < \epsilon \rightarrow q$ náleží přímce $p$.\\
 
-\section{!Vstupní data}
-Aplikace požaduje dva druhy vstupních dat:
+Dalším problémem bylo, jak zajistit, aby byl generovaný rastr bodů pravidelný. To bylo ošetřeno zaokrouhlením počtu vstupních bodů směrem nahoru tak, aby po odmocnění vznikl pravidelný rastr.\\
 
-\begin{enumerate}
-\item soubor daných polygonů
-\item daný bod $q$
-\end{enumerate}
+počet bodů v řádce/sloupci = $roundUp(\sqrt{num\_of\_points})$
 
-Seznam bodů jednotlivých polygonů je uložen v textovém souboru polygon.txt. Pro vykreslení jednotlivých polygonů v aplikaci je nutno tento soubor do aplikace nahrát pomocí tlačítka \textit{Load}. K vygenerování souřadnic bodů byla použita online aplikace ze stránek mobilefish.com. Struktura souboru s polygony je následující:\\
 
-\noindent
-\textsl{První řádek}: počet polygonů v souboru\\
-\textsl{Sloupec 1}: číslo polygonu, jehož součástí daný bod je\\
-\textsl{Sloupec 2}: souřadnice X daného bodu polygonu\\
-\textsl{Sloupec 3}: souřadnice Y daného bodu polygonu\\
+\section{Vstupní data}
+Aplikace si na základě ručního zadání vstupních parametrů uživatelem sama vygeneruje potřebná vstupní data. \\
 
-Bod $q$ není součástí textového souboru, do aplikace vstupuje na základě ručního zadání uživatelem. Pro zadání bodu je nutné v aplikaci kliknout levým tlačítkem myši do okna s polygony.
+Z rozbalovací nabídky \textbf{Shape of set} uživatel volí prostorové uspořádání generované množiny bodů. Na výběr jsou možnosti \textit{Random set}, \textit{Raster} a \textit{Circle}. V kolonce \textbf{Number of points} uživatel volí, kolik bodů bude generováno. Lze tak učinit buď přímým zadáním počtu bodů, nebo zvýšením/snížením počtu bodů o 1000 bodů šipkami na boku. Aplikace omezuje maximální a minimální počet generovaných bodů na interval $\textless$1,1000000$\textgreater$. Množina bodů se vygeneruje stisknutím tlačítka \textsl{Generate set}.\\
 
-\section{!Výstupní data}
-Vytvořená aplikace dále vypisuje dobu, po kterou  výpočet probíhal v závislosti na zvoleném výpočetním algoritmu, počtu vstupním bodů a na jejich prostorovém uspořádání.
-Výstupem úlohy je vypsání v grafickém okně aplikace, v jaké poloze se analyzovaný bod vůči polygonům nachází. Polygony, kterým bod náleží, jsou barevně zvýrazněny.
+Uživatel má dále možnost volit, jaký výpočetní algoritmus bude použit pro tvorbu konvexní obálky. Rozbalovací nabídka \textbf{Method} nabízí celkem tři výpočetní algoritmy: \textit{Jarvis Scan}, \textit{Quick Hull} a \textit{Sweep Line}. Konvexní obálka je generována stisknutím tlačítka \textbf{Create CH}. Pokud před spuštěním procesu nebyla vygenerována žádná vstupní množina bodů, uživatel je upozorněn chybovou hláškou. 
+
+\section{Výstupní data}
+Vygenerovaná množina bodů a její konvexní obálka je vykreslena v grafickém okně aplikace. Aplikace dále vypisuje časy [ms], jak dlouho trvalo generování množiny a jak dlouho nad danou množinou běžel výpočetní algoritmus.
 
 \subsection{Grafy a tabulky}
 
@@ -218,15 +220,34 @@ Výstupem úlohy je vypsání v grafickém okně aplikace, v jaké poloze se ana
 \section{!Aplikace}
 V následují kapitole je představen vizuální vzhled vytvořené aplikace tak, jak ji vidí prostý uživatel.
 
-%\begin{figure}[h!]
-	%\centering
-	%\includegraphics[width=13cm]{./pictures/gui_winding.png}
-	%\caption{Výstup při použití \textit{Winding Number Algorithm} pro $q$ ležící ve více vrcholech polygonů}
-%\end{figure}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=11.5cm]{./pictures/app_default.png}
+	\caption{Výchozí vzhled aplikace po spuštění}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=11.5cm]{./pictures/app_random_jarvis.png}
+	\caption{Výstup při použití algoritmu \textit{Jarvis Scan} nad množinou \textit{Random} o 1000 bodech}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=13cm]{./pictures/app_raster_qhull.png}
+	\caption{Výstup při použití algoritmu \textit{QHull} nad množinou \textit{Raster} o 1000 bodech}
+\end{figure}
+~
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=13cm]{./pictures/app_circle_sweep.png}
+	\caption{Výstup při použití algoritmu \textit{Sweep Line} nad množinou \textit{Circle} o 1000 bodech}
+\end{figure}
 
 \clearpage
  
-\section{!Dokumentace}
+\section{Dokumentace}
 Tato kapitola obsahuje dokumentaci k jednotlivým třídám.
 
 \subsection{Algorithms}
@@ -411,7 +432,7 @@ Metoda \textbf{on\_ch\_button\_clicked} na základě uživatelem zvoleného algo
 Metoda \textbf{on\_clear\_button\_clicked} vrací aplikaci do výchozí polohy smazáním všeho, co bylo vykresleno. 
 
 \subsubsection{on\_set\_button\_clicked}
-Metoda \textbf{on\_set\_button\_clicked} generuje množinu bodů na základě zadaných vstupních parametrů uživatelem.
+Metoda \textbf{on\_set\_button\_clicked} generuje množinu bodů na základě zadaných vstupních parametrů uživatelem. Metoda zároveň počítá čas [ms], jak dlouho množinu trvalo vygenerovat, a vypíše ho do aplikace.
 
 \clearpage
 \section{!Závěr}
