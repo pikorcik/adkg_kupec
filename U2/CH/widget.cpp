@@ -22,35 +22,43 @@ void Widget::on_ch_button_clicked()
 {
     //Generate convex hull
 
-    QPolygon ch;
-
-    //Check whether there are points in set
-    if(points.size() == 0)
-        ui->time_label->setText("No points in set");
-    else
+    vector<int> time_vector;
+    for(int i = 0; i < 10; i++)
     {
-        //Start time
-        clock_t s = std::clock();
+        QPolygon ch;
 
-        //Construct convex hull
-        if(ui->method_comboBox->currentIndex()==0)
-            ch = Algorithms::CHJarvis(points);
-        else if(ui->method_comboBox->currentIndex()==1)
-            ch = Algorithms::QHull(points);
+        //Check whether there are points in set
+        if(points.size() == 0)
+            ui->time_label->setText("No points in set");
         else
-            ch = Algorithms::CHSweepLine(points);
+        {
+            //Start time
+            clock_t s = std::clock();
 
-        //End time
-        clock_t e = std::clock();
+            //Construct convex hull
+            if(ui->method_comboBox->currentIndex()==0)
+                ch = Algorithms::CHJarvis(points);
+            else if(ui->method_comboBox->currentIndex()==1)
+                ch = Algorithms::QHull(points);
+            else
+                ch = Algorithms::CHSweepLine(points);
 
-        //Time difference in miliseconds
-        clock_t time = e-s;
-        ui->time_label->setText(QString::number(time) + " ms");
+            //End time
+            clock_t e = std::clock();
 
-        //Set and repaint
-        ui->Canvas->setCH(ch);
-        repaint();
+            //Time difference in miliseconds
+            clock_t time = e-s;
+            ui->time_label->setText(QString::number(time) + " ms");
+            time_vector.push_back(time);
+
+            //Set and repaint
+            ui->Canvas->setCH(ch);
+            repaint();
+        }
     }
+    qDebug() << "Selected shape: " << ui->shape_comboBox->currentText();
+    qDebug() << "Selected number of points: " << ui->points_spinBox->value();
+    qDebug() << time_vector;
 }
 
 void Widget::on_clear_button_clicked()
