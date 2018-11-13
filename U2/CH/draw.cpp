@@ -1,4 +1,5 @@
 #include "draw.h"
+#include<math.h>
 
 Draw::Draw(QWidget *parent) : QWidget(parent)
 {
@@ -65,9 +66,6 @@ std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int ca
         int x;
         int y;
 
-        //Number of points to be added to raster
-        int num = num_of_points;
-
         //Raster rows
         for(int i = 0; i < edge; i++)
         {
@@ -83,10 +81,31 @@ std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int ca
         }
     }
 
-    //Generate points in circle
+    //Generate points in a circle
     else
     {
+        //Step on a circle between points
+        double slice = 2*M_PI/num_of_points;
 
+        //Centre coordinates
+        QPoint centre(canvas_width/2, canvas_height/2);
+
+        //Radius
+        int r;
+        if(canvas_width < canvas_height)
+            r = canvas_width/2 - 10;
+        else
+            r = canvas_height/2 - 10;
+
+        for(int i = 0; i < num_of_points; i++)
+        {
+            double angle = slice * i;
+
+            int x = centre.x() + r * cos(angle);
+            int y = centre.y() + r * sin(angle);
+
+            points.push_back(QPoint(x, y));
+        }
     }
 
     return points;
