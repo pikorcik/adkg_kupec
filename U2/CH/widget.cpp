@@ -2,6 +2,7 @@
 #include "widget.h"
 #include "ui_widget.h"
 #include "algorithms.h"
+#include <fstream>
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -20,9 +21,21 @@ Widget::~Widget()
 
 void Widget::on_ch_button_clicked()
 {
-    //Generate convex hull
 
-    vector<int> time_vector;
+    //Open file
+    ofstream myfile;
+    myfile.open("..\\vysledky.txt", ios::app);
+
+    //Write selected info
+    QString shape = ui->shape_comboBox->currentText();
+    int num_points = ui->points_spinBox->value();
+    QString method = ui->method_comboBox->currentText();
+
+    myfile << "Selected shape: " << shape.toLatin1().data() << endl;
+    myfile << "Selected number of points: " << num_points << endl;
+    myfile << "Selected method: " << method.toLatin1().data() << endl;
+
+    //Generate convex hull
     for(int i = 0; i < 10; i++)
     {
         QPolygon ch;
@@ -49,16 +62,19 @@ void Widget::on_ch_button_clicked()
             //Time difference in miliseconds
             clock_t time = e-s;
             ui->time_label->setText(QString::number(time) + " ms");
-            time_vector.push_back(time);
+
+            //Write time to file
+            myfile << time << ";";
 
             //Set and repaint
             ui->Canvas->setCH(ch);
             repaint();
         }
     }
-    qDebug() << "Selected shape: " << ui->shape_comboBox->currentText();
-    qDebug() << "Selected number of points: " << ui->points_spinBox->value();
-    qDebug() << time_vector;
+
+    //Close file
+    myfile << endl << "-----" << endl;
+    myfile.close();
 }
 
 void Widget::on_clear_button_clicked()
