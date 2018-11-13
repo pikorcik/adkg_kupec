@@ -117,6 +117,9 @@ QPolygon Algorithms::CHJarvis (vector<QPoint> &points)
 
     } while (!(pj == q));
 
+    //Create strict convex hull
+    strictCH(ch);
+
     return ch;
 }
 
@@ -160,6 +163,9 @@ QPolygon Algorithms::QHull (vector<QPoint> &points)
 
     //Process SL
     qh_loc(0, 1, sl, ch);
+
+    //Create strict convex hull
+    strictCH(ch);
 
     return ch;
 }
@@ -289,5 +295,23 @@ QPolygon Algorithms::CHSweepLine(vector<QPoint> &points)
 
     }
 
+
+    //Create strict convex hull
+    strictCH(ch);
+
     return ch;
+}
+
+void Algorithms::strictCH(QPolygon &ch)
+{
+    //Create strict convex hull
+    for(int i = 0; i < ch.size()-2; i++)
+    {
+        //Delete point in between if on the same line
+        if(getPointLinePosition(ch[i+2],ch[i],ch[i+1]) == ON)
+        {
+            ch.remove(i+1);
+            i--;
+        }
+    }
 }

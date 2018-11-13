@@ -20,6 +20,7 @@ public:
     static QPolygon QHull(vector<QPoint> &points);
     static void qh_loc(int s, int e, vector<QPoint> &ss, QPolygon &h);
     static QPolygon CHSweepLine(vector<QPoint> &points);
+    static void strictCH(QPolygon &ch);
 };
 
 #endif // ALGORITHMS_H
