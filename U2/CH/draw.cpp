@@ -9,17 +9,20 @@ void Draw::paintEvent(QPaintEvent *e)
 {
    QPainter painter(this);
    painter.begin(this);
-   painter.setPen(Qt::red);
-
-   //Draw convex hull
-   painter.drawPolygon(ch);
+   QPen pen_point(Qt::black, 1);
+   painter.setPen(pen_point);
 
    //Draw points
    for(unsigned int i = 0; i < points.size(); i++)
    {
-       painter.drawEllipse(points[i].x()-5, points[i].y()-5, 10, 10);
+       painter.drawEllipse(points[i].x()-2.5, points[i].y()-2.5, 5, 5);
    }
 
+   QPen pen_ch(Qt::red, 2);
+   painter.setPen(pen_ch);
+
+   //Draw convex hull
+   painter.drawPolygon(ch);
 
    painter.end();
 
