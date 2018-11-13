@@ -214,6 +214,19 @@ QPolygon Algorithms::CHSweepLine(vector<QPoint> &points)
     //Create convex hull using the sweepline procedure
     QPolygon ch;
 
+    //Remove duplicit points
+    for(int i = 0; i < points.size()-1; i++)
+    {
+        for(int j = i+1; j < points.size(); j++)
+        {
+            if(points[j].x() == points[i].x() && points[j].y() == points[i].y())
+            {
+                points.erase(points.begin()+j);
+                j--;
+            }
+        }
+    }
+
     //Sort points by x
     std::sort(points.begin(), points.end(), SortByXAsc());
 
