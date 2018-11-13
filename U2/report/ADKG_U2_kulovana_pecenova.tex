@@ -174,9 +174,9 @@ Zjednodušený zápis algoritmu:
 \subitem Podmínka ($y_i > y_{i-1}$) $\rightarrow$ $S_U$: $p$[i] = i-1, $n$[i] = $n$[i-1]
 \subitem Jinak $\rightarrow$ $S_L$: $n$[i] = i-1 $p$[i] = $p$[i-1]
 \subitem Oprava indexů: $n$[$p$[i]] = i, $p$[$n$[i]] = i
-\subitem Dokud $n$[$n$[i]] je vpravo od i, $n$[i]:
+\subitem Dokud $n$[$n$[i]] je vpravo od přímky (i, $n$[i]):
 \subsubitem $p$[$n$[$n$[i]]] = i, $n$[i] = $n$[$n$[i]]
-\subitem Dokud $p$[$p$[i]] je vlevo od i, $p$[i]:
+\subitem Dokud $p$[$p$[i]] je vlevo od přímky (i, $p$[i]):
 \subsubitem $n$[$p$[$p$[i]]] = i, $p$[i] = $p$[$p$[i]]
 \end{enumerate}
 %%vypsání polygonu z nasledníku??
@@ -274,7 +274,7 @@ Metoda \textbf{CHSweepLine} vytváří konvexní obálku obálku nad vstupní mn
 
 \textbf{Input}:
 \begin{itemize}
-\item \textit{vector}<\texttt{QPoint}> $points$
+\item \textsl{vector} $\textless$\texttt{QPoint}$\textgreater$ $points$
 \end{itemize}
 
 \textbf{Output}:
@@ -331,10 +331,10 @@ Metoda \textbf{getPointLinePosition} určuje polohu bodu $q$ vzhledem k přímce
 \end{itemize}
 
 \subsection{Draw}
-Třída \textit{Draw} obsahuje metody, které slouží ke generaci vstupní množiny bodů a k jejímu vykreslení. Dále vykresluje konvexní obálku dané množiny. 
+Třída \textit{Draw} obsahuje metody, které generují a vykreslují vstupní množinu bodů. Dále vykresluje konvexní obálku dané množiny. 
 
-\subsubsection{!paintEvent}
-Metoda \textbf{paintEvent} vykresluje polygony a analyzovaný bod $q$. Návratová hodnota je typu \textit{void}.
+\subsubsection{paintEvent}
+Metoda \textbf{paintEvent} vykresluje vygenerovanou vstupní množinu bodů a její konvexní obálku. Návratová hodnota je typu \textit{void}.
 
 \textbf{Input}:
 \begin{itemize}
@@ -342,39 +342,37 @@ Metoda \textbf{paintEvent} vykresluje polygony a analyzovaný bod $q$. Návratov
 \end{itemize}
 
 \subsubsection{!mousePressEvent}
-Metoda \textbf{mousePressEvent} slouží k načtení souřadnic bodu $q$. Návratová hodnota je typu \textit{void}.
+Metoda \textbf{mousePressEvent} slouží k ručnímu načtení vstupních bodů. Návratová hodnota je typu \texttt{void}.
 
 \textbf{Input}:
 \begin{itemize}
 \item QMouseEvent *e
 \end{itemize}
 
-\subsubsection{!clearAll}
-Metoda \textbf{clearCanvas} slouží k vymazání všech vykreslených dat. Metoda neobsahuje žádné proměnné na vstupu a návratová hodnota je typu \textit{void}.
+\subsubsection{setCh}
+Metoda \textbf{setCh} slouží k vymazání všech vykreslených dat. Návratová hodnota metody je typu \texttt{void}.
 
-\subsubsection{!fillPolygon}
-Metoda \textbf{fillPolygon} barevně vyšrafuje polygon, ve kterém se nachází analyzovaný bod $q$. Návratová hodnota je typu \textit{void}.
-
-\textbf{Input}:
-\begin{itemize}
-\item $std::vector\textless std::vector\textless QPoint\textgreater \textgreater$ poly\_fill
-\end{itemize}
-
-\subsubsection{!loadPolygon}
-Metoda \textbf{loadPolygon} slouží k nahrání bodů jednotlivých polygonů do aplikace. Součástí metody je i kontrola, zda se soubor úspěšně nahrál, zda vůbec obsahuje nějaké polygony a zda jsou polygony tvořeny aspoň 3 body. Návratová hodnota je typu \textit{QString} vrací hlášku, zda byly polygony úspěšně nahrány.
+\subsubsection{generateSet}
+Metoda \textbf{generateSet} slouží ke generování vstupní množiny bodů. Na vstupu má čtyři proměnné typu \texttt{int}, které definují prostorové uspořádání generovaných bodů, jejich počet a šířku a výšku kreslící plochy. Metoda defaultně nastavuje počet generovaných bodů na hodnotu 1000 a omezuje maximální možnou hodnotu, kterou lze ručně nastavit, na 1000000 bodů. Rozměr kreslící plochy definuje maximální možné souřadnice, kterých generované body mohou nabývat. Návratová hodnota metody vektor bodů třídy \texttt{QPoint}.\\
 
 \textbf{Input}:
 \begin{itemize}
-\item const char* path
+\item \texttt{int} $shape\_index$ (0 $\rightarrow$ random, 1 $\rightarrow$ raster, 2 $\rightarrow$ circle)
+\item \texttt{int} $num\_of\_points$ (rozsah: 1000 – 1000000)
+\item \texttt{int} $canvas\_width$
+\item \texttt{int} $canvas\_height$
 \end{itemize}
 
 \textbf{Output}:
 \begin{itemize}
-\item QString
+\item \textsl{vector} $\textless$\texttt{QPoint}$\textgreater$
 \end{itemize}
 
+\subsubsection{clearAll}
+Metoda \textbf{clearCanvas} slouží k vymazání všech vykreslených dat. Metoda neobsahuje žádné proměnné na vstupu a návratová hodnota je typu \texttt{void}.
+
 \subsection{SortByXAsc}
-Třída obsahuje jedinou metodu(??konstruktor) \textbf{SortByXAsc}, která má na vstupu dva body typu \texttt{QPoint}, návratová hodnota je typu \texttt{bool}. Metoda vrací bod s nižší  souřadnicí X. Mají-li oba body shodnou souřadnici X, vrací bod s nižší souřadnicí Y.\\
+Třída \textbf{SortByXAsc} má na vstupu dva body typu \texttt{QPoint}, návratová hodnota je typu \texttt{bool}. Metoda vrací bod s nižší  souřadnicí X. Mají-li oba body shodnou souřadnici X, vrací bod s nižší souřadnicí Y.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -389,7 +387,7 @@ Třída obsahuje jedinou metodu(??konstruktor) \textbf{SortByXAsc}, která má n
 \end{itemize}
 
 \subsection{SortByYAsc}
-Třída obsahuje jedinou metodu(??konstruktor) \textbf{SortByYAsc}, která má na vstupu dva body typu \texttt{QPoint}, návratová hodnota je typu \texttt{bool}. Metoda vrací bod s nižší  souřadnicí Y. Mají-li oba body shodnou souřadnici Y, vrací bod s nižší souřadnicí X.\\
+Třída \textbf{SortByYAsc} má na vstupu dva body typu \texttt{QPoint}, návratová hodnota je typu \texttt{bool}. Metoda vrací bod s nižší  souřadnicí Y. Mají-li oba body shodnou souřadnici Y, vrací bod s nižší souřadnicí X.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -403,22 +401,17 @@ Třída obsahuje jedinou metodu(??konstruktor) \textbf{SortByYAsc}, která má n
 \item 1 $\rightarrow$ bod $p_1$ má nižší souřadnici Y
 \end{itemize}
 
-\subsection{!Widget}
-Metody třídy \textbf{Widget} slouží pro práci uživatele s aplikací. Až na jednu výjimku nemají metody na vstupu nic, návratové hodnoty všech metod jsou typu \textit{void}.
-
-\subsubsection{!writeResult}
-Metoda \textbf{writeResult} vrací polohu bodu $q$ vzhledem k polygonu na základě vstupní hodnoty typu \textit{int}.\\
-
-\textbf{Input}:
-\begin{itemize}
-\item int
-\end{itemize}
+\subsection{Widget}
+Metody třídy \textbf{Widget} slouží pro práci uživatele s aplikací. Až na jednu výjimku nemají metody na vstupu nic, návratové hodnoty všech metod jsou typu \texttt{void}.
 
 \subsubsection{on\_ch\_button\_clicked}
-Metoda \textbf{on\_ch\_button\_clicked} načítá data z textového formátu. Uživatel sám vyhledává cestu k požadovanému souboru.
+Metoda \textbf{on\_ch\_button\_clicked} na základě uživatelem zvoleného algoritmu generuje konvexní obálku nad vstupní množinou bodů. Metoda zároveň počítá čas [ms], během kterého algoritmus vypočítá konvexní obálku, a vypíše ho do aplikace. Do výpočtu času není zahrnuto vykreslování konvexní obálky.
 
 \subsubsection{on\_clear\_button\_clicked}
 Metoda \textbf{on\_clear\_button\_clicked} vrací aplikaci do výchozí polohy smazáním všeho, co bylo vykresleno. 
+
+\subsubsection{on\_set\_button\_clicked}
+Metoda \textbf{on\_set\_button\_clicked} generuje množinu bodů na základě zadaných vstupních parametrů uživatelem.
 
 \clearpage
 \section{!Závěr}
@@ -450,3 +443,7 @@ Dostupné z: \href{http://www.it.cas.cz/manual/latex/}{http://www.it.cas.cz}
 %polomer kruznice dan predem -> omezeni aby body nevylezly z platna
 %chybova hlaska, zadame-li vic bod nez je mozne
 %defaultní vstupní data
+%generacebodů přizpůsobena canvasu
+%data vypisována do konzole
+%pravidelný rastr -> zaokrouhlení nahoru
+%při zmáčknutí create ch se předchozí množina smaže
