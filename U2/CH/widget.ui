@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Widget</string>
+   <string>Convex hull</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
@@ -42,12 +42,22 @@
        </item>
        <item>
         <property name="text">
-         <string>Raster</string>
+         <string>Grid</string>
         </property>
        </item>
        <item>
         <property name="text">
          <string>Circle</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Ellipse</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Square</string>
         </property>
        </item>
       </widget>
