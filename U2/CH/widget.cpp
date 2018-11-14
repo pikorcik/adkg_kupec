@@ -36,18 +36,21 @@ void Widget::on_ch_button_clicked()
     myfile << "Selected method: " << method.toLatin1().data() << endl;
 
     //Assign points to new variable (not to change original set)
-    vector<QPoint> points = points_original;
+    //vector<QPoint> points = points_original;
+
+    QPolygon ch;
 
     //Generate convex hull
-    for(int i = 0; i < 10; i++)
+    //Check whether there are points in set
+    if(points_original.size() == 0)
+        ui->time_label->setText("No points in set");
+    else
     {
-        QPolygon ch;
-
-        //Check whether there are points in set
-        if(points.size() == 0)
-            ui->time_label->setText("No points in set");
-        else
+        for(int i = 0; i < 10; i++)
         {
+
+            vector<QPoint> points = points_original;
+
             //Start time
             clock_t s = std::clock();
 
@@ -68,12 +71,13 @@ void Widget::on_ch_button_clicked()
 
             //Write time to file
             myfile << time << ";";
-
-            //Set and repaint
-            ui->Canvas->setCH(ch);
-            repaint();
         }
+
     }
+
+    //Set and repaint
+    ui->Canvas->setCH(ch);
+    repaint();
 
     //Close file
     myfile << endl << "-----" << endl;
