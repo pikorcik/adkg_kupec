@@ -70,7 +70,7 @@ void Widget::on_ch_button_clicked()
             ui->time_label->setText(QString::number(time) + " ms");
 
             //Write time to file
-            myfile << time << ";";
+            myfile << time << endl;
         }
 
     }
