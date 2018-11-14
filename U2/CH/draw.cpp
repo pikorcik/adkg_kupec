@@ -29,16 +29,6 @@ void Draw::paintEvent(QPaintEvent *e)
 
 }
 
-void Draw::mousePressEvent(QMouseEvent *e)
-{
-    QPoint p(e->x(), e->y());
-
-    points.push_back(p);
-
-    repaint();
-
-}
-
 std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int canvas_width, int canvas_height)
 {
     //Generate set of chosen shape
