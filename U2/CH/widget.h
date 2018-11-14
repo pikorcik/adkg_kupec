@@ -24,7 +24,7 @@ private slots:
 
 private:
     Ui::Widget *ui;
-    std::vector<QPoint> points;
+    std::vector<QPoint> points_original;
 };
 
 #endif // WIDGET_H
