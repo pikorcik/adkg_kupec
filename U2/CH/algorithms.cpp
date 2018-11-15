@@ -237,9 +237,9 @@ QPolygon Algorithms::CHSweepLine(vector<QPoint> &points)
     QPolygon ch;
 
     //Remove duplicit points
-    for(int i = 0; i < points.size()-1; i++)
+    for(unsigned int i = 0; i < points.size()-1; i++)
     {
-        for(int j = i+1; j < points.size(); j++)
+        for(unsigned int j = i+1; j < points.size(); j++)
         {
             if(points[j].x() == points[i].x() && points[j].y() == points[i].y())
             {
