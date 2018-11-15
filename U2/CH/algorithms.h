@@ -21,6 +21,7 @@ public:
     static void qh_loc(int s, int e, vector<QPoint> &ss, QPolygon &h);
     static QPolygon CHSweepLine(vector<QPoint> &points);
     static void strictCH(QPolygon &ch);
+    static double getDistance(QPoint &p1, QPoint &p2);
 };
 
 #endif // ALGORITHMS_H

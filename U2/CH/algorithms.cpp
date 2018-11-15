@@ -112,7 +112,7 @@ QPolygon Algorithms::CHJarvis (vector<QPoint> &points)
             if(fabs(fi-fi_max) < eps)
             {
                 //If so, get the closest point to pj
-                double d_pj_pi = sqrt((pj.x()-points[i].x())*(pj.x()-points[i].x())+(pj.y()-points[i].y())*(pj.y()-points[i].y()));
+                double d_pj_pi = getDistance(pj,points[i]);
                 if(dist_min > d_pj_pi)
                 {
                     dist_min = d_pj_pi;
@@ -349,4 +349,11 @@ void Algorithms::strictCH(QPolygon &ch)
             i--;
         }
     }
+}
+
+double Algorithms::getDistance(QPoint &p1, QPoint &p2)
+{
+    double dx = p1.x()-p2.x();
+    double dy = p1.y()-p2.y();
+    return sqrt(dx*dx + dy*dy);
 }
