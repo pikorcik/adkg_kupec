@@ -100,7 +100,7 @@ QPolygon Algorithms::CHJarvis (vector<QPoint> &points)
     {
         int i_max = -1;
         double fi_max = 0;
-        double dist_min = 100000;
+        double dist_min = 10e10;
 
         //Find pi = arg max angle(pi, pj, pjj)
         for(unsigned int i = 0; i < points.size(); i++)

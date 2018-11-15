@@ -102,7 +102,7 @@ std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int ca
     }
 
     //Generate points on an ellipse
-    else if (shape_index == 3)
+    else
     {
         //Step on a circle between points
         double slice = 2*M_PI/num_of_points;
@@ -122,55 +122,6 @@ std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int ca
             int y = centre.y() + b * sin(angle);
 
             points.push_back(QPoint(x, y));
-        }
-    }
-
-    //Generate square set
-    else
-    {
-        //Number of points on one grid edge
-        int edge = ceil(num_of_points/4);
-
-        //Step between point coordinates
-        double coor_step;
-        if(canvas_width < canvas_height)
-            coor_step = canvas_width/edge-5;
-        else
-            coor_step = canvas_height/edge-5;
-
-        //Vertical edges
-        QPoint a(5, 5);
-        for(int i = 0; i < 2; i++)
-        {
-            int x = a.x();
-            int y = a.y();
-
-            for(int j = 0; j < edge; j++)
-            {
-                points.push_back(QPoint(x, y));
-                x += coor_step;
-            }
-
-            a.setX((a.x()+coor_step));
-            a.setY(a.y()+edge*coor_step);
-        }
-
-        //Horizontal edges
-        a.setX(5);
-        a.setY(5+edge*coor_step);
-        for(int i = 0; i < 2; i++)
-        {
-            int x = a.x();
-            int y = a.y();
-
-            for(int j = 0; j < edge; j++)
-            {
-                points.push_back(QPoint(x, y));
-                y -= coor_step;
-            }
-
-            a.setX(a.x()+edge*coor_step);
-            a.setY(a.y()+coor_step);
         }
     }
 
