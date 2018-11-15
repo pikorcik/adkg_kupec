@@ -72,6 +72,9 @@ double Algorithms::getPointLineDistance(QPoint &q, QPoint &a, QPoint &b)
 QPolygon Algorithms::CHJarvis (vector<QPoint> &points)
 {
     //Create convex hull using the Jarvis Scan procedure
+
+    double eps = 10e-6;
+
     QPolygon ch;
 
     //Find pivot q
@@ -80,6 +83,10 @@ QPolygon Algorithms::CHJarvis (vector<QPoint> &points)
 
     std::sort(points.begin(), points.end(), SortByXAsc());
     QPoint s = points[0];
+
+    //Change s.X if points s and q are identical (solves problem with counting angle later)
+    if(fabs(q.x()-s.x()) < eps)
+        s.setX(s.x()+10);
 
     //Create Pjj
     QPoint pjj (s.x(),q.y());
@@ -93,19 +100,34 @@ QPolygon Algorithms::CHJarvis (vector<QPoint> &points)
     {
         int i_max = -1;
         double fi_max = 0;
+        double dist_min = 100000;
 
         //Find pi = arg max angle(pi, pj, pjj)
-        for(unsigned int i = 0; i<points.size();i++)
+        for(unsigned int i = 0; i < points.size(); i++)
         {
             //Get angle betwwen 2 segments
             double fi = get2LinesAngle(pj, pjj, pj, points[i]);
 
-            //Find maximum
-            if (fi>fi_max)
+            //Check whether there are collinear points
+            if(fabs(fi-fi_max) < eps)
             {
-                i_max=i;
-                fi_max=fi;
+                //If so, get the closest point to pj
+                double d_pj_pi = sqrt((pj.x()-points[i].x())*(pj.x()-points[i].x())+(pj.y()-points[i].y())*(pj.y()-points[i].y()));
+                if(dist_min > d_pj_pi)
+                {
+                    dist_min = d_pj_pi;
+                    i_max = i;
+                    fi_max = fi;
+                }
             }
+
+            //Find maximum
+            else if (fi>fi_max)
+            {
+                i_max = i;
+                fi_max = fi;
+            }
+
         }
 
         //Add the next point to CH
