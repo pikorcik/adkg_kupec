@@ -45,10 +45,10 @@ std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int ca
         }
     }
 
-    //Generate raster set
+    //Generate grid set
     else if(shape_index == 1)
     {
-        //Number of points on one raster edge
+        //Number of points on one grid edge
         double edge = ceil(sqrt(num_of_points));
 
         //Step between point coordinates
@@ -59,12 +59,12 @@ std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int ca
         int x;
         int y;
 
-        //Raster rows
+        //Grid rows
         for(int i = 0; i < edge; i++)
         {
             y = i*y_size;
 
-            //Raster columns
+            //Grid columns
             for(int j = 0; j < edge; j++)
             {
                 x = j*x_size;
@@ -75,7 +75,7 @@ std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int ca
     }
 
     //Generate points in a circle
-    else
+    else if (shape_index == 2)
     {
         //Step on a circle between points
         double slice = 2*M_PI/num_of_points;
@@ -96,6 +96,30 @@ std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int ca
 
             int x = centre.x() + r * cos(angle);
             int y = centre.y() + r * sin(angle);
+
+            points.push_back(QPoint(x, y));
+        }
+    }
+
+    //Generate points on an ellipse
+    else if (shape_index == 3)
+    {
+        //Step on a circle between points
+        double slice = 2*M_PI/num_of_points;
+
+        //Centre coordinates
+        QPoint centre(canvas_width/2, canvas_height/2);
+
+        //Half-axis
+        int a = canvas_width/2 - 10;
+        int b = canvas_height/2 - 10;
+
+        for(int i = 0; i < num_of_points; i++)
+        {
+            double angle = slice * i;
+
+            int x = centre.x() + a * cos(angle);
+            int y = centre.y() + b * sin(angle);
 
             points.push_back(QPoint(x, y));
         }
