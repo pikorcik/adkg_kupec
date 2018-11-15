@@ -69,7 +69,7 @@ void Widget::on_clear_button_clicked()
 
 void Widget::on_set_button_clicked()
 {
-    //Generate set of points based on chosen shape and size
+    //Generate set of points based on selected shape and size
 
     //Start time
     clock_t s1 = std::clock();
@@ -77,7 +77,7 @@ void Widget::on_set_button_clicked()
     //Clear canvas
     ui->Canvas->clearAll();
 
-    //Get chosen set parameters
+    //Get selected set parameters
     int shape_index = ui->shape_comboBox->currentIndex();
     int num_of_points = ui->points_spinBox->value();
 

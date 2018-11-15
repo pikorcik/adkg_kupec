@@ -31,7 +31,7 @@ void Draw::paintEvent(QPaintEvent *e)
 
 std::vector<QPoint> Draw::generateSet(int shape_index, int num_of_points, int canvas_width, int canvas_height)
 {
-    //Generate set of chosen shape
+    //Generate set of selected shape
     //Proportions of set according to the size of canvas
 
     //Generate random set
