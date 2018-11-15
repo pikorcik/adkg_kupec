@@ -81,7 +81,7 @@ Zadání úlohy bylo staženo ze stránek předmětu \href{https://web.natur.cun
 	\includegraphics[clip, trim=0cm 10cm 0cm 3cm, width=1.0\textwidth]{./pictures/zadani02.pdf}
 \end{figure}
 
-V rámci této úlohy byly implementovány bonusové úlohy č. 2-3. Bonusová úloha č. 5 byla částečně implementována v rámci základního zadání plus navíc bylo přidáno vykreslení elipsy a čtverce.
+V rámci této úlohy byly implementovány bonusové úlohy č. 2–3. Bonusová úloha č. 5 byla částečně implementována v rámci základního zadání plus navíc bylo přidáno vykreslení elipsy.
 \clearpage
 
 \section{Popis a rozbor problému}
@@ -95,7 +95,7 @@ Své využití konvexní obálky nalézají v mnoha oborech. V kartografii se ho
 	\caption{Ukázka konvexní obálky (\href{http://mind.cs.byu.edu/courses/312/projects/project2_files/ConvexHull_python.php}{\textsl{zdroj}})}
 \end{figure}
 
-Vzniklá aplikace k tvorbě konvexní obálek využívá tří výpočetních algoritmů: \textit{Jarvis Scan}, \textit{Quick Hull} a \textit{Sweep Line}. %%a \textit{Graham Scan}. Čtvrtý z uvedených algoritmů patří mezi bonusové úlohy, které bylo možno implementovat.
+Vzniklá aplikace k tvorbě konvexní obálek využívá tří výpočetních algoritmů: \textit{Jarvis Scan}, \textit{Quick Hull} a \textit{Sweep Line}.
 
 \section{Algoritmy}
 Tato kapitola se zabývá popisem algoritmů, které byly v aplikaci implementovány. 
@@ -138,7 +138,7 @@ Algoritmus \textit{Quick Hull} se skládá z globální a lokální procedury. G
 \item Proveď: $q_3 \in H$
 \item Lokální procedura pro $S_U$
 \item Proveď: $q_1 \in H$
-\item Lokální procedura pro $S_U$
+\item Lokální procedura pro $S_L$
 \end{enumerate}
 ~\\
 \textbf{Lokální procedura nad polorovinou $S_i$}:
@@ -187,12 +187,11 @@ Podmínka ($p_i == p_j$) $\rightarrow$ bod $p_j$ odstraněn (viz. Obrázek 2)\\
       \caption{Neopravený (vlevo) vs. opravený (vpravo) \textit{Sweep Line} algoritmus}
 \end{figure}
 
-Algoritmus \textit{Jarvis Scan} generuje špatné výsledky, není-li ošetřeno, že žádné tři body nejsou spolu kolineární. Tento problém se zejména projevoval při generaci setu \textit{Grid}, který jich obsahuje spoustu. Singularita byla ošetřena vypočtením úhlu $\sphericalangle p_{a}, p, p_{b}$, a pokud byl menší, než stanovená mez $\epsilon$, byl pro další výpočty vybrán bližší ze dvou kolineárních bodů $a$, $b$.
+Algoritmus \textit{Jarvis Scan} generuje špatné výsledky, není-li ošetřeno, že žádné tři body nejsou spolu kolineární. Tento problém se zejména projevoval při generaci setu \textit{Grid}, který jich obsahuje spoustu. Singularita byla ošetřena vypočtením úhlu $\sphericalangle p_{jj}, p_j, p_i$, a pokud byl menší, než stanovená mez $\epsilon$, byl pro další výpočty vybrán bližší z kolineárních bodů.
 
 \begin{itemize}
-\item Podmínka ($\sphericalangle p_{a}, p, p_{b}$) $< \epsilon$
-\subitem Podmínka ($d_{p,a} < d_{p,b}$) $\rightarrow$ vyber bod $a$
-\subitem Jinak: vyber $b$
+\item Podmínka ($\sphericalangle p_{jj}, p_j, p_i$) $< \epsilon$
+\subitem Podmínka ($d_{p_j,p_i} < d_{min}$) $\rightarrow$ vyber bod $p_i$, $d_{min} = d_{p_j,p_i}$
 \end{itemize}
 
 Dalším problémem bylo, jak zajistit, aby byl generovaný rastr pravidelný. To bylo ošetřeno zaokrouhlením počtu vstupních bodů směrem nahoru tak, aby po odmocnění vznikl pravidelný rastr.\\
@@ -200,18 +199,17 @@ Dalším problémem bylo, jak zajistit, aby byl generovaný rastr pravidelný. T
 počet bodů v řádce/sloupci = $roundUp(\sqrt{num\_of\_points})$
 
 \section{Vstupní data}
-Aplikace si na základě ručního zadání vstupních parametrů uživatelem sama vygeneruje potřebná vstupní data. Z rozbalovací nabídky \textbf{Shape of set} uživatel volí prostorové uspořádání generované množiny bodů. Na výběr jsou možnosti \textit{Random set}, \textit{Grid} a \textit{Circle}. V kolonce \textbf{Number of points} uživatel volí, kolik bodů bude generováno. Lze tak učinit buď přímým zadáním počtu bodů, nebo zvýšením/snížením počtu bodů o 1000 bodů šipkami na boku. Aplikace omezuje maximální a minimální počet generovaných bodů na interval $\textless$1, 1000000$\textgreater$. Množina bodů se vygeneruje stisknutím tlačítka \textsl{Generate set}.\\
+Aplikace si na základě ručního zadání vstupních parametrů uživatelem sama vygeneruje potřebná vstupní data. Z rozbalovací nabídky \textbf{Shape of set} uživatel volí prostorové uspořádání generované množiny bodů. Na výběr jsou možnosti \textit{Random set}, \textit{Grid} a \textit{Circle}. V kolonce \textbf{Number of points} uživatel volí, kolik bodů bude generováno. Lze tak učinit buď přímým zadáním počtu bodů, nebo zvýšením/snížením počtu bodů o 1000 šipkami na boku. Aplikace omezuje minimální a maximální počet generovaných bodů na interval $\textless$1, 1000000$\textgreater$. Množina bodů se vygeneruje stisknutím tlačítka \textsl{Generate set}.\\
 
 Uživatel má dále možnost volit, jaký výpočetní algoritmus bude použit pro tvorbu konvexní obálky. Rozbalovací nabídka \textbf{Method} nabízí celkem tři výpočetní algoritmy: \textit{Jarvis Scan}, \textit{Quick Hull} a \textit{Sweep Line}. Konvexní obálka je generována stisknutím tlačítka \textsl{Create CH}. Pokud před spuštěním procesu nebyla vygenerována žádná vstupní množina bodů, uživatel je upozorněn chybovou hláškou. 
 
 \section{Výstupní data}
 Vygenerovaná množina bodů a její konvexní obálka je vykreslena v grafickém okně aplikace. Aplikace dále vypisuje časy [ms], jak dlouho trvalo generování množiny a jak dlouho nad danou množinou běžel výpočetní algoritmus.\\
 
-%\subsection{Grafy a tabulky a grafy}
-V rámci testování byly nad množinami bodů \textit{Random set}, \textit{Grid} a \textit{Circle} postupně spuštěny všechny tři algoritmy. Pro každou množinu a algoritmus byla pro daný počet bodů $n = \{1000, 5000, 10000, 25000, 50000, 75000, 100000, 200000, 500000, 1000000\}$ aplikace spuš\-tě\-na 10x, aby bylo získáno dostatečné množství testovacích dat. Z každé testované množiny bylo tedy získáno celkem 300 testovacích dat. Data byla ukládána do textového souboru a následně zpracována v \textit{Excelu}. \\
+V rámci testování byly nad množinami bodů \textit{Random set}, \textit{Grid} a \textit{Circle} postupně spuštěny všechny tři algoritmy. Pro každou množinu a algoritmus byla pro daný počet bodů $n = \{1000, 5000, 10000, 25000, 50000, 75000, 100000, 200000, 500000, 1000000\}$ aplikace spuš\-tě\-na 10x, aby bylo získáno dostatečné množství testovacích dat. Z každé testované množiny bylo tedy získáno celkem 300 testovacích dat. Data byla ukládána do textového souboru a následně zpracována v \textit{Excelu}.
 
 \subsection{Tabulky}
-Níže jsou uvedeny průměrné časy běhu algoritmů pro daný počet bodů $n$ z 10 měření pro jednotlivé množiny. Tabulky se všemi naměřenými hodnotami a vypočtenými rozptyly jsou uvedeny v souboru \textit{testovani.xlsx}. 
+Níže jsou uvedeny průměrné časy běhu algoritmů pro daný počet bodů $n$ z 10 měření pro jednotlivé množiny. Tabulky se všemi naměřenými hodnotami a vypočtenými rozptyly jsou uvedeny v souboru \textit{testing.xlsx}. 
 
 \begin{table}[]
 \centering
@@ -236,7 +234,7 @@ n / algoritmus & Jarvis Scan {[}ms{]} & Quick Hull {[}ms{]} & Sweep Line {[}ms{]
 \centering
 \begin{tabular}{|c|c|c|c|}
 \hline
-\multicolumn{4}{|c|}{\textbf{Průměrný čas výpočtu - Grid}}                        \\ \hline
+\multicolumn{4}{|c|}{\textbf{Průměrný čas výpočtu – Grid}}                        \\ \hline
 n / algoritmus & Jarvis Scan {[}ms{]} & Quick Hull {[}ms{]} & Sweep Line {[}ms{]} \\ \hline
 1000           & 25.7                 & 0.1                 & 1.0                 \\ \hline
 5000           & 284.5                & 0.8                 & 22.6                \\ \hline
@@ -255,7 +253,7 @@ n / algoritmus & Jarvis Scan {[}ms{]} & Quick Hull {[}ms{]} & Sweep Line {[}ms{]
 \centering
 \begin{tabular}{|c|c|c|c|}
 \hline
-\multicolumn{4}{|c|}{\textbf{Průměrný čas výpočtu - Circle}}                	  \\ \hline
+\multicolumn{4}{|c|}{\textbf{Průměrný čas výpočtu – Circle}}                	  \\ \hline
 n / algoritmus & Jarvis Scan {[}ms{]} & Quick Hull {[}ms{]} & Sweep Line {[}ms{]} \\ \hline
 1000           & 44.7                 & 1.5                 & 1.0                 \\ \hline
 5000           & 441.5                & 7.2                 & 17.5                \\ \hline
@@ -357,7 +355,7 @@ Níže přiložené grafy zobrazují závislost mezi počtem bodů množiny a pr
 %\end{comment}
 
 \clearpage
-\section{!Aplikace}
+\section{Aplikace}
 V následují kapitole je představen vizuální vzhled vytvořené aplikace tak, jak ji vidí prostý uživatel.
 
 \begin{figure}[h!]
@@ -375,7 +373,7 @@ V následují kapitole je představen vizuální vzhled vytvořené aplikace tak
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=13cm]{./pictures/app_raster_qhull.png}
-	\caption{Výstup při použití algoritmu \textit{QHull} nad množinou \textit{Grid} o 1000 bodech}
+	\caption{Výstup při použití algoritmu \textit{Quick Hull} nad množinou \textit{Grid} o 1000 bodech}
 \end{figure}
 ~
 
@@ -391,7 +389,7 @@ V následují kapitole je představen vizuální vzhled vytvořené aplikace tak
 Tato kapitola obsahuje dokumentaci k jednotlivým třídám.
 
 \subsection{Algorithms}
-Třída \textit{Algorithms} obsahuje tři základní metody, které nad vstupní množinou bodů vytváří konvexní obálky. Dále obsahuje pomocné metody k výpočtu úhlu mezi dvěma přímkami a metody k určování vztahu bodu a přímky.
+Třída \textit{Algorithms} obsahuje tři základní metody, které nad vstupní množinou bodů vytváří konvexní obálky. Dále obsahuje pomocné metody k výpočtu úhlu mezi dvěma přímkami, metody k určování vztahu bodu a přímky a metodu pro vytvoření striktně konvexní obálky.
 
 \subsubsection*{CHJarvis}
 Metoda \textbf{CHJarvis} vytváří konvexní obálku obálku nad vstupní množinou bodů za použití algoritmu \textit{Jarvis Scan}. Na vstupu je vektor bodů třídy \texttt{QPoint}. Návratová hodnota je polygon třídy \texttt{QPolygon}, který obsahuje uspořádané body tvořící konvexní obálku.\\
@@ -420,7 +418,7 @@ Metoda \textbf{QHull} vytváří konvexní obálku obálku nad vstupní množino
 \end{itemize}
 
 \subsubsection*{qh\_loc}
-Metoda \textbf{qh\_loc} je lokální procedura algoritmu \textbf{QHull}, která se volá rekurzivně a hledá nejvzdálenější bod od přímky v dané polorovině a přidává jej do konvexní obálky poloroviny $H_i$. Na vstupu jsou dvě proměnné typu \texttt{int}, které obsahují index počátečního ($s$) a koncového bodu ($e$) dané přímky, vektor bodů vstupní poloroviny třídy \texttt{QPoint} a polygon třídy \texttt{QPolygon}, ve kterém jsou uloženy body konvexní obálky. Návratová hodnota je typu \texttt{void}.\\
+Metoda \textbf{qh\_loc} je lokální procedura algoritmu \textit{Quick Hull}, která se volá rekurzivně a hledá nejvzdálenější bod od přímky v dané polorovině a přidává jej do konvexní obálky poloroviny $H_i$. Na vstupu jsou dvě proměnné typu \texttt{int}, které obsahují index počátečního ($s$) a koncového bodu ($e$) dané přímky, vektor bodů vstupní poloroviny třídy \texttt{QPoint} a polygon třídy \texttt{QPolygon}, ve kterém jsou uloženy body konvexní obálky. Návratová hodnota je typu \texttt{void}.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -532,7 +530,7 @@ Metoda \textbf{generateSet} slouží ke generování vstupní množiny bodů. Na
 
 \textbf{Input}:
 \begin{itemize}
-\item \texttt{int} $shape\_index$ (0 $\rightarrow$ random set, 1 $\rightarrow$ grid, 2 $\rightarrow$ circle, 3 $\rightarrow$ ellipse, 4 $\rightarrow$ square)
+\item \texttt{int} $shape\_index$ (0 $\rightarrow$ random set, 1 $\rightarrow$ grid, 2 $\rightarrow$ circle, 3 $\rightarrow$ ellipse)
 \item \texttt{int} $num\_of\_points$ (rozsah: 1000 – 1000000)
 \item \texttt{int} $canvas\_width$
 \item \texttt{int} $canvas\_height$
@@ -577,7 +575,7 @@ Třída \textbf{SortByYAsc} má na vstupu dva body typu \texttt{QPoint}, návrat
 \end{itemize}
 
 \subsection{Widget}
-Metody třídy \textbf{Widget} slouží pro práci uživatele s aplikací. Až na jednu výjimku nemají metody na vstupu nic, návratové hodnoty všech metod jsou typu \texttt{void}.
+Metody třídy \textbf{Widget} slouží pro práci uživatele s aplikací. Metody na vstupu nemají žádné parametry a návratové hodnoty jsou typu \texttt{void}.
 
 \subsubsection*{on\_ch\_button\_clicked}
 Metoda \textbf{on\_ch\_button\_clicked} na základě uživatelem zvoleného algoritmu generuje konvexní obálku nad vstupní množinou bodů. Metoda zároveň počítá čas [ms], během kterého algoritmus vypočítá konvexní obálku, a vypíše ho do aplikace. Do výpočtu času není zahrnuto vykreslování konvexní obálky.
@@ -590,13 +588,13 @@ Metoda \textbf{on\_set\_button\_clicked} generuje množinu bodů na základě za
 
 \clearpage
 \section{Závěr}
-V rámci úlohy \textit{Konvexní obálky} byla vytvořena aplikace, která nad vstupní množinou bodů vytváří konvexní obálky. V rámci testování, která trvalo dlouho do noci a málem se při nich přehřály použité počítače, byla shromážděna data pro určení průměrných časů pro výpočet konvexní obálky jednotlivými algoritmy. Z časových důvodů byly implementovány jen některé bonusové úlohy.\\
+V rámci úlohy \textit{Konvexní obálky} byla vytvořena aplikace, která nad vstupní množinou bodů vytváří striktně konvexní obálky. V rámci testování, která trvalo dlouho do noci a použitým počítačům dala pořádně zabrat, byla shromážděna data průměrné doby výpočtu striktně konvexní obálky pro jednotlivé algoritmy. Z časových důvodů byly implementovány jen některé bonusové úlohy.\\
 
-Po provedených testech považujeme za nejvhodnější algoritmus pro výpočet konvexní obálky pro všechny typy množin algoritmus \textit{Quick Hull}, a to i přesto, že by měl na kružnici dávat horší výsledky. Ze všech použitých algoritmů je suverénně nejrychlejším, což se výrazně projevilo hlavně na velkých množinách. Výpočet konvexní obálky \textit{Jarvis Scanem} na velkých množinách trval dlouho, avšak překvapila nás rychlost, s jakou se vypořádal s kružnicí. Nicméně výpočet obálky mu i na malých množinách trval o poznání déle než ostatním algoritmům. Jako nevyhovujícím pro všechny typy množin (zejména pokud obsahují velké množství bodů) byl shledán \textit{Sweep Line} algoritmus. Vytvoření konvexní obálky nad množinou o 1 milionu bodů mu trvalo 12-15 minut(pro srovnání, \textit{Quick Hull} to zvládal pod 1.5 s).\\
+Po provedených testech považujeme za nejvhodnější algoritmus pro výpočet konvexní obálky pro všechny typy množin algoritmus \textit{Quick Hull}, a to i přesto, že by měl na kružnici dávat horší výsledky. Ze všech použitých algoritmů je suverénně nejrychlejším, což se výrazně projevilo hlavně na velkých množinách. Výpočet konvexní obálky \textit{Jarvis Scanem} na velkých množinách trval dlouho, avšak překvapila nás rychlost, s jakou se vypořádal s kružnicí. Nicméně výpočet obálky mu i na malých množinách trval o poznání déle než ostatním algoritmům. Jako nevyhovujícím pro všechny typy množin (zejména pokud obsahují velké množství bodů) byl shledán \textit{Sweep Line} algoritmus. Vytvoření konvexní obálky nad množinou o 1 milionu bodů mu trvalo 12-15 minut(pro srovnání, \textit{Quick Hull} to zvládal pod 1.5 s). Vliv na výpočetní dobu jistě má odstranění duplicitních bodů ze vstupní množiny, avšak je to nezbytný krok ke správnému fungování algoritmu.\\
 
 Závěrem by bylo vhodné podotknout, že data z testování nejsou 100\% spolehlivá. Již v průběhu testování bylo zaznamenáno, že doba výpočtu algoritmu velmi závisí na výkonu použitého počítače (rozdíl v rychlostech byl až dvojnásobný) a také na tom, zda jsou v době testování na počítači spuštěny jiné aplikace (např. prohlížeč) nebo se provádí jiné úkony (např. psaní technické zprávy). To může být jednou z příčin vzniku odchylek, které se v datech občas vyskytují. Pro zachování přibližně konzistentních podmínek při testování byly použity dva notebooky s podobným výkonem.\\
 
-Do budoucna by jistě šla rozšířit nabídka generovaných množin bodů a naprogramovat celková automatizace testování. Aktuální verze kódu pro testování obsahovala pouze cyklus na 10 opakování téhož výpočtu. Mezi pozitivní přínosy úlohy zajisté patří objevení způsobu hromadného exportu grafů z \textit{Excelu} do formátu *.png.
+Do budoucna by jistě šla rozšířit nabídka generovaných množin bodů a naprogramovat celková automatizace testování. Aktuální verze kódu pro testování obsahovala pouze cyklus na 10 opakování téhož výpočtu. Dále by mohl být naprogramován další výpočetní algoritmus, \textit{Graham Scan}, na který již autorky neměly čas. Mezi pozitivní přínosy úlohy zajisté patří objevení způsobu hromadného exportu grafů z \textit{Excelu} do formátu *.png.
 
 \clearpage
 
