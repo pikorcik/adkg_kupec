@@ -9,8 +9,9 @@ private:
     QPoint s, e;
 public:
     Edge(QPoint &start, QPoint &end):s(start),e(end){}
-    QPoint getS() const {return s;}
-    QPoint getE() const {return e;}
+    QPoint & getS() {return s;}
+    QPoint & getE() {return e;}
+
     void switchOrientation()
     {
         QPoint temp = s;
@@ -18,9 +19,9 @@ public:
         e = temp;
     }
 
-    bool operator == (const Edge &edge) const
+    bool operator == (const Edge &e_)
     {
-        return (s == edge.getS() && e == edge.getE());
+        return ((s == e_.s)&&(e == e_.e));
     }
 
 };
