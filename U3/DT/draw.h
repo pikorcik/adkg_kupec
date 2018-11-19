@@ -2,6 +2,9 @@
 #define DRAW_H
 
 #include <QWidget>
+#include <vector>
+
+#include "edge.h"
 
 class Draw : public QWidget
 {
