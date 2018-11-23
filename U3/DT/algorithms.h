@@ -1,6 +1,7 @@
 #ifndef ALGORITHMS_H
 #define ALGORITHMS_H
 #include "edge.h"
+#include "qpoint3d.h"
 
 #include <QtGui>
 #include <vector>
@@ -15,12 +16,15 @@ class Algorithms
 {
 public:
     Algorithms();
-    static TPosition getPointLinePosition(QPoint &q, QPoint &a, QPoint &b);
-    static double getCircleRadius(QPoint &p1, QPoint &p2, QPoint &p3, QPoint &c);
-    static int getNearestPoint(QPoint &p, std::vector<QPoint> points);
-    static double getDistance(QPoint &p1, QPoint &p2);
-    static int getDelaunayPoint(QPoint &s, QPoint &e, std::vector<QPoint> points);
-    static std::vector<Edge> delaunayTriangulation(std::vector<QPoint> &points);
+    static TPosition getPointLinePosition(QPoint3D &q, QPoint3D &a, QPoint3D &b);
+    static double getCircleRadius(QPoint3D &p1, QPoint3D &p2, QPoint3D &p3, QPoint3D &c);
+    static int getNearestPoint(QPoint3D &p, std::vector<QPoint3D> points);
+    static double getDistance(QPoint3D &p1, QPoint3D &p2);
+    static int getDelaunayPoint(QPoint3D &s, QPoint3D &e, std::vector<QPoint3D> points);
+    static std::vector<Edge> delaunayTriangulation(std::vector<QPoint3D> &points);
+    static QPoint3D getContourPoint(QPoint3D &p1, QPoint3D &p2, double &z);
+    static std::vector<Edge> createContours(std::vector<Edge> &dt, double &z_min, double &z_max, double &dz);
+
 };
 
 #endif // ALGORITHMS_H

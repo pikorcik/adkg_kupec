@@ -31,7 +31,7 @@ void Draw::paintEvent(QPaintEvent *e)
 
 void Draw::mousePressEvent(QMouseEvent *e)
 {
-    QPoint p(e->x(), e->y());
+    QPoint3D p(e->x(), e->y());
 
     points.push_back(p);
 

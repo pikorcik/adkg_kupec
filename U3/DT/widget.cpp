@@ -4,6 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <QtGui>
+#include "qpoint3d.h"
 
 
 //#include "edge.h"
@@ -23,10 +24,10 @@ Widget::~Widget()
 
 void Widget::on_delaunay_button_clicked()
 {
-    std::vector<QPoint> points = ui->Canvas->getPoints();
+    std::vector<QPoint3D> points = ui->Canvas->getPoints();
 
     std::ofstream f ("test.txt");
-    for(QPoint p: points)
+    for(QPoint3D p: points)
     {
         f << p.x() << "  " << p.y() <<'\n';
     }
