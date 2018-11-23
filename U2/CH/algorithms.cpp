@@ -235,22 +235,29 @@ QPolygon Algorithms::CHSweepLine(vector<QPoint> &points)
 {
     //Create convex hull using the sweepline procedure
     QPolygon ch;
-
-    //Remove duplicit points
-    for(unsigned int i = 0; i < points.size()-1; i++)
-    {
-        for(unsigned int j = i+1; j < points.size(); j++)
-        {
-            if(points[j].x() == points[i].x() && points[j].y() == points[i].y())
-            {
-                points.erase(points.begin()+j);
-                j--;
-            }
-        }
-    }
+    double eps = 10e-10;
 
     //Sort points by x
     std::sort(points.begin(), points.end(), SortByXAsc());
+
+    //Remove duplicit points
+    std::vector<QPoint> points_clean;
+
+    for(unsigned int i = 0; i < points.size(); i++)
+    {
+        //Add last point (unable to compare)
+        if(i == points.size()-1)
+        {
+            points_clean.push_back(points[i]);
+            break;
+        }
+
+        //Add point if not duplicit with following
+        if(getDistance(points[i], points[i+1]) > eps)
+            points_clean.push_back(points[i]);
+    }
+
+    points = points_clean;
 
     //Create list of predecessors
     std::vector<int> p(points.size());
