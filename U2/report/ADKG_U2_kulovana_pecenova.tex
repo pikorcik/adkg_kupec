@@ -55,7 +55,7 @@ Konvexní obálky\\
 
 \normalsize  
 Zimní semestr 2018/2019\\
-%(oprava: )
+(oprava: 24. 11. 2018)
 \vspace{14cm}
 \end{center}
 
@@ -81,7 +81,7 @@ Zadání úlohy bylo staženo ze stránek předmětu \href{https://web.natur.cun
 	\includegraphics[clip, trim=0cm 10cm 0cm 3cm, width=1.0\textwidth]{./pictures/zadani02.pdf}
 \end{figure}
 
-V rámci této úlohy byly implementovány bonusové úlohy č. 2–3. Bonusová úloha č. 5 byla částečně implementována v rámci základního zadání plus navíc bylo přidáno vykreslení elipsy.
+V rámci této úlohy byly implementovány bonusové úlohy č. 2–3. Bonusová úloha č. 5 byla částečně implementována v rámci základního zadání plus navíc bylo přidáno vykreslení elipsy. Nová verze technické zprávy obsahuje opravené hodnoty a grafy pro algoritmus \textit{Sweep Line} a dle nich upravený závěr.
 \clearpage
 
 \section{Popis a rozbor problému}
@@ -176,9 +176,9 @@ Zjednodušený zápis algoritmu:
 \end{enumerate}
 
 \section{Problematické situace}
-V algoritmu \textit{Sweep Line} bylo nutné ošetřit singularitu, která způsobovala generování nekonvexní obálky. Konkrétně bylo nutné odstranit duplicitní body. Zároveň však toto opatření rapidně navýšilo výpočetní dobu algoritmu, zejména u množiny s vyšším počtem bodů. \\
+V algoritmu \textit{Sweep Line} bylo nutné ošetřit singularitu, která způsobovala generování nekonvexní obálky. Konkrétně bylo nutné odstranit duplicitní body. V opravené verzi aplikace je situace ošetřena setříděním bodů podle souřadnice X a porovnáním vzdáleností mezi dvěma po sobě jdoucími body. Je-li vzdálenosti menší než stanovená mez $\epsilon$, body jsou považovány za duplicitní a bod s větší souřadnicí X je ze vstupní množiny odstraněn. \\
 
-Podmínka ($p_i == p_j$) $\rightarrow$ bod $p_j$ odstraněn (viz. Obrázek 2)\\
+Podmínka ($d_{p_i,p_j} < \epsilon$) $\rightarrow$ bod $p_j$ nezahrnut (viz. Obrázek 2)\\
 
 \begin{figure} [h!]
     \centering
@@ -211,62 +211,62 @@ V rámci testování byly nad množinami bodů \textit{Random set}, \textit{Grid
 \subsection{Tabulky}
 Níže jsou uvedeny průměrné časy běhu algoritmů pro daný počet bodů $n$ z 10 měření pro jednotlivé množiny. Tabulky se všemi naměřenými hodnotami a vypočtenými rozptyly jsou uvedeny v souboru \textit{testing.xlsx}. 
 
-\begin{table}[]
-\centering
-\begin{tabular}{|c|c|c|c|}
-\hline
+\begin{table}[]                                                                            
+\centering                                                                                 
+\begin{tabular}{|c|c|c|c|}                                                                 
+\hline                                                                                     
 \multicolumn{4}{|c|}{\textbf{Průměrný čas výpočtu – Random set}}                  \\ \hline
 n / algoritmus & Jarvis Scan {[}ms{]} & Quick Hull {[}ms{]} & Sweep Line {[}ms{]} \\ \hline
-1000           & 4.5                  & 0.2                 & 1.1                 \\ \hline
-5000           & 36.3                 & 1.7                 & 22.5                \\ \hline
-10000          & 94.8                 & 3.2                 & 92.6                \\ \hline
-25000          & 475.9                & 6.3                 & 539.3               \\ \hline
-50000          & 2078.2               & 13.1                & 2091.7              \\ \hline
-75000          & 4424.1               & 19.0                & 4450.4              \\ \hline
-100000         & 8890.2               & 27.9                & 7818.6              \\ \hline
-200000         & 32830.6              & 52.0                & 31694.4             \\ \hline
-500000         & 126622.3             & 130.8               & 179290.2            \\ \hline
-1000000        & 378372.1             & 245.7               & 635048.4            \\ \hline
-\end{tabular}
-\end{table}
-
-\begin{table}[]
-\centering
-\begin{tabular}{|c|c|c|c|}
-\hline
+1000           & 4.5                  & 0.2                 & 0.1                 \\ \hline
+5000           & 36.3                 & 1.7                 & 1.0                 \\ \hline
+10000          & 94.8                 & 3.2                 & 2.1                 \\ \hline
+25000          & 475.9                & 6.3                 & 5.6                 \\ \hline
+50000          & 2078.2               & 13.1                & 10.6                \\ \hline
+75000          & 4424.1               & 19.0                & 16.2                \\ \hline
+100000         & 8890.2               & 27.9                & 22.4                \\ \hline
+200000         & 32830.6              & 52.0                & 47.3                \\ \hline
+500000         & 126622.3             & 130.8               & 124.5               \\ \hline
+1000000        & 378372.1             & 245.7               & 238.9               \\ \hline
+\end{tabular}                                                                              
+\end{table}                                                                                
+                                                                                           
+\begin{table}[]                                                                            
+\centering                                                                                 
+\begin{tabular}{|c|c|c|c|}                                                                 
+\hline                                                                                     
 \multicolumn{4}{|c|}{\textbf{Průměrný čas výpočtu – Grid}}                        \\ \hline
 n / algoritmus & Jarvis Scan {[}ms{]} & Quick Hull {[}ms{]} & Sweep Line {[}ms{]} \\ \hline
-1000           & 25.7                 & 0.1                 & 1.0                 \\ \hline
-5000           & 284.5                & 0.8                 & 22.6                \\ \hline
-10000          & 794.2                & 1.6                 & 84.4                \\ \hline
-25000          & 3207.6               & 4.1                 & 462.9               \\ \hline
-50000          & 9096.5               & 9.1                 & 1719.1              \\ \hline
-75000          & 16612.3              & 14.6                & 3723.1              \\ \hline
-100000         & 25434.8              & 19.4                & 6763.6              \\ \hline
-200000         & 71724.0              & 33.4                & 27294.5             \\ \hline
-500000         & 272534.8             & 89.5                & 179383.6            \\ \hline
-1000000        & 567696.9             & 187.1               & 745138.1            \\ \hline
-\end{tabular}
-\end{table}
-
-\begin{table}[]
-\centering
-\begin{tabular}{|c|c|c|c|}
-\hline
-\multicolumn{4}{|c|}{\textbf{Průměrný čas výpočtu – Circle}}                	  \\ \hline
+1000           & 25.7                 & 0.1                 & 0.1                 \\ \hline
+5000           & 284.5                & 0.8                 & 0.9                 \\ \hline
+10000          & 794.2                & 1.6                 & 2.1                 \\ \hline
+25000          & 3207.6               & 4.1                 & 5.1                 \\ \hline
+50000          & 9096.5               & 9.1                 & 10.9                \\ \hline
+75000          & 16612.3              & 14.6                & 17.2                \\ \hline
+100000         & 25434.8              & 19.4                & 22.0                \\ \hline
+200000         & 71724.0              & 33.4                & 43.9                \\ \hline
+500000         & 272534.8             & 89.5                & 103.4               \\ \hline
+1000000        & 567696.9             & 187.1               & 186.3               \\ \hline
+\end{tabular}                                                                              
+\end{table}                                                                                
+                                                                                           
+\begin{table}[]                                                                            
+\centering                                                                                 
+\begin{tabular}{|c|c|c|c|}                                                                 
+\hline                                                                                     
+\multicolumn{4}{|c|}{\textbf{Průměrný čas výpočtu – Circle}}                	    \\ \hline
 n / algoritmus & Jarvis Scan {[}ms{]} & Quick Hull {[}ms{]} & Sweep Line {[}ms{]} \\ \hline
-1000           & 44.7                 & 1.5                 & 1.0                 \\ \hline
-5000           & 441.5                & 7.2                 & 17.5                \\ \hline
-10000          & 875.0                & 14.0                & 71.1                \\ \hline
-25000          & 2382.7               & 34.0                & 389.2               \\ \hline
-50000          & 4847.1               & 67.3                & 1502.8              \\ \hline
-75000          & 7265.5               & 100.7               & 3468.3              \\ \hline
-100000         & 9729.6               & 133.4               & 6254.1              \\ \hline
-200000         & 19879.8              & 265.2               & 25542.0             \\ \hline
-500000         & 48700.1              & 673.7               & 185213.4            \\ \hline
-1000000        & 73295.8              & 1373.5              & 799618.4            \\ \hline
-\end{tabular}
-\end{table}
+1000           & 44.7                 & 1.5                 & 0.2                 \\ \hline
+5000           & 441.5                & 7.2                 & 0.8                 \\ \hline
+10000          & 875.0                & 14.0                & 1.4                 \\ \hline
+25000          & 2382.7               & 34.0                & 2.5                 \\ \hline
+50000          & 4847.1               & 67.3                & 4.2                 \\ \hline
+75000          & 7265.5               & 100.7               & 5.8                 \\ \hline
+100000         & 9729.6               & 133.4               & 7.6                 \\ \hline
+200000         & 19879.8              & 265.2               & 14.1                \\ \hline
+500000         & 48700.1              & 673.7               & 38.7                \\ \hline
+1000000        & 73295.8              & 1373.5              & 73.5                \\ \hline
+\end{tabular}                                                                              
+\end{table}                                                                                
 
 \clearpage
 
@@ -337,19 +337,19 @@ Níže přiložené grafy zobrazují závislost mezi počtem bodů množiny a pr
 \subsubsection{Porovnání}
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=9.3cm]{./pictures/g_rand_all.png}
+	\includegraphics[width=8.4cm]{./pictures/g_rand_all.png}
 	\caption{Graf pro množinu \textit{Random}}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=9.3cm]{./pictures/g_grid_all.png}
+	\includegraphics[width=8.4cm]{./pictures/g_grid_all.png}
 	\caption{Graf pro množinu \textit{Grid}}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=9.3cm]{./pictures/g_circ_all.png}
+	\includegraphics[width=8.4cm]{./pictures/g_circ_all.png}
 	\caption{Graf pro množinu \textit{Circle}}
 \end{figure}
 %\end{comment}
@@ -588,11 +588,11 @@ Metoda \textbf{on\_set\_button\_clicked} generuje množinu bodů na základě za
 
 \clearpage
 \section{Závěr}
-V rámci úlohy \textit{Konvexní obálky} byla vytvořena aplikace, která nad vstupní množinou bodů vytváří striktně konvexní obálky. V rámci testování, která trvalo dlouho do noci a použitým počítačům dala pořádně zabrat, byla shromážděna data průměrné doby výpočtu striktně konvexní obálky pro jednotlivé algoritmy. Z časových důvodů byly implementovány jen některé bonusové úlohy.\\
+V rámci úlohy \textit{Konvexní obálky} byla vytvořena aplikace, která nad vstupní množinou bodů vytváří striktně konvexní obálky. V rámci testování, která trvalo dlouho do noci a použitým počítačům dala pořádně zabrat, byla shromážděna data průměrné doby výpočtu striktně konvexní obálky pro jednotlivé algoritmy. Z časových důvodů byly implementovány jen některé bonusové úlohy. Opravená verze aplikace lépe implementuje odstraňo\-vá\-ní duplicitních bodů v algoritmu \textit{Sweep Line}, což výrazně přispělo ke snížení doby běhu algoritmu. V závislosti na tom byly upraveny hodnoty v tabulkách a grafy z nich vycházející.\\
 
-Po provedených testech považujeme za nejvhodnější algoritmus pro výpočet konvexní obálky pro všechny typy množin algoritmus \textit{Quick Hull}, a to i přesto, že by měl na kružnici dávat horší výsledky. Ze všech použitých algoritmů je suverénně nejrychlejším, což se výrazně projevilo hlavně na velkých množinách. Výpočet konvexní obálky \textit{Jarvis Scanem} na velkých množinách trval dlouho, avšak překvapila nás rychlost, s jakou se vypořádal s kružnicí. Nicméně výpočet obálky mu i na malých množinách trval o poznání déle než ostatním algoritmům. Jako nevyhovujícím pro všechny typy množin (zejména pokud obsahují velké množství bodů) byl shledán \textit{Sweep Line} algoritmus. Vytvoření konvexní obálky nad množinou o 1 milionu bodů mu trvalo 12-15 minut(pro srovnání, \textit{Quick Hull} to zvládal pod 1.5 s). Vliv na výpočetní dobu jistě má odstranění duplicitních bodů ze vstupní množiny, avšak je to nezbytný krok ke správnému fungování algoritmu.\\
+Po nově provedeném opravném testování považujeme za nejvhodnější algoritmus pro výpočet konvexní obálky algoritmus \textit{Sweep Line}, a to i přesto, že pro množinu \textit{Grid} byl o něco málo rychlejší algoritmus \textit{Quick Hull}. Jeho rychlost se projevila hlavně u množiny \textit{Circle} (striktně konvexní obálku nad milionem bodů generoval průměrně pod desetinu sekundy). Pro množiny \textit{Random} a \textit{Grid} lze považovat algoritmus \textit{Quick Hull} za srovnatelný s algoritmem \textit{Sweep Line} co se týče výpočetní doby. Jeho slabina se však projevila u množiny \textit{Circle}, jejíž prostorové uspořádání zaručuje, že všechny body náleží konvexní obálce. Tady \textit{Quick Hull} trochu zaváhal a výpočtení doba se prodloužila. Jako nevyhovujícím pro tvorbu konvexních obálek byl shledán algoritmus \textit{Jarvis Scan}. Výpočet obálky mu i na malých množinách trval o poznání déle než ostatním algoritmům, avšak překvapila nás rychlost, s jakou se vypořádal s kružnicí v porovnání s jinými množinami.\\
 
-Závěrem by bylo vhodné podotknout, že data z testování nejsou 100\% spolehlivá. Již v průběhu testování bylo zaznamenáno, že doba výpočtu algoritmu velmi závisí na výkonu použitého počítače (rozdíl v rychlostech byl až dvojnásobný) a také na tom, zda jsou v době testování na počítači spuštěny jiné aplikace (např. prohlížeč) nebo se provádí jiné úkony (např. psaní technické zprávy). To může být jednou z příčin vzniku odchylek, které se v datech občas vyskytují. Pro zachování přibližně konzistentních podmínek při testování byly použity dva notebooky s podobným výkonem.\\
+Závěrem by bylo vhodné podotknout, že data z testování nejsou 100\% spolehlivá. Již v průběhu testování bylo zaznamenáno, že doba výpočtu algoritmu velmi závisí na výkonu použitého počítače (rozdíl v rychlostech byl až dvojnásobný) a také na tom, zda jsou v době testování na počítači spuštěny jiné aplikace (např. prohlížeč) nebo se provádí jiné úkony (např. psaní technické zprávy). To může být jednou z příčin vzniku odchylek a nepřesností, které se v datech občas vyskytují. Pro zachování přibližně konzistentních podmínek při testování byly použity dva notebooky s podobným výkonem.\\
 
 Do budoucna by jistě šla rozšířit nabídka generovaných množin bodů a naprogramovat celková automatizace testování. Aktuální verze kódu pro testování obsahovala pouze cyklus na 10 opakování téhož výpočtu. Dále by mohl být naprogramován další výpočetní algoritmus, \textit{Graham Scan}, na který již autorky neměly čas. Mezi pozitivní přínosy úlohy zajisté patří objevení způsobu hromadného exportu grafů z \textit{Excelu} do formátu *.png.
 
@@ -600,7 +600,7 @@ Do budoucna by jistě šla rozšířit nabídka generovaných množin bodů a na
 
 \section{Zdroje}
 \begin{enumerate}
-\item  \textsl{BAYER, Tomáš. Geometrické vyhledávání bodů} [online][cit. 10. 11. 2018].\\
+\item  \textsl{BAYER, Tomáš. Konvexní obálky} [online][cit. 10. 11. 2018].\\
 Dostupné z: \href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk4.pdf}{https://web.natur.cuni.cz}
 
 \item  \textsl{CS 312 - Convex Hull Project} [online][cit. 10. 11. 2018].\\
