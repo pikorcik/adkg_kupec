@@ -72,6 +72,9 @@ double Algorithms::getPointLineDistance(QPoint &q, QPoint &a, QPoint &b)
 QPolygon Algorithms::CHJarvis (vector<QPoint> &points)
 {
     //Create convex hull using the Jarvis Scan procedure
+
+    double eps = 10e-6;
+
     QPolygon ch;
 
     //Find pivot q
@@ -80,6 +83,10 @@ QPolygon Algorithms::CHJarvis (vector<QPoint> &points)
 
     std::sort(points.begin(), points.end(), SortByXAsc());
     QPoint s = points[0];
+
+    //Change s.X if points s and q are identical (solves problem with counting angle later)
+    if(fabs(q.x()-s.x()) < eps)
+        s.setX(s.x()+10);
 
     //Create Pjj
     QPoint pjj (s.x(),q.y());
@@ -93,19 +100,34 @@ QPolygon Algorithms::CHJarvis (vector<QPoint> &points)
     {
         int i_max = -1;
         double fi_max = 0;
+        double dist_min = 10e10;
 
         //Find pi = arg max angle(pi, pj, pjj)
-        for(unsigned int i = 0; i<points.size();i++)
+        for(unsigned int i = 0; i < points.size(); i++)
         {
             //Get angle betwwen 2 segments
             double fi = get2LinesAngle(pj, pjj, pj, points[i]);
 
-            //Find maximum
-            if (fi>fi_max)
+            //Check whether there are collinear points
+            if(fabs(fi-fi_max) < eps)
             {
-                i_max=i;
-                fi_max=fi;
+                //If so, get the closest point to pj
+                double d_pj_pi = getDistance(pj,points[i]);
+                if(dist_min > d_pj_pi)
+                {
+                    dist_min = d_pj_pi;
+                    i_max = i;
+                    fi_max = fi;
+                }
             }
+
+            //Find maximum
+            else if (fi>fi_max)
+            {
+                i_max = i;
+                fi_max = fi;
+            }
+
         }
 
         //Add the next point to CH
@@ -213,22 +235,29 @@ QPolygon Algorithms::CHSweepLine(vector<QPoint> &points)
 {
     //Create convex hull using the sweepline procedure
     QPolygon ch;
-
-    //Remove duplicit points
-    for(int i = 0; i < points.size()-1; i++)
-    {
-        for(int j = i+1; j < points.size(); j++)
-        {
-            if(points[j].x() == points[i].x() && points[j].y() == points[i].y())
-            {
-                points.erase(points.begin()+j);
-                j--;
-            }
-        }
-    }
+    double eps = 10e-10;
 
     //Sort points by x
     std::sort(points.begin(), points.end(), SortByXAsc());
+
+    //Remove duplicit points
+    std::vector<QPoint> points_clean;
+
+    for(unsigned int i = 0; i < points.size(); i++)
+    {
+        //Add last point (unable to compare)
+        if(i == points.size()-1)
+        {
+            points_clean.push_back(points[i]);
+            break;
+        }
+
+        //Add point if not duplicit with following
+        if(getDistance(points[i], points[i+1]) > eps)
+            points_clean.push_back(points[i]);
+    }
+
+    points = points_clean;
 
     //Create list of predecessors
     std::vector<int> p(points.size());
@@ -327,4 +356,11 @@ void Algorithms::strictCH(QPolygon &ch)
             i--;
         }
     }
+}
+
+double Algorithms::getDistance(QPoint &p1, QPoint &p2)
+{
+    double dx = p1.x()-p2.x();
+    double dy = p1.y()-p2.y();
+    return sqrt(dx*dx + dy*dy);
 }
