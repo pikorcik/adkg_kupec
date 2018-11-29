@@ -18,9 +18,11 @@ public:
 private slots:
     void on_delaunay_button_clicked();
 
-    void on_dmt_button_clicked();
-
     void on_clear_button_clicked();
+
+    void on_contours_button_clicked();
+
+    void on_dtm_button_clicked();
 
 private:
     Ui::Widget *ui;

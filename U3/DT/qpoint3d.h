@@ -7,7 +7,7 @@ class QPoint3D : public QPointF
 {
 
 private:
-    double z;
+    double z = 0;
 
 public:
     QPoint3D(double x, double y, double z_):QPointF(x, y), z(z_){}

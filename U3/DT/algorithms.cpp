@@ -118,7 +118,7 @@ int Algorithms::getDelaunayPoint(QPoint3D &s, QPoint3D &e, std::vector<QPoint3D>
             //Is the point in the left half-plane?
             if(getPointLinePosition(points[i], s, e) == LEFT)
             {
-                QPoint3D c;
+                QPoint3D c(0,0,0);
                 double rad = getCircleRadius(points[i], s, e, c);
 
                 //Point in the right half-plane is preferred
@@ -345,4 +345,76 @@ std::vector<Edge> Algorithms::createContours(std::vector<Edge> &dt, double &z_mi
     }
 
     return contours;
+}
+
+double Algorithms::getSlope(QPoint3D &p1, QPoint3D &p2, QPoint3D &p3)
+{
+    //Compute slope of the triangle
+
+    //Count vectors
+    double ux = p1.x() - p2.x();
+    double uy = p1.y() - p2.y();
+    double uz = p1.getZ() - p2.getZ();
+    double vx = p3.x() - p2.x();
+    double vy = p3.y() - p2.y();
+    double vz = p3.getZ() - p2.getZ();
+
+    //Cross product
+    double nx = uy*vz - uz*vy;
+    double ny = -(ux*vz - uz*vx);
+    double nz = ux*vy - uy*vx;
+
+    //Count norm
+    double norm = sqrt(nx*nx + ny*ny + nz*nz);
+
+    //Count slope
+    return acos(nz/norm)*180/M_PI;
+
+}
+
+double Algorithms::getAspect(QPoint3D &p1, QPoint3D &p2, QPoint3D &p3)
+{
+    //Compute aspect of the triangle
+
+    //Count vectors
+    double ux = p1.x() - p2.x();
+    double uy = p1.y() - p2.y();
+    double uz = p1.getZ() - p2.getZ();
+    double vx = p3.x() - p2.x();
+    double vy = p3.y() - p2.y();
+    double vz = p3.getZ() - p2.getZ();
+
+    //Cross product
+    double nx = uy*vz - uz*vy;
+    double ny = -(ux*vz - uz*vx);
+
+    //Count aspect
+    return atan2(nx,ny)*180/M_PI;
+}
+
+std::vector<Triangle> Algorithms::analyzeDTM(std::vector<Edge> &dt)
+{
+    //Convert edges and compute slope and aspect
+    std::vector<Triangle> dtm;
+
+    //Calculate slope and aspect
+    for(unsigned int i = 0; i < dt.size(); i += 3)
+    {
+        //Get triangle vertices
+        QPoint3D p1 = dt[i].getS();
+        QPoint3D p2 = dt[i].getE();
+        QPoint3D p3 = dt[i+1].getE();
+
+        //Compute slope
+        double slope = getSlope(p1, p2, p3);
+
+        //Compute aspect
+        double aspect = getAspect(p1, p2, p3);
+
+        Triangle t(p1, p2, p3, slope, aspect);
+        dtm.push_back(t);
+    }
+
+    return dtm;
+
 }

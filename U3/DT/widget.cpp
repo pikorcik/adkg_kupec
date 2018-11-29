@@ -5,6 +5,7 @@
 #include <fstream>
 #include <QtGui>
 #include "qpoint3d.h"
+#include "triangle.h"
 
 
 //#include "edge.h"
@@ -38,13 +39,30 @@ void Widget::on_delaunay_button_clicked()
     repaint();
 }
 
-void Widget::on_dmt_button_clicked()
-{
-
-}
 
 void Widget::on_clear_button_clicked()
 {
     ui->Canvas->clearDT();
+    repaint();
+}
+
+void Widget::on_contours_button_clicked()
+{
+    //Create contour lines
+    std::vector<Edge> dt = ui->Canvas->getDT();
+    std::vector<Edge> contours = Algorithms::createContours(dt, 0, 100, 5);
+    ui->Canvas->setContours(contours);
+
+    repaint();
+}
+
+void Widget::on_dtm_button_clicked()
+{
+    //Analyze slope and aspect
+    std::vector<Edge> dt = ui->Canvas->getDT();
+    std::vector<Triangle> dtm = Algorithms::analyzeDTM(dt);
+
+    ui->Canvas->setDTM(dtm);
+
     repaint();
 }
