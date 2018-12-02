@@ -73,7 +73,7 @@ double Algorithms::getCircleRadius(QPoint3D &p1, QPoint3D &p2, QPoint3D &p3, QPo
     return sqrt((x1-m) * (x1-m) + (y1-n)*(y1-n));
 }
 
-int Algorithms::getNearestPoint(QPoint3D &p, std::vector<QPoint3D> points)
+int Algorithms::getNearestPoint(QPoint3D &p, std::vector<QPoint3D> &points)
 {
     //Find the nearest point
     double dist_min = getDistance(p, points[1]);
@@ -103,7 +103,7 @@ double Algorithms::getDistance(QPoint3D &p1, QPoint3D &p2)
     return sqrt(dx*dx + dy*dy);
 }
 
-int Algorithms::getDelaunayPoint(QPoint3D &s, QPoint3D &e, std::vector<QPoint3D> points)
+int Algorithms::getDelaunayPoint(QPoint3D &s, QPoint3D &e, std::vector<QPoint3D> &points)
 {
     //Find the Delaunay point
     double rad_min = 10e10;
@@ -258,7 +258,7 @@ std::vector<Edge> Algorithms::delaunayTriangulation(std::vector<QPoint3D> &point
     return dt;
 }
 
-QPoint3D Algorithms::getContourPoint(QPoint3D &p1, QPoint3D &p2, double &z)
+QPoint3D Algorithms::getContourPoint(QPoint3D &p1, QPoint3D &p2, double z)
 {
     //Return intersection of the edge and a horizontal plane
     double cx = (p2.x() - p1.x()) / (p2.getZ() - p1.getZ()) * (z - p1.getZ()) + p1.x();
@@ -268,9 +268,9 @@ QPoint3D Algorithms::getContourPoint(QPoint3D &p1, QPoint3D &p2, double &z)
     return p;
 }
 
-std::vector<Edge> Algorithms::createContours(std::vector<Edge> &dt, double &z_min, double &z_max, double &dz)
+std::vector<Edge> Algorithms::createContours(std::vector<Edge> &dt, double z_min, double z_max, double dz)
 {
-    //Create contoure lines
+    //Create contour lines
     std::vector<Edge> contours;
 
     //Process all triangles
@@ -289,10 +289,10 @@ std::vector<Edge> Algorithms::createContours(std::vector<Edge> &dt, double &z_mi
         //Find all contour lines
         for(double z = z_min; z <= z_max; z += dz)
         {
-            //High differences
-            double dz1 = z1 - z;
-            double dz2 = z2 - z;
-            double dz3 = z3 - z;
+            // High differences
+            double dz1 = z - z1;
+            double dz2 = z - z2;
+            double dz3 = z - z3;
 
             //Is the edge intersected by a plane?
             double dz12 = dz1 * dz2;
@@ -307,17 +307,18 @@ std::vector<Edge> Algorithms::createContours(std::vector<Edge> &dt, double &z_mi
             else if(dz1 == 0 && dz2 == 0)
                 contours.push_back(dt[i]);
 
-            //Edge e23 is coplanar
+            //Edge e23 is colinear
             else if(dz2 == 0 && dz3 == 0)
                 contours.push_back(dt[i+1]);
 
-            //Edge e31 is coplanar
+            //Edge e31 is colinear
             else if(dz3 == 0 && dz1 == 0)
                 contours.push_back(dt[i+2]);
 
             //Plane intersects edges e12 and e23
             else if((dz12 <= 0 && dz23 < 0) || (dz12 < 0 && dz23 <= 0))
             {
+                //Compute contour line points
                 QPoint3D a  = getContourPoint(p1, p2, z);
                 QPoint3D b = getContourPoint(p2, p3, z);
 
@@ -327,6 +328,7 @@ std::vector<Edge> Algorithms::createContours(std::vector<Edge> &dt, double &z_mi
             //Plane intersects edges e23 and e31
             else if((dz23 <= 0 && dz31 < 0) || (dz23 < 0 && dz31 <= 0))
             {
+                //Compute contour line points
                 QPoint3D a  = getContourPoint(p2, p3, z);
                 QPoint3D b = getContourPoint(p3, p1, z);
 
@@ -336,6 +338,7 @@ std::vector<Edge> Algorithms::createContours(std::vector<Edge> &dt, double &z_mi
             //Plane intersects edges e31 and e12
             else if((dz31 <= 0 && dz12 < 0) || (dz31 < 0 && dz12 <= 0))
             {
+                //Compute contour line points
                 QPoint3D a  = getContourPoint(p3, p1, z);
                 QPoint3D b = getContourPoint(p1, p2, z);
 
@@ -397,8 +400,8 @@ std::vector<Triangle> Algorithms::analyzeDTM(std::vector<Edge> &dt)
     //Convert edges and compute slope and aspect
     std::vector<Triangle> dtm;
 
-    //Calculate slope and aspect
     for(unsigned int i = 0; i < dt.size(); i += 3)
+    //Process all triangles
     {
         //Get triangle vertices
         QPoint3D p1 = dt[i].getS();
@@ -411,10 +414,10 @@ std::vector<Triangle> Algorithms::analyzeDTM(std::vector<Edge> &dt)
         //Compute aspect
         double aspect = getAspect(p1, p2, p3);
 
+        //Create the triangle
         Triangle t(p1, p2, p3, slope, aspect);
         dtm.push_back(t);
     }
 
     return dtm;
-
 }

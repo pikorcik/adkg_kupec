@@ -11,27 +11,28 @@
 class Draw : public QWidget
 {
     Q_OBJECT
-private:
-    std::vector<QPoint3D> points;       //List of points
-    std::vector<Edge> dt;               //List of Delaunay edges
-    std::vector<Edge> contours;         //List of contours
-    std::vector<Triangle> dtm;          //List of triangles
+    private:
+        std::vector<QPoint3D> points;     //List of points
+        std::vector<Edge> dt;             //List of Delaunay edges
+        std::vector<Edge> contours;       //List of contours
+        std::vector<Triangle> dtm;        //List of triangles
 
-public:
-    explicit Draw(QWidget *parent = nullptr);
-    void paintEvent(QPaintEvent *e);
-    void mousePressEvent(QMouseEvent *e);
-    void clearPoints() {points.clear();}
-    void clearDT() {dt.clear();}
-    std::vector<QPoint3D> & getPoints(){return points;}
-    std::vector<Edge> & getDT(){return dt;}
-    void setDT(std::vector<Edge> &dt_){dt = dt_;}
-    void setContours(std::vector<Edge> &contours_){contours = contours_;}
-    void setDTM(std::vector<Triangle> &dtm_){dtm = dtm_;}
+    public:
+        explicit Draw(QWidget *parent = nullptr);
+        void paintEvent(QPaintEvent *e);
+        void mousePressEvent(QMouseEvent *e);
+        void clearPoints() {points.clear();}
+        void clearDT();
+        std::vector<QPoint3D> & getPoints(){return points;}
+        std::vector<Edge> & getDT(){return dt;}
+        void setDT(std::vector<Edge> &dt_){dt = dt_;}
+        void setContours(std::vector<Edge> &contours_){contours = contours_;}
+        void setDTM(std::vector<Triangle> &dtm_){dtm = dtm_;}
 
-signals:
+    signals:
 
-public slots:
+    public slots:
+
 };
 
 #endif // DRAW_H

@@ -4,7 +4,6 @@
 #include <vector>
 #include <fstream>
 #include <QtGui>
-#include "qpoint3d.h"
 #include "triangle.h"
 
 
@@ -26,14 +25,14 @@ Widget::~Widget()
 void Widget::on_delaunay_button_clicked()
 {
     std::vector<QPoint3D> points = ui->Canvas->getPoints();
-
-    std::ofstream f ("test.txt");
+    /*
+    std::ofstream f ("test.fxt");
     for(QPoint3D p: points)
     {
         f << p.x() << "  " << p.y() <<'\n';
     }
     f.close();
-
+    */
     std::vector<Edge> dt = Algorithms::delaunayTriangulation(points);
     ui->Canvas->setDT(dt);
     repaint();
@@ -42,6 +41,7 @@ void Widget::on_delaunay_button_clicked()
 
 void Widget::on_clear_button_clicked()
 {
+    //Clear and repaint
     ui->Canvas->clearDT();
     repaint();
 }

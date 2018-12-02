@@ -1,6 +1,7 @@
 #ifndef SORTBYXASC_H
 #define SORTBYXASC_H
-#include<QtGui>
+
+#include <QtGui>
 #include "qpoint3d.h"
 
 
