@@ -1,4 +1,4 @@
-QTPointInPoly.pro.user
+﻿QTPointInPoly.pro.user
 QTPointInPoly.pro.user.5ca6959
 build-QTPointInPoly-Desktop_Qt_5_7_0_MinGW_32bit-Debug/
 build-QTPointInPoly-Desktop_Qt_5_7_0_MinGW_32bit-Release/
@@ -15,9 +15,14 @@ CH.pro.user
 
 build-DT-Desktop_Qt_5_7_0_MinGW_32bit-Debug/
 build-DT-Desktop_Qt_5_7_0_MinGW_32bit-Release/
-build-DT-Desktop_Qt_5_6_0_MinGW_32bit-Ladění/
-build-DT-Desktop_Qt_5_6_0_MinGW_32bit-Vydání/
+build-DT-Desktop_Qt_5_6_0_MinGW_32bit-Debug/
+build-DT-Desktop_Qt_5_6_0_MinGW_32bit-Release/
 DT.pro.user.c811fc7
 DT.pro.user
 
 U2/build-CH-Desktop_Qt_5_6_0_MinGW_32bit-Release/
+
+ADKG_U3_kulovana_pecenova.aux
+ADKG_U3_kulovana_pecenova.out
+ADKG_U3_kulovana_pecenova.toc
+ADKG_U3_kulovana_pecenova
