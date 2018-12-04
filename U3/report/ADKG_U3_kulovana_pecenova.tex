@@ -150,15 +150,15 @@ Mějme trojúhelník $t_i$ tvořený třemi hranami $e_{1}(p_{1},p_{2})$, $e_{2}
 ~\\
 Pro případy 2 a 3 nebyly vrstevnice řešeny. Nastane-li případ 1 ($e_i \cap \rho$), je pro hranu $e_i$ a rovinu $\rho$ níže uvedenými vzorci vypočten průsečík $a$ o výšce $z_a$: (pro přehlednost uvedeno pro hranu $e_1$)
 
-$$ x_a = \frac{(x_2-x_1)}{(z_2-z_1)}(z-z_1)+x_1 $$
-$$ y_a = \frac{(y_2-y_1)}{(z_2-z_1)}(z-z_1)+y_1 $$
+$$ x_a = \frac{(x_2-x_1)}{(z_2-z_1)}(z_a-z_1)+x_1 $$
+$$ y_a = \frac{(y_2-y_1)}{(z_2-z_1)}(z_a-z_1)+y_1 $$
 
 \subsection{Sklon}
 Algoritmus pro výpočet sklonu počítá sklon jednotlivých trojúhelníků $t_i$. Sklon je úhel $\varphi$ mezi svislicí $n$ a normálou trojúhelníku $n_t$. Rovina trojúhelníku $t_i$ je určena vektory $u$, $v$. Sklon nabývá hodnot $\textless$0$^\circ$;180$^\circ$???$\textgreater$ a v aplikaci je zobrazen v odstínech šedi.\\
 
 $$n = (0,0,1)$$
 $$n_t = \vec{u}\times \vec{v}$$
-$$\varphi =\arccos(\frac{n_t \cdot n}{|n_t| |n|})$$
+$$\varphi =\arccos\left(\frac{n_t \cdot n}{|n_t| |n|}\right)$$
 
 \subsection{Orientace}
 
@@ -368,6 +368,12 @@ Metoda \textbf{setDTM} slouží k převedení digitálního modelů terénu do k
 \subsubsection*{loadDTM}
 Metoda \textbf{loadDTM} slouží k načtení vstupních dat do aplikace. Součástí metody je i kontrola, zda se soubor úspěšně nahrál. Návratová hodnota je typu \textsl{QString} vrací hlášku, zda byly polygony úspěšně nahrány čí nikoli.
 
+\subsubsection*{drawSlope}
+Metoda \textbf{drawSlope} slouží k vykreslení sklonu trojúhelníků.
+
+\subsubsection*{drawAspect}
+Metoda \textbf{drawAspect} slouží k vykreslení orientace trojúhelníků.
+
 
 \subsection{Edge}
 Třída \textit{Edge} slouží k manipulaci s orientovanými hranami. Definuje dva body typu \texttt{QPoint3D} jako počáteční a koncový bod hrany.
@@ -380,8 +386,6 @@ Metoda \textbf{getE} slouží k získání koncový body hrany.
 
 \subsubsection*{switchOrientation}
 Metoda \textbf{switchOrientation} prohazuje orientaci hrany.  
-
-\subsubsection*{????operator}
 
 
 \subsection{QPpoint3D}
@@ -434,11 +438,11 @@ Metoda \textbf{on\_clear\_button\_clicked} vrací aplikaci do výchozí polohy s
 \subsubsection*{on\_contours\_button\_clicked}
 Metoda \textbf{on\_contours\_button\_clicked} nad vygenerovanou trojúhelníkovou sítí z Delaunayho triangulace vykreslí vrstevnice. 
 
-\subsubsection*{on\_dtm\_button\_clicked}
-Metoda \textbf{on\_dtm\_button\_clicked} obarví trojúhelníky vygenerované Delaunayho triangulací v odstínech šedi podle hodnoty sklonu daného trojúhelníku.
+\subsubsection*{on\_slope\_button\_clicked}
+Metoda \textbf{on\_slope\_button\_clicked} obarví trojúhelníky vygenerované Delaunayho triangulací v odstínech šedi podle hodnoty sklonu daného trojúhelníku.
 
-\subsubsection*{!!!aspect}
-
+\subsubsection*{on\_aspect\_button\_clicked}
+Metoda \textbf{on\_aspect\_button\_clicked} obarví trojúhelníky vygenerované Delaunayho triangulací na základě jejich orientace  ke světové straně.
 
 \subsubsection*{on\_load\_button\_clicked}
 Metoda \textbf{on\_load\_button\_clicked} načítá data z textového formátu. Uživatel sám vyhledává cestu k požadovanému souboru.
