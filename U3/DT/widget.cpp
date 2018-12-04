@@ -70,6 +70,10 @@ void Widget::on_dtm_button_clicked()
 
 void Widget::on_load_button_clicked()
 {
+    //Get size of canvas
+    int canvas_width = ui->Canvas->width()-20;
+    int canvas_height = ui->Canvas->height()-20;
+
     //Get path to current directory
     QDir cur_path = QDir::currentPath();
     QString dir_path = cur_path.path();
@@ -87,8 +91,8 @@ void Widget::on_load_button_clicked()
     //Convert path from QString to char* to use in ifstream
     const char* poly_path_char = poly_path.toLatin1().data();
 
-    //Load polygons to vector
-    QString load_message = ui->Canvas->loadDTM(poly_path_char);
+    //Load points to vector
+    QString load_message = ui->Canvas->loadDTM(poly_path_char, canvas_width, canvas_height);
 
     //Write load message
     ui->load_label->setText(load_message);

@@ -30,7 +30,7 @@ class Draw : public QWidget
         void setDT(std::vector<Edge> &dt_){dt = dt_;}
         void setContours(std::vector<Edge> &contours_){contours = contours_;}
         void setDTM(std::vector<Triangle> &dtm_){dtm = dtm_;}
-        QString loadDTM(const char* path);
+        QString loadDTM(const char* path, int width, int height);
 
     signals:
 

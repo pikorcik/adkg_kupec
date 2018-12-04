@@ -8,7 +8,7 @@ Draw::Draw(QWidget *parent) : QWidget(parent)
 
 }
 
-QString Draw::loadDTM(const char* path)
+QString Draw::loadDTM(const char* path, int width, int height)
 {
     //Open DTM file
     ifstream input_data;
@@ -21,32 +21,56 @@ QString Draw::loadDTM(const char* path)
         return "Unable to open file.";
     }
 
-    //Number of points
-    int point_count;
-    input_data >> point_count;
-    qDebug() << "No of points written in file: " << point_count;
-
-    //Check whether number of points is > 0
-    if(point_count < 1)
-    {
-        input_data.close();
-        return "No points in the file.";
-    }
-
     //Declare variables
     double x, y, z;
+    double x_min = std::numeric_limits<double>::max();
+    double x_max = std::numeric_limits<double>::min();
+    double y_min = std::numeric_limits<double>::max();
+    double y_max = std::numeric_limits<double>::min();
+    double z_min = std::numeric_limits<double>::max();
+    double z_max = std::numeric_limits<double>::min();
 
+    //Get all points
     while(!input_data.eof())
     {
         input_data >> x;
         input_data >> y;
         input_data >> z;
-
         points.push_back(QPoint3D(x, y, z));
+
+        //Check min and max coordinates
+        if(x < x_min)
+            x_min = x;
+        if(x > x_max)
+            x_max = x;
+        if(y < y_min)
+            y_min = y;
+        if(y > y_max)
+            y_max = y;
+        if(z < z_min)
+            z_min = z;
+        if(z > z_max)
+            z_max = z;
     }
 
     input_data.close();
+
     qDebug() << "No of points: " << points.size();
+
+    //Check whether number of points is > 0
+    if(points.size() < 1)
+    {
+        return "No points in the file.";
+    }
+
+    //Resize data according to canvas size
+    double x_resize = width / (x_max - x_min);
+    double y_resize = height / (y_max - y_min);
+    for(unsigned int i = 0; i < points.size(); i++)
+    {
+        points[i].setX((points[i].x() - x_min) * x_resize);
+        points[i].setY((points[i].y() - y_min) * y_resize);
+    }
 
     return "File successfully open.";
 }
