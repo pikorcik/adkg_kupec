@@ -16,6 +16,11 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
+
+    //Set initial values
+    ui->contours_spinbox->setRange(0, 500);
+    ui->contours_spinbox->setValue(5);
+    ui->contours_spinbox->setSingleStep(5);
 }
 
 Widget::~Widget()
@@ -51,7 +56,8 @@ void Widget::on_contours_button_clicked()
 {
     //Create contour lines
     std::vector<Edge> dt = ui->Canvas->getDT();
-    std::vector<Edge> contours = Algorithms::createContours(dt, 0, 100, 5);
+    double step = ui->contours_spinbox->value();
+    std::vector<Edge> contours = Algorithms::createContours(dt, z_min, z_max, step);
     ui->Canvas->setContours(contours);
 
     repaint();
@@ -92,7 +98,7 @@ void Widget::on_load_button_clicked()
     const char* poly_path_char = poly_path.toLatin1().data();
 
     //Load points to vector
-    QString load_message = ui->Canvas->loadDTM(poly_path_char, canvas_width, canvas_height);
+    QString load_message = ui->Canvas->loadDTM(poly_path_char, canvas_width, canvas_height, z_min, z_max);
 
     //Write load message
     ui->load_label->setText(load_message);

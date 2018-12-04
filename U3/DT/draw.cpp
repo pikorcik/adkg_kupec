@@ -8,7 +8,7 @@ Draw::Draw(QWidget *parent) : QWidget(parent)
 
 }
 
-QString Draw::loadDTM(const char* path, int width, int height)
+QString Draw::loadDTM(const char* path, int width, int height, double &z_min, double &z_max)
 {
     //Open DTM file
     ifstream input_data;
@@ -27,8 +27,8 @@ QString Draw::loadDTM(const char* path, int width, int height)
     double x_max = std::numeric_limits<double>::min();
     double y_min = std::numeric_limits<double>::max();
     double y_max = std::numeric_limits<double>::min();
-    double z_min = std::numeric_limits<double>::max();
-    double z_max = std::numeric_limits<double>::min();
+    z_min = std::numeric_limits<double>::max();
+    z_max = std::numeric_limits<double>::min();
 
     //Get all points
     while(!input_data.eof())
@@ -85,7 +85,7 @@ void Draw::paintEvent(QPaintEvent *e)
     for(int i = 0; i < points.size(); i++)
     {
         painter.drawEllipse(points[i].x() - 2.5, points[i].y() - 2.55, 5, 5);
-        painter.drawText(points[i].x() + 10, points[i].y() + 10, QString::number(points[i].getZ()));
+        //painter.drawText(points[i].x() + 10, points[i].y() + 10, QString::number(points[i].getZ()));
     }
 
     //Draw Delaunay edges

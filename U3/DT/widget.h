@@ -28,6 +28,7 @@ private slots:
 
 private:
     Ui::Widget *ui;
+    double z_min, z_max;
 };
 
 #endif // WIDGET_H

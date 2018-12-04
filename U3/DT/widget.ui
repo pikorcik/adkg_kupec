@@ -22,12 +22,22 @@
        <verstretch>1</verstretch>
       </sizepolicy>
      </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhDigitsOnly</set>
+     </property>
     </widget>
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLineEdit" name="load_line"/>
+      <widget class="QLineEdit" name="load_line">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="load_button">
@@ -75,6 +85,16 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="contours_label">
+       <property name="text">
+        <string>Step:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="contours_spinbox"/>
      </item>
      <item>
       <widget class="QPushButton" name="contours_button">
