@@ -150,5 +150,7 @@ void Draw::clearDT()
     dt.clear();
     dtm.clear();
     contours.clear();
+    flag_slope = false;
+    flag_aspect = false;
 }
 

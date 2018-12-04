@@ -21,6 +21,12 @@ Widget::Widget(QWidget *parent) :
     ui->contours_spinbox->setRange(0, 500);
     ui->contours_spinbox->setValue(5);
     ui->contours_spinbox->setSingleStep(5);
+
+    ui->delaunay_button->setEnabled(false);
+    ui->contours_button->setEnabled(false);
+    ui->slope_button->setEnabled(false);
+    ui->aspect_button->setEnabled(false);
+    ui->clear_button->setEnabled(false);
 }
 
 Widget::~Widget()
@@ -28,51 +34,11 @@ Widget::~Widget()
     delete ui;
 }
 
-void Widget::on_delaunay_button_clicked()
-{
-    std::vector<QPoint3D> points = ui->Canvas->getPoints();
-    /*
-    std::ofstream f ("test.fxt");
-    for(QPoint3D p: points)
-    {
-        f << p.x() << "  " << p.y() <<'\n';
-    }
-    f.close();
-    */
-
-    //Calculate Delaunay triangulation
-    std::vector<Edge> dt = Algorithms::delaunayTriangulation(points);
-
-    //Analyze slope and aspect
-    std::vector<Triangle> dtm = Algorithms::analyzeDTM(dt);
-
-    ui->Canvas->setDTM(dtm);
-    ui->Canvas->setDT(dt);
-
-    repaint();
-}
-
-
-void Widget::on_clear_button_clicked()
-{
-    //Clear and repaint
-    ui->Canvas->clearDT();
-    repaint();
-}
-
-void Widget::on_contours_button_clicked()
-{
-    //Create contour lines
-    std::vector<Edge> dt = ui->Canvas->getDT();
-    double step = ui->contours_spinbox->value();
-    std::vector<Edge> contours = Algorithms::createContours(dt, z_min, z_max, step);
-    ui->Canvas->setContours(contours);
-
-    repaint();
-}
-
 void Widget::on_load_button_clicked()
 {
+    //Clear previous data
+    ui->Canvas->clearDT();
+
     //Get size of canvas
     int canvas_width = ui->Canvas->width()-20;
     int canvas_height = ui->Canvas->height()-20;
@@ -99,6 +65,50 @@ void Widget::on_load_button_clicked()
 
     //Write load message
     ui->load_label->setText(load_message);
+
+    //Enable triangulation button
+    ui->delaunay_button->setEnabled(true);
+}
+
+void Widget::on_delaunay_button_clicked()
+{
+    std::vector<QPoint3D> points = ui->Canvas->getPoints();
+    /*
+    std::ofstream f ("test.fxt");
+    for(QPoint3D p: points)
+    {
+        f << p.x() << "  " << p.y() <<'\n';
+    }
+    f.close();
+    */
+
+    //Calculate Delaunay triangulation
+    std::vector<Edge> dt = Algorithms::delaunayTriangulation(points);
+
+    //Analyze slope and aspect
+    std::vector<Triangle> dtm = Algorithms::analyzeDTM(dt);
+
+    ui->Canvas->setDTM(dtm);
+    ui->Canvas->setDT(dt);
+
+    repaint();
+
+    //Enable buttons (contours, slope, aspect, clear)
+    ui->contours_button->setEnabled(true);
+    ui->slope_button->setEnabled(true);
+    ui->aspect_button->setEnabled(true);
+    ui->clear_button->setEnabled(true);
+}
+
+void Widget::on_contours_button_clicked()
+{
+    //Create contour lines
+    std::vector<Edge> dt = ui->Canvas->getDT();
+    double step = ui->contours_spinbox->value();
+    std::vector<Edge> contours = Algorithms::createContours(dt, z_min, z_max, step);
+    ui->Canvas->setContours(contours);
+
+    repaint();
 }
 
 void Widget::on_slope_button_clicked()
@@ -111,4 +121,18 @@ void Widget::on_aspect_button_clicked()
 {
     ui->Canvas->drawAspect();
     repaint();
+}
+
+void Widget::on_clear_button_clicked()
+{
+    //Clear and repaint
+    ui->Canvas->clearDT();
+    repaint();
+    ui->load_label->clear();
+    ui->load_line->clear();
+    ui->delaunay_button->setEnabled(false);
+    ui->contours_button->setEnabled(false);
+    ui->slope_button->setEnabled(false);
+    ui->aspect_button->setEnabled(false);
+    ui->clear_button->setEnabled(false);
 }
