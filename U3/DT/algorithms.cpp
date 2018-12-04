@@ -400,8 +400,8 @@ std::vector<Triangle> Algorithms::analyzeDTM(std::vector<Edge> &dt)
     //Convert edges and compute slope and aspect
     std::vector<Triangle> dtm;
 
-    for(unsigned int i = 0; i < dt.size(); i += 3)
     //Process all triangles
+    for(unsigned int i = 0; i < dt.size(); i += 3)
     {
         //Get triangle vertices
         QPoint3D p1 = dt[i].getS();

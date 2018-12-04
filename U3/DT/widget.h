@@ -24,6 +24,8 @@ private slots:
 
     void on_dtm_button_clicked();
 
+    void on_load_button_clicked();
+
 private:
     Ui::Widget *ui;
 };

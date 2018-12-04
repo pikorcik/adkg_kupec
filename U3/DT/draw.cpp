@@ -1,11 +1,54 @@
 #include "draw.h"
 
 #include <QtGui>
-#include <ctime>
+using namespace std;
 
 Draw::Draw(QWidget *parent) : QWidget(parent)
 {
-    srand((unsigned)time(0));
+
+}
+
+QString Draw::loadDTM(const char* path)
+{
+    //Open DTM file
+    ifstream input_data;
+    input_data.open(path);
+
+    //Check whether file is open
+    if (!input_data.is_open())
+    {
+        input_data.close();
+        return "Unable to open file.";
+    }
+
+    //Number of points
+    int point_count;
+    input_data >> point_count;
+    qDebug() << "No of points written in file: " << point_count;
+
+    //Check whether number of points is > 0
+    if(point_count < 1)
+    {
+        input_data.close();
+        return "No points in the file.";
+    }
+
+    //Declare variables
+    double x, y, z;
+
+    while(!input_data.eof())
+    {
+        input_data >> x;
+        input_data >> y;
+        input_data >> z;
+
+        points.push_back(QPoint3D(x, y, z));
+    }
+
+    input_data.close();
+    qDebug() << "No of points: " << points.size();
+
+    return "File successfully open.";
 }
 
 void Draw::paintEvent(QPaintEvent *e)
@@ -17,7 +60,7 @@ void Draw::paintEvent(QPaintEvent *e)
     //Draw points
     for(int i = 0; i < points.size(); i++)
     {
-        painter.drawEllipse(points[i].x() - 5, points[i].y() - 5, 10, 10);
+        painter.drawEllipse(points[i].x() - 2.5, points[i].y() - 2.55, 5, 5);
         painter.drawText(points[i].x() + 10, points[i].y() + 10, QString::number(points[i].getZ()));
     }
 
@@ -60,16 +103,6 @@ void Draw::paintEvent(QPaintEvent *e)
     }
 
     painter.end();
-}
-
-void Draw::mousePressEvent(QMouseEvent *e)
-{
-    //Add new point
-    int z = (rand()%101);
-    QPoint3D p(e->x(), e->y(), z);
-    points.push_back(p);
-
-    repaint();
 }
 
 void Draw::clearDT()

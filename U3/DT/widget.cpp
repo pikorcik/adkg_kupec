@@ -4,6 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <QtGui>
+#include <QFileDialog>
 #include "triangle.h"
 
 
@@ -65,4 +66,30 @@ void Widget::on_dtm_button_clicked()
     ui->Canvas->setDTM(dtm);
 
     repaint();
+}
+
+void Widget::on_load_button_clicked()
+{
+    //Get path to current directory
+    QDir cur_path = QDir::currentPath();
+    QString dir_path = cur_path.path();
+
+    //Open file dialog and select path to polygon file
+    QString poly_path = QFileDialog::getOpenFileName(
+                this,
+                tr("Select file to open"),
+                dir_path,
+                "Text file (*.txt)");
+
+    //Write selected path to UI
+    ui->load_line->setText(poly_path);
+
+    //Convert path from QString to char* to use in ifstream
+    const char* poly_path_char = poly_path.toLatin1().data();
+
+    //Load polygons to vector
+    QString load_message = ui->Canvas->loadDTM(poly_path_char);
+
+    //Write load message
+    ui->load_label->setText(load_message);
 }

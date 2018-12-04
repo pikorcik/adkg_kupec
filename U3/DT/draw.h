@@ -3,6 +3,9 @@
 
 #include <QWidget>
 #include <vector>
+#include <fstream>
+#include <iostream>
+#include <QDebug>
 
 #include "edge.h"
 #include "qpoint3d.h"
@@ -20,7 +23,6 @@ class Draw : public QWidget
     public:
         explicit Draw(QWidget *parent = nullptr);
         void paintEvent(QPaintEvent *e);
-        void mousePressEvent(QMouseEvent *e);
         void clearPoints() {points.clear();}
         void clearDT();
         std::vector<QPoint3D> & getPoints(){return points;}
@@ -28,6 +30,7 @@ class Draw : public QWidget
         void setDT(std::vector<Edge> &dt_){dt = dt_;}
         void setContours(std::vector<Edge> &contours_){contours = contours_;}
         void setDTM(std::vector<Triangle> &dtm_){dtm = dtm_;}
+        QString loadDTM(const char* path);
 
     signals:
 
