@@ -39,8 +39,16 @@ void Widget::on_delaunay_button_clicked()
     }
     f.close();
     */
+
+    //Calculate Delaunay triangulation
     std::vector<Edge> dt = Algorithms::delaunayTriangulation(points);
+
+    //Analyze slope and aspect
+    std::vector<Triangle> dtm = Algorithms::analyzeDTM(dt);
+
+    ui->Canvas->setDTM(dtm);
     ui->Canvas->setDT(dt);
+
     repaint();
 }
 
@@ -59,17 +67,6 @@ void Widget::on_contours_button_clicked()
     double step = ui->contours_spinbox->value();
     std::vector<Edge> contours = Algorithms::createContours(dt, z_min, z_max, step);
     ui->Canvas->setContours(contours);
-
-    repaint();
-}
-
-void Widget::on_dtm_button_clicked()
-{
-    //Analyze slope and aspect
-    std::vector<Edge> dt = ui->Canvas->getDT();
-    std::vector<Triangle> dtm = Algorithms::analyzeDTM(dt);
-
-    ui->Canvas->setDTM(dtm);
 
     repaint();
 }
@@ -102,4 +99,16 @@ void Widget::on_load_button_clicked()
 
     //Write load message
     ui->load_label->setText(load_message);
+}
+
+void Widget::on_slope_button_clicked()
+{
+    ui->Canvas->drawSlope();
+    repaint();
+}
+
+void Widget::on_aspect_button_clicked()
+{
+    ui->Canvas->drawAspect();
+    repaint();
 }

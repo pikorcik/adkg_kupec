@@ -117,9 +117,16 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="dtm_button">
+      <widget class="QPushButton" name="slope_button">
        <property name="text">
-        <string>Analyze DTM</string>
+        <string>Slope</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="aspect_button">
+       <property name="text">
+        <string>Aspect</string>
        </property>
       </widget>
      </item>

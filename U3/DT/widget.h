@@ -22,9 +22,11 @@ private slots:
 
     void on_contours_button_clicked();
 
-    void on_dtm_button_clicked();
+    void on_slope_button_clicked();
 
     void on_load_button_clicked();
+
+    void on_aspect_button_clicked();
 
 private:
     Ui::Widget *ui;

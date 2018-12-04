@@ -103,32 +103,46 @@ void Draw::paintEvent(QPaintEvent *e)
     }
 
     //Draw slope
-    double c = 255.0/180;
-    for(int i = 0; i < dtm.size(); i++)
+    if(flag_slope)
     {
-        //Get triangle and its vertices
-        Triangle t = dtm[i];
-        QPoint3D p1 = t.getP1();
-        QPoint3D p2 = t.getP2();
-        QPoint3D p3 = t.getP3();
+        double c = 255.0/180;
+        for(int i = 0; i < dtm.size(); i++)
+        {
+            //Get triangle and its vertices
+            Triangle t = dtm[i];
+            QPoint3D p1 = t.getP1();
+            QPoint3D p2 = t.getP2();
+            QPoint3D p3 = t.getP3();
 
-        //Get slope and set the brush
-        int c_slope = c * t.getSlope();
-        painter.setBrush(QColor(c_slope, c_slope, c_slope));
+            //Get slope and set the brush
+            int c_slope = c * t.getSlope();
+            painter.setBrush(QColor(c_slope, c_slope, c_slope));
 
-        //Create polygon
-        QPolygon triangle;
-        triangle.append(QPoint(p1.x(), p1.y()));
-        triangle.append(QPoint(p2.x(), p2.y()));
-        triangle.append(QPoint(p3.x(), p3.y()));
+            //Create polygon
+            QPolygon triangle;
+            triangle.append(QPoint(p1.x(), p1.y()));
+            triangle.append(QPoint(p2.x(), p2.y()));
+            triangle.append(QPoint(p3.x(), p3.y()));
 
-        //Draw polygon
-        painter.drawPolygon(triangle);
+            //Draw polygon
+            painter.drawPolygon(triangle);
+        }
     }
 
     painter.end();
 }
 
+void Draw::drawSlope()
+{
+    flag_slope = !flag_slope;
+    flag_aspect = false;
+}
+
+void Draw::drawAspect()
+{
+    flag_aspect = !flag_aspect;
+    flag_slope =  false;
+}
 void Draw::clearDT()
 {
     //Clear all

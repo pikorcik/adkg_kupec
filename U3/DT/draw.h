@@ -19,6 +19,8 @@ class Draw : public QWidget
         std::vector<Edge> dt;             //List of Delaunay edges
         std::vector<Edge> contours;       //List of contours
         std::vector<Triangle> dtm;        //List of triangles
+        bool flag_slope = false;
+        bool flag_aspect = false;
 
     public:
         explicit Draw(QWidget *parent = nullptr);
@@ -31,6 +33,8 @@ class Draw : public QWidget
         void setContours(std::vector<Edge> &contours_){contours = contours_;}
         void setDTM(std::vector<Triangle> &dtm_){dtm = dtm_;}
         QString loadDTM(const char* path, int width, int height, double &z_min, double &z_max);
+        void drawSlope();
+        void drawAspect();
 
     signals:
 
