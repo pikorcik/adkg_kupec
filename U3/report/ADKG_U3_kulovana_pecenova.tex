@@ -85,21 +85,22 @@ V rámci této úlohy nebyly implementovány žádné bonusové úlohy.
 \clearpage
 
 \section{Popis a rozbor problému}
-Úloha \textbf{Digitální model terénu a jeho analýzy} se zabývá vytvořením aplikace, která Delaunayho triangulací nad vstupní množinou bodů $P$ vytvoří trojúhelníkovou síť, pro kterou se lineární interpolací vypočítají vrstevnice. Aplikace dále počítá a vhodně vizualizuje sklon a expozici trojúhelníků ke světovým stranám.\\ 
+Úloha \textbf{Digitální model terénu a jeho analýzy} se zabývá vytvořením aplikace, která Delaunayovou triangulací nad vstupní množinou bodů $P$ vytvoří trojúhelníkovou síť, pro kterou se lineární interpolací vypočítají vrstevnice. Aplikace dále počítá a vhodně vizualizuje sklon a expozici trojúhelníků ke světovým stranám.\\ 
 
-Způsobů, jak geometricky zkonstruovat trojúhelníkovou síť, je více. Pro účely této úlohy byla vybrána Delaunayho triangulace, protože poskytuje optimální trojúhelníky z hlediska tvaru, což je zejména v kartografii velmi důležité. Delaunayho triangulace má čtyři základní vlastnosti:
+Způsobů, jak geometricky zkonstruovat trojúhelníkovou síť, je více. Pro účely této úlohy byla vybrána Delaunayova triangulace, protože poskytuje optimální trojúhelníky z hlediska tvaru, což je zejména v kartografii velmi důležité. Delaunayova triangulace má čtyři základní vlastnosti:
 \begin{enumerate}
 \item Uvnitř kružnice opsané trojúhelníku $t_i \in DT$ neleží žádný jiný bod množiny $P$.
 \item $DT$ maximalizuje minimální úhel v $\forall t_i$, avšak $DT$ neminimalizuje maximální úhel v $t_i$.
 \item $DT$ je lokálně optimální i globálně optimální vůči kritériu minimálního úhlu.
 \item $DT$ je jednoznačná, pokud žádné čtyři body neleží na kružnici.\footnote{Zdroj: \href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk5.pdf}{https://web.natur.cuni.cz}, slide 22}
 \end{enumerate}
+\vspace{0.4cm}
 
 \section{Algoritmy}
 Tato kapitola se zabývá popisem algoritmů, které byly v aplikaci implementovány. 
 
-\subsection{Delanuayho triangulace}
-Delaunyho triangulace byla realizována inkrementální konstrukcí, která je založena na postupném přidávání bodů do již vytvořené triangulace. Během výpočtu je používaná struktura $AEL$ (Active Edge List), která obsahuje všechny hrany, proto které ještě nebyl nalezen třetí bod trojúhelníku. Hrana, pro kterou byl bod nalezen, je vzápětí ze seznamu odstraněna. Před přidáním hran do seznamu je kontrolováno, zda se v něm již nenachází hrana s opačnou orientací. V takovém případě není hrana do seznamu přidána.\\
+\subsection{Delanuayova triangulace}
+Delaunyova triangulace byla realizována inkrementální konstrukcí, která je založena na postupném přidávání bodů do již vytvořené triangulace. Během výpočtu je používaná struktura $AEL$ (Active Edge List), která obsahuje všechny hrany, proto které ještě nebyl nalezen třetí bod trojúhelníku. Hrana, pro kterou byl bod nalezen, je vzápětí ze seznamu odstraněna. Před přidáním hran do seznamu je kontrolováno, zda se v něm již nenachází hrana s opačnou orientací. V takovém případě není hrana do seznamu přidána.\\
 
 Mějme množinu bodů $P$ a orientovanou hranu $e_i$. Hledáme takový bod $p_i \in P$, který se nachází v levé polorovině vymezené hranou $e_i$, pro který dále platí, že poloměr kružnice jemu a hraně opsané je minimální. Během výpočtu jsou upřednostňovány body, jejichž středy opsaných kružnic se nachází v pravé polorovině. Je-li bod splňující výše uvedené kritéria nalezen, vytvoří se dvě nové orientované hrany $e_{i+1}$ a $e_{i+2}$, které se přidají do triangulace a do $AEL$. Původní hrana $e_i$ je z $AEL$ odstraněna. Není-li žádný vhodný bod nalezen, dochází k prohození orientace hrany $e_i$ a postup je opakován. Celý proces je ukončen ve chvíli, kde se v $AEL$ nenachází již žádná hrana. \\ 
 
@@ -108,7 +109,7 @@ Zjednodušený zápis algoritmu lze zapsat způsobem uvedeným níže:
 \begin{enumerate}
 \item Nalezení pivota $a$: $a$ = min($x$) a jemu nejbližší bod $b$
 \item Vytvoření $e_1 = (a,b)$
-\item Nalezení Delaunayho bodu: $r(k_i)$ = min, $k_i = (e_1,p_i)$
+\item Nalezení Delaunayova bodu: $r(k_i)$ = min, $k_i = (e_1,p_i)$
 \item Podmínka: $p_i$ nenalezen $\rightarrow e_1 = (b,a)$, opakuj krok 3
 \item Vytvoř zbylé hrany trojúhelníku: $e_2 = (b,p_i)$, $e_3 = (p_i,a)$
 \item Přidej hrany do $AEL$: $AEL \leftarrow e_1$, $AEL \leftarrow e_2$, $AEL \leftarrow e_3$
@@ -116,7 +117,7 @@ Zjednodušený zápis algoritmu lze zapsat způsobem uvedeným níže:
 \item Dokud $AEL \neq \emptyset$:
 \subitem Vezmi první hranu z $AEL \rightarrow e_1$
 \subitem Prohoď orientaci: $e_1 = (b,a)$
-\subitem Nalezení Delaunayho bodu: $r(k_i)$ = min, $k_i = (e_1,p_i)$
+\subitem Nalezení Delaunayova bodu: $r(k_i)$ = min, $k_i = (e_1,p_i)$
 \subitem Podmínka: $p_i$ nalezen 
 \subsubitem Vytvoř zbylé hrany trojúhelníku: $e_2 = (b,p_i)$, $e_3 = (p_i,a)$
 \subsubitem Přidej hranu do $DT$: $DT \leftarrow e_1$
@@ -137,12 +138,12 @@ Druhý algoritmus použitý v aplikaci slouží k výpočtu vrstevnic. Vrstevnic
 Mějme trojúhelník $t_i$ tvořený třemi hranami $e_{1}(p_{1},p_{2})$, $e_{2}(p_{2},p_{3})$ a $e_{3}(p_{3},p_{1})$ a rovinu $\rho$ o výšce Z. Hledáme průsečnici roviny trojúhelníku $t_i$ s rovinou $\rho$. Pro kritérium $t = (z-z_i)(z-z_{i+1})$ mohou nastat tři základní situace:
 
 \begin{enumerate}
-\item $t < 0 \rightarrow e_i \cap \rho$
 \item $t > 0 \rightarrow e_i \notin \rho$ 
 \item $t = 0 \rightarrow e_i \in \rho$
+\item $t < 0 \rightarrow e_i \cap \rho$
 \end{enumerate}
 ~\\
-Pro případy 2 a 3 nebyly vrstevnice řešeny. Nastane-li případ 1 ($e_i \cap \rho$), je pro hranu $e_i$ a rovinu $\rho$ níže uvedenými vzorci vypočten průsečík $a$ o výšce $z_a$: (pro přehlednost uvedeno pro hranu $e_1$)
+Pro případy 1 a 2 nebyly vrstevnice řešeny. Nastane-li případ 3 ($e_i \cap \rho$), je pro hranu $e_i$ a rovinu $\rho$ níže uvedenými vzorci vypočten průsečík $a$ o výšce $z_a$: (pro přehlednost uvedeno pro hranu $e_1$)
 
 $$ x_a = \frac{(x_2-x_1)}{(z_2-z_1)}(z_a-z_1)+x_1 $$
 $$ y_a = \frac{(y_2-y_1)}{(z_2-z_1)}(z_a-z_1)+y_1 $$
@@ -167,14 +168,15 @@ $$A = \arctan2\left(\frac{n_x}{n_y}\right)$$
 \section{Vstupní data}
 Pro účely této úlohy byla použita data, která byla naměřena v rámci geodetické výuky v terénu v Mariánské u Jáchymova. Souřadnice X a Y byly pro tuto úlohu zredukovány na rozumnou velikost, souřadnice Z byla zachována. Body byly zaměřeny metodou GNSS a totální stanicí a znázorňují tamní louku a část silnice. Seznam vstupních bodů je uložen v textovém souboru testovaci\_data.txt. Soubor je nutné do aplikace nahrát pomocí tlačítka \textsl{Load points}. Struktura textového souboru je následující:\\
 
-\textsl{Sloupec 1}: souřadnice Y [m]\\
-\textsl{Sloupec 2}: souřadnice X [m]\\
-\textsl{Sloupec 3}: souřadnice Z [m]\\
+\noindent
+\textit{Sloupec 1}: souřadnice Y [m]\\
+\textit{Sloupec 2}: souřadnice X [m]\\
+\textit{Sloupec 3}: souřadnice Z [m]\\
 
-Po úspěšném/neúspěšném nahrání souboru je uživatel upozorněn hláškou. Uživatel nemůže kliknout na žádné jiné tlačítko pro výpočty, nejsou-li nahrána data (tlačítka jsou zašedivělá). Aplikace dále nedovoluje spustit výpočty, jež jsou pro své fungování závislé na trojúhelníkové síti, nebyla-li předtím vytvořena. Uživatel má dále možnost zvolit krok, v jakém se budou vykreslovat vrstevnice. Hodnoty lze měnit šipkami nahoru/dolů po 5 m nebo ručně vepsat hodnotu v rozmezí 0 m až 100 m. Delaunayova triangulace, vrstevnice, sklon a orientace se vygenerují stisknutím příslušných tlačítek.
+Po úspěšném/neúspěšném nahrání souboru je uživatel upozorněn hláškou. Uživatel nemůže kliknout na žádné jiné tlačítko pro výpočty, nejsou-li nahrána data (tlačítka jsou zašedivělá). Aplikace dále nedovoluje spustit výpočty, jejichž fungování je závislé na vygenerované trojúhelníkové síti, nebyla-li předtím vytvořena. Uživatel má dále možnost zvolit krok, v jakém se budou vykreslovat vrstevnice. Hodnoty lze měnit šipkami nahoru/dolů po 5 m nebo ručně vepsat hodnotu celého čísla v rozmezí 0 m až 100 m. Delaunayova triangulace, vrstevnice, sklon a orientace se generují stisknutím příslušných tlačítek.
 
 \section{Výstupní data}
-Vstupní množina bodů a nad ní vygenerovaná trojúhelníková síť je zobrazena ve grafickém okně aplikace. Vykreslování vrstevnic, sklonu a orientace je odděleno. U vrstevnic je každá pátá (hlavní) zvýrazněna. Sklon je v odstínech šedi (čím vyšší sklon, tím tmavší barva). Pro zobrazení orientace trojúhelníků ke světovým stranám byla využita prostřední kružnice barvené škály ze stránek společnosti \textit{esri}, viz níže.\\
+Vstupní množina bodů a nad ní vygenerovaná trojúhelníková síť je zobrazena ve grafickém okně aplikace. Vykreslování vrstevnic, sklonu a orientace je odděleno. U vrstevnic je každá pátá (hlavní) zvýrazněna. Sklon je v odstínech šedi (čím vyšší sklon, tím tmavší barva). Pro zobrazení orientace trojúhelníků ke světovým stranám byla využita prostřední kružnice barvené škály ze stránek společnosti \textit{esri}, viz níže. Aplikace je uvedena do výchozího stavu stisknutím tlačítka \textsl{Clear}.\\
 
 \begin{figure}[h!]
 	\centering
@@ -223,18 +225,46 @@ V následují kapitole je představen vizuální vzhled vytvořené aplikace tak
 \end{figure}
 \clearpage
 
-\section{Zhodnocení dosažených výsledků}
+\section{Zhodnocení činnosti algoritmu}
+V následující kapitole jsou porovnány části DMT vytvořeného aplikací a DMT, který byl již dříve vytvořen v SW \textit{Atlas}. Aplikace nezvládá zobrazovat současně vykreslené vrstevnice a sklon trojúhelníků. Ukázka výstupů je rozdělena do dvou snímků. 
 
+\subsection{Celý model}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=11cm]{./pictures/kupec_dtm_contours.png}
+	\includegraphics[width=11cm]{./pictures/kupec_dtm_slope.png}
+	\caption{DMT vytvořený aplikací}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=15cm]{./pictures/atlas_dtm.png}
+	\caption{DMT ze SW \textit{Atlas}}
+\end{figure}
+
+\subsection{Kotlina}
+
+
+\subsection{Hrana}
+
+
+\subsection{Hřbetnice}
+
+
+
+%vykreslení trojúhelníků, které tam  nechceme
+%údolí
+%silnice
 \clearpage
  
 \section{Dokumentace}
 Tato kapitola obsahuje dokumentaci k jednotlivým třídám.
 
 \subsection{Algorithms}
-Třída \textit{Algorithms} obsahuje metody pro výpočet Delaunayho triangulace a analýzu DTM.
+Třída \textit{Algorithms} obsahuje metody pro výpočet Delaunayova triangulace a analýzu DTM.
 
 \subsubsection*{delaunayTriangulation}
-Metoda \textbf{delaunayTriangulation} vytváří nad množinou bodů Delaunayho triangulaci. Na vstupu je vektor bodů typu \texttt{QPoint3D}, metoda vrací uspořádaný vektor hran \texttt{Edge}, které tvoří jednotlivé trojúhelníky.\\
+Metoda \textbf{delaunayTriangulation} vytváří nad množinou bodů Delaunayovy triangulaci. Na vstupu je vektor bodů typu \texttt{QPoint3D}, metoda vrací uspořádaný vektor hran \texttt{Edge}, které tvoří jednotlivé trojúhelníky.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -246,8 +276,8 @@ Metoda \textbf{delaunayTriangulation} vytváří nad množinou bodů Delaunayho 
 \item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$
 \end{itemize}
 
-\subsubsection*{!createContours}
-Metoda \textbf{createContours} vytváří nad vstupní množinou hran vrstevnice na základě zadané minimální a maximální výšky a kroku, po kterém se vrstevnice budou vykreslovat.  Metoda vrací vektor hran, které představují vrstevnice.\\
+\subsubsection*{createContours}
+Metoda \textbf{createContours} vytváří nad vstupní množinou hran vrstevnice dle zadaného kroku, po kterém se vrstevnice budou vykreslovat.  Metoda vrací vektor hran, které představují vrstevnice.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -342,7 +372,7 @@ Metoda \textbf{getNearestPoint} slouží k nalezení nejbližšího bodu z množ
 \end{itemize}
 
 \subsubsection*{getDelaunayPoint}
-Metoda \textbf{getDelaunayPoint} slouží k nalezení třetího bodu trojúhelníku, který splňuje Delaunayho kritérium nejmenší opsané kružnice. Na vstupu jsou dva body typu \texttt{QPoint3D}, které představují orientovanou hranu, a vektor bodů typu \texttt{QPoint3D}. Návratová hodnota typu \texttt{int} vrací index hledaného bodu.\\
+Metoda \textbf{getDelaunayPoint} slouží k nalezení třetího bodu trojúhelníku, který splňuje Delaunayovo kritérium nejmenší opsané kružnice. Na vstupu jsou dva body typu \texttt{QPoint3D}, které představují orientovanou hranu, a vektor bodů typu \texttt{QPoint3D}. Návratová hodnota typu \texttt{int} vrací index hledaného bodu.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -365,7 +395,7 @@ Metoda \textbf{getContourPoint} počítá průsečík hrany trojúhelníku tvoř
 Třída \textit{Draw} obsahuje metody, které nahrávají a vykreslují vstupní množinu bodů. Dále zajišťuje vykreslení a smazání všech operací, kterou jsou nad množinou prováděny.
 
 \subsubsection*{paintEvent}
-Metoda \textbf{paintEvent} vykresluje vstupní množinu bodů, Delaunayho triangulaci, vrstevnice a sklon a orientaci trojúhelníků.
+Metoda \textbf{paintEvent} vykresluje vstupní množinu bodů, Delaunayovu triangulaci, vrstevnice a sklon a orientaci trojúhelníků.
 
 \subsubsection*{clearDT}
 Metoda \textbf{clearDT} slouží k vymazání všech vykreslených dat.
@@ -377,7 +407,7 @@ Metoda \textbf{getPoints} slouží k získání vektoru bodů z kreslící ploch
 Metoda \textbf{getPoints} slouží k získání vektoru hran z kreslící plochy. Metoda vrací vektor hran typu \texttt{Edge}.
 
 \subsubsection*{setDT}
-Metoda \textbf{setDT} slouží k převedení Delaunayho triangulace do kreslícího okna.
+Metoda \textbf{setDT} slouží k převedení Delaunayovy triangulace do kreslícího okna.
 
 \subsubsection*{setContours}
 Metoda \textbf{setContours} slouží k převedení vrstevnic do kreslícího okna.
@@ -450,19 +480,19 @@ Metoda \textbf{getAspect} slouží k získání orientace daného trojúhelníku
 Metody třídy \textbf{Widget} slouží pro práci uživatele s aplikací. Metody na vstupu nemají žádné parametry a návratové hodnoty jsou typu \texttt{void}.
 
 \subsubsection*{on\_delaunay\_button\_clicked}
-Metoda \textbf{on\_delaunay\_button\_clicked} nad vstupní množinou bodů zobrazí Delaunayho triangulaci. 
+Metoda \textbf{on\_delaunay\_button\_clicked} nad vstupní množinou bodů zobrazí Delaunayovu triangulaci. 
 
 \subsubsection*{on\_clear\_button\_clicked}
 Metoda \textbf{on\_clear\_button\_clicked} vrací aplikaci do výchozí polohy smazáním všeho, co bylo vykresleno. 
 
 \subsubsection*{on\_contours\_button\_clicked}
-Metoda \textbf{on\_contours\_button\_clicked} nad vygenerovanou trojúhelníkovou sítí z Delaunayho triangulace vykreslí vrstevnice. 
+Metoda \textbf{on\_contours\_button\_clicked} nad vygenerovanou trojúhelníkovou sítí z Delaunayovy triangulace vykreslí vrstevnice. 
 
 \subsubsection*{on\_slope\_button\_clicked}
-Metoda \textbf{on\_slope\_button\_clicked} obarví trojúhelníky vygenerované Delaunayho triangulací v odstínech šedi podle hodnoty sklonu daného trojúhelníku.
+Metoda \textbf{on\_slope\_button\_clicked} obarví trojúhelníky vygenerované Delaunayovou triangulací v odstínech šedi podle hodnoty sklonu daného trojúhelníku.
 
 \subsubsection*{on\_aspect\_button\_clicked}
-Metoda \textbf{on\_aspect\_button\_clicked} obarví trojúhelníky vygenerované Delaunayho triangulací na základě jejich orientace  ke světové straně.
+Metoda \textbf{on\_aspect\_button\_clicked} obarví trojúhelníky vygenerované Delaunayovou triangulací na základě jejich orientace  ke světové straně.
 
 \subsubsection*{on\_load\_button\_clicked}
 Metoda \textbf{on\_load\_button\_clicked} načítá data z textového formátu. Uživatel sám vyhledává cestu k požadovanému souboru.
