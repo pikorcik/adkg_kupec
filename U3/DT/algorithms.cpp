@@ -118,7 +118,7 @@ int Algorithms::getDelaunayPoint(QPoint3D &s, QPoint3D &e, std::vector<QPoint3D>
             //Is the point in the left half-plane?
             if(getPointLinePosition(points[i], s, e) == LEFT)
             {
-                QPoint3D c(0,0,0);
+                QPoint3D c;
                 double rad = getCircleRadius(points[i], s, e, c);
 
                 //Point in the right half-plane is preferred

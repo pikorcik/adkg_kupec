@@ -25,7 +25,6 @@ class Draw : public QWidget
     public:
         explicit Draw(QWidget *parent = nullptr);
         void paintEvent(QPaintEvent *e);
-        void clearPoints() {points.clear();}
         void clearDT();
         std::vector<QPoint3D> & getPoints(){return points;}
         std::vector<Edge> & getDT(){return dt;}

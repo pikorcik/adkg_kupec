@@ -37,7 +37,8 @@ Widget::~Widget()
 void Widget::on_load_button_clicked()
 {
     //Clear previous data
-    ui->Canvas->clearDT();
+    //ui->Canvas->clearDT();
+    on_clear_button_clicked();
 
     //Get size of canvas
     int canvas_width = ui->Canvas->width()-20;
@@ -67,7 +68,8 @@ void Widget::on_load_button_clicked()
     ui->load_label->setText(load_message);
 
     //Enable triangulation button
-    ui->delaunay_button->setEnabled(true);
+    if(load_message == "File successfully open.")
+        ui->delaunay_button->setEnabled(true);
 }
 
 void Widget::on_delaunay_button_clicked()

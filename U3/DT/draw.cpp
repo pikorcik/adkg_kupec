@@ -55,8 +55,6 @@ QString Draw::loadDTM(const char* path, int width, int height, double &z_min, do
 
     input_data.close();
 
-    qDebug() << "No of points: " << points.size();
-
     //Check whether number of points is > 0
     if(points.size() < 1)
     {
