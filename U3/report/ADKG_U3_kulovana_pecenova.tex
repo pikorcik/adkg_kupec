@@ -85,7 +85,7 @@ V rámci této úlohy nebyly implementovány žádné bonusové úlohy.
 \clearpage
 
 \section{Popis a rozbor problému}
-Úloha \textbf{Digitální model terénu a jeho analýzy} se zabývá vytvořením aplikace, která Delaunayovou triangulací nad vstupní množinou bodů $P$ vytvoří trojúhelníkovou síť, pro kterou se lineární interpolací vypočítají vrstevnice. Aplikace dále počítá a vhodně vizualizuje sklon a expozici trojúhelníků ke světovým stranám.\\ 
+Úloha \textbf{Digitální model terénu a jeho analýzy} se zabývá vytvořením aplikace, která Delaunayovou triangulací nad vstupní množinou bodů $P$ vytvoří trojúhelníkovou síť, pro kterou se lineární interpolací vypočítají vrstevnice. Aplikace dále počítá a vhodně vizualizuje sklon a orientaci trojúhelníků ke světovým stranám.\\ 
 
 Způsobů, jak geometricky zkonstruovat trojúhelníkovou síť, je více. Pro účely této úlohy byla vybrána Delaunayova triangulace, protože poskytuje optimální trojúhelníky z hlediska tvaru, což je zejména v kartografii velmi důležité. Delaunayova triangulace má čtyři základní vlastnosti:
 \begin{enumerate}
@@ -100,9 +100,9 @@ Způsobů, jak geometricky zkonstruovat trojúhelníkovou síť, je více. Pro �
 Tato kapitola se zabývá popisem algoritmů, které byly v aplikaci implementovány. 
 
 \subsection{Delanuayova triangulace}
-Delaunyova triangulace byla realizována inkrementální konstrukcí, která je založena na postupném přidávání bodů do již vytvořené triangulace. Během výpočtu je používaná struktura $AEL$ (Active Edge List), která obsahuje všechny hrany, proto které ještě nebyl nalezen třetí bod trojúhelníku. Hrana, pro kterou byl bod nalezen, je vzápětí ze seznamu odstraněna. Před přidáním hran do seznamu je kontrolováno, zda se v něm již nenachází hrana s opačnou orientací. V takovém případě není hrana do seznamu přidána.\\
+Delaunyova triangulace byla realizována metodou inkrementální konstrukce, která je založena na postupném přidávání bodů do již vytvořené triangulace. Během výpočtu je používaná struktura $AEL$ (Active Edge List), která obsahuje všechny hrany, proto které ještě nebyl nalezen třetí bod trojúhelníku. Hrana, pro kterou byl bod nalezen, je vzápětí ze seznamu odstraněna. Před přidáním hran do seznamu je kontrolováno, zda se v něm již nenachází hrana s opačnou orientací. V takovém případě není hrana do seznamu přidána.\\
 
-Mějme množinu bodů $P$ a orientovanou hranu $e_i$. Hledáme takový bod $p_i \in P$, který se nachází v levé polorovině vymezené hranou $e_i$, pro který dále platí, že poloměr kružnice jemu a hraně opsané je minimální. Během výpočtu jsou upřednostňovány body, jejichž středy opsaných kružnic se nachází v pravé polorovině. Je-li bod splňující výše uvedené kritéria nalezen, vytvoří se dvě nové orientované hrany $e_{i+1}$ a $e_{i+2}$, které se přidají do triangulace a do $AEL$. Původní hrana $e_i$ je z $AEL$ odstraněna. Není-li žádný vhodný bod nalezen, dochází k prohození orientace hrany $e_i$ a postup je opakován. Celý proces je ukončen ve chvíli, kde se v $AEL$ nenachází již žádná hrana. \\ 
+Mějme množinu bodů $P$ a orientovanou hranu $e_i$. Hledáme takový bod $p_i \in P$, který se nachází v levé polorovině vymezené hranou $e_i$, pro který dále platí, že poloměr kružnice jemu a hraně opsané je minimální. Během výpočtu jsou upřednostňovány body, jejichž středy opsaných kružnic se nachází v pravé polorovině. Je-li bod splňující výše uvedená kritéria nalezen, vytvoří se dvě nové orientované hrany $e_{i+1}$ a $e_{i+2}$, které se přidají do triangulace a do $AEL$. Původní hrana $e_i$ je z $AEL$ odstraněna. Není-li žádný vhodný bod nalezen, dochází k prohození orientace hrany $e_i$ a postup je opakován. Celý proces je ukončen ve chvíli, kde se v $AEL$ nenachází již žádná hrana. \\ 
 
 Zjednodušený zápis algoritmu lze zapsat způsobem uvedeným níže:
 
@@ -135,7 +135,7 @@ Lokální algoritmus $add$:
 \subsection{Vrstevnice}
 Druhý algoritmus použitý v aplikaci slouží k výpočtu vrstevnic. Vrstevnice byly zkonstruovány metodou lineární interpolace, která je založena na předpokladu, že spád terénu mezi dvěma body $p_i$ se mění stejně, tedy konstantně. Výpočet byl proveden postupně pro všechny trojúhelníky a vrstevnice byly ukládány jako seznam hran.\\
 
-Mějme trojúhelník $t_i$ tvořený třemi hranami $e_{1}(p_{1},p_{2})$, $e_{2}(p_{2},p_{3})$ a $e_{3}(p_{3},p_{1})$ a rovinu $\rho$ o výšce Z. Hledáme průsečnici roviny trojúhelníku $t_i$ s rovinou $\rho$. Pro kritérium $t = (z-z_i)(z-z_{i+1})$ mohou nastat tři základní situace:
+Mějme trojúhelník $t_i$ tvořený třemi hranami $e_{1}(p_{1},p_{2})$, $e_{2}(p_{2},p_{3})$ a $e_{3}(p_{3},p_{1})$ a rovinu $\rho$ o výšce Z. Hledáme průsečnici roviny trojúhelníku $t_i$ s rovinou $\rho$. Pro kritérium $t=(z-z_i)(z-z_{i+1})$ mohou nastat tři základní situace:
 
 \begin{enumerate}
 \item $t > 0 \rightarrow e_i \notin \rho$ 
@@ -166,14 +166,14 @@ $$A = \arctan2\left(\frac{n_x}{n_y}\right)$$
 %contours-> dostat se na celé číslo a od toho to počítat (nelze vzít nejmenší/největší hodnotu)
 
 \section{Vstupní data}
-Pro účely této úlohy byla použita data, která byla naměřena v rámci geodetické výuky v terénu v Mariánské u Jáchymova. Souřadnice X a Y byly pro tuto úlohu zredukovány na rozumnou velikost, souřadnice Z byla zachována. Body byly zaměřeny metodou GNSS a totální stanicí a znázorňují tamní louku a část silnice. Seznam vstupních bodů je uložen v textovém souboru testovaci\_data.txt. Soubor je nutné do aplikace nahrát pomocí tlačítka \textsl{Load points}. Struktura textového souboru je následující:\\
+Pro účely této úlohy byla použita data, která byla naměřena v rámci geodetické výuky v terénu v Mariánské u Jáchymova. Souřadnice X a Y byly pro tuto úlohu zredukovány na rozumnou velikost, souřadnice Z byla zachována. Body byly zaměřeny metodou GNSS a totální stanicí a znázorňují tamní louku a část silnice. Seznam vstupních bodů je uložen v textovém souboru testing\_data.txt. Soubor je nutné do aplikace nahrát pomocí tlačítka \textsl{Load points}. Struktura textového souboru je následující:\\
 
 \noindent
 \textit{Sloupec 1}: souřadnice X [m]\\
 \textit{Sloupec 2}: souřadnice Y [m]\\
 \textit{Sloupec 3}: souřadnice Z [m]\\
 
-Po úspěšném/neúspěšném nahrání souboru je uživatel upozorněn hláškou. Uživatel nemůže kliknout na žádné jiné tlačítko pro výpočty, nejsou-li nahrána data (tlačítka jsou zašedivělá). Aplikace dále nedovoluje spustit výpočty, jejichž fungování je závislé na vygenerované trojúhelníkové síti, nebyla-li předtím vytvořena. Uživatel má dále možnost zvolit krok, v jakém se budou vykreslovat vrstevnice. Hodnoty lze měnit šipkami nahoru/dolů po 5 m nebo ručně vepsat hodnotu celého čísla v rozmezí 0 m až 100 m. Delaunayova triangulace, vrstevnice, sklon a orientace se generují stisknutím příslušných tlačítek.
+Po úspěšném/neúspěšném nahrání souboru je uživatel upozorněn hláškou. Uživatel nemůže kliknout na žádné jiné tlačítko pro výpočty, nejsou-li nahrána data (tlačítka jsou zašedivělá). Aplikace dále nedovoluje spustit výpočty, jejichž fungování je závislé na vygenerované trojúhelníkové síti, nebyla-li předtím vytvořena. Uživatel má dále možnost zvolit krok, v jakém se budou vykreslovat vrstevnice. Hodnoty lze měnit šipkami nahoru/dolů po 5 m nebo ručně vepsat hodnotu celého čísla v rozmezí 1 m až 100 m. Delaunayova triangulace, vrstevnice, sklon a orientace se generují stisknutím příslušných tlačítek.
 
 \section{Výstupní data}
 Vstupní množina bodů a nad ní vygenerovaná trojúhelníková síť je zobrazena ve grafickém okně aplikace. Vykreslování vrstevnic, sklonu a orientace je odděleno. U vrstevnic je každá pátá (hlavní) zvýrazněna. Sklon je v odstínech šedi (čím vyšší sklon, tím tmavší barva). Pro zobrazení orientace trojúhelníků ke světovým stranám byla využita prostřední kružnice barvené škály ze stránek společnosti \textit{esri}, viz níže. Aplikace je uvedena do výchozího stavu stisknutím tlačítka \textsl{Clear}.\\
@@ -226,7 +226,7 @@ V následují kapitole je představen vizuální vzhled vytvořené aplikace tak
 \clearpage
 
 \section{Zhodnocení činnosti algoritmu}
-V následující kapitole je porovnán DMT z aplikace a DMT, který byl již dříve vytvořen v SW \textit{Atlas}. Aplikace nezvládá zobrazovat současně vykreslené vrstevnice a sklon trojúhelníků. Ukázka výstupů je rozdělena do dvou snímků. 
+V následující kapitole je porovnán DMT z aplikace a DMT, který byl již dříve vyhotoven v SW \textit{Atlas}. Aplikace nezvládá zobrazovat současně vykreslené vrstevnice a sklon trojúhelníků. Ukázka výstupů je rozdělena do dvou snímků. 
 
 \subsection{Celý model}
 \begin{figure}[h!]
@@ -235,36 +235,74 @@ V následující kapitole je porovnán DMT z aplikace a DMT, který byl již dř
 	\includegraphics[width=12cm]{./pictures/kupec_dtm_slope.png}
 	\caption{DMT vytvořený aplikací}
 \end{figure}
+\clearpage
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=15cm]{./pictures/atlas_dtm.png}
+	\includegraphics[width=13cm]{./pictures/atlas_dtm.png}
 	\caption{DMT ze SW \textit{Atlas}}
 \end{figure}
 
-\subsection{Kotlina}
+Na první pohled je patrné, že DMT ze SW \textit{Atlas} je kvalitněji vyhotoven. Problémem  Delaunayovy triangulace implementované v aplikaci je zejména chybějící možnost nadefinovat lomové a povinné hrany pro triangulaci. V horní části modelu podél silnice se vygenerovaly štíhlé trojúhelníky, které by správně vůbec neměly existovat, jelikož se nachází mimo zájmovou oblast. Vrstevnice z \textit{Atlasu} jsou vyhlazenější, neboť to bylo během generování modelu zajištěno funkcí pro vyhlazení vrstevnic, a vytvořená aplikace toto neumožňuje. Jelikož sklon terénu byl víceméně rovnoměrný, sklon generovaný v aplikaci není příliš viditelný. 
 
+\subsection{Plošina}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=7cm]{./pictures/kupec_plateau_contours.png}
+	\includegraphics[width=7cm]{./pictures/kupec_plateau_slope.png}
+	\caption{Plošina vytvořená aplikací}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=7cm]{./pictures/atlas_plateau.png}
+	\caption{Plošina ze SW \textit{Atlas}}
+\end{figure}
+
+Plošina uprostřed území je rozeznatelná zejména z tvarů vrstevnic. Z trojúhelníkové sítě je patrné, že je trochu vyvýšená, ale i tak to chce trochu představivosti.
 
 \subsection{Hrana}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=7cm]{./pictures/kupec_edge_contours.png}
+	\includegraphics[width=7cm]{./pictures/kupec_edge_slope.png}
+	\caption{Hrana silnice vytvořená aplikací}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=10cm]{./pictures/atlas_edge.png}
+	\caption{Hrana silnice ze SW \textit{Atlas}}
+\end{figure}
+
+Vygenerované vrstevnice v okolí silnice působí silně kostrbatým dojmem, avšak trojúhelníková síť poměrně věrně kopíruje tvar silnice. Jak již bylo zmíněno výše, velkým problémem jsou štíhlé trojúhelníky v horní části modelu, které by neměly existovat.
 
 
 \subsection{Údolnice}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=7.5cm]{./pictures/kupec_thalweg_contours.png}
+	\includegraphics[width=7.5cm]{./pictures/kupec_thalweg_aspect.png}
+	\caption{Údolnice vytvořená aplikací}
+\end{figure}
 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=15cm]{./pictures/atlas_thalweg.png}
+	\caption{Údolnice ze SW \textit{Atlas}}
+\end{figure}
 
-
-%vykreslení trojúhelníků, které tam  nechceme
-%údolí
-%silnice
+Pro názornost porovnání byla tentokrát použita orientace trojúhelníků ke světovým stranám. Z jejich natočení je patrné, že ve středu dochází ke zlomu v terénním tvaru. Vrstevnice tento úkaz hezky vystihují. Ze všech částí DMT vystihla aplikace tento tvar v porovnání s DMT z \textit{Atlasu} nejvěrněji.
 \clearpage
  
 \section{Dokumentace}
 Tato kapitola obsahuje dokumentaci k jednotlivým třídám.
 
 \subsection{Algorithms}
-Třída \textit{Algorithms} obsahuje metody pro výpočet Delaunayova triangulace a analýzu DTM.
+Třída \textit{Algorithms} obsahuje metody pro výpočet Delaunayovy triangulace a analýzu DTM.
 
 \subsubsection*{delaunayTriangulation}
-Metoda \textbf{delaunayTriangulation} vytváří nad množinou bodů Delaunayovy triangulaci. Na vstupu je vektor bodů typu \texttt{QPoint3D}, metoda vrací uspořádaný vektor hran \texttt{Edge}, které tvoří jednotlivé trojúhelníky.\\
+Metoda \textbf{delaunayTriangulation} vytváří nad množinou bodů Delaunayovu triangulaci. Na vstupu je vektor bodů typu \texttt{QPoint3D}, metoda vrací uspořádaný vektor hran \texttt{Edge}, které tvoří jednotlivé trojúhelníky.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -303,7 +341,7 @@ Metoda \textbf{getSlope} počítá sklon trojúhelníku, který je tvořen třem
 \end{itemize}
 
 \subsubsection*{getAspect}
-Metoda \textbf{getSlope} počítá orientaci trojúhelníku, který je tvořen třemi body, ke světovým stranám. Návratová hodnota typu \texttt{double} vrací orientaci trojúhelníku ve stupních. Orientace je pravotočivá a nabývá hodnot $\textless$-180$^\circ$;180$^\circ\textgreater$.\\
+Metoda \textbf{getAspect} počítá orientaci trojúhelníku, který je tvořen třemi body, ke světovým stranám. Návratová hodnota typu \texttt{double} vrací orientaci trojúhelníku ve stupních. Orientace je pravotočivá a nabývá hodnot $\textless$-180$^\circ$;180$^\circ\textgreater$.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -404,7 +442,7 @@ Metoda \textbf{clearDT} slouží k vymazání všech vykreslených dat.
 Metoda \textbf{getPoints} slouží k získání vektoru bodů z kreslící plochy. Metoda vrací vektor bodů typu \texttt{QPoint3D}.
 
 \subsubsection*{getDT}
-Metoda \textbf{getPoints} slouží k získání vektoru hran z kreslící plochy. Metoda vrací vektor hran typu \texttt{Edge}.
+Metoda \textbf{getDT} slouží k získání vektoru hran z kreslící plochy. Metoda vrací vektor hran typu \texttt{Edge}.
 
 \subsubsection*{setDT}
 Metoda \textbf{setDT} slouží k převedení Delaunayovy triangulace do kreslícího okna.
@@ -413,10 +451,10 @@ Metoda \textbf{setDT} slouží k převedení Delaunayovy triangulace do kreslíc
 Metoda \textbf{setContours} slouží k převedení vrstevnic do kreslícího okna.
 
 \subsubsection*{setDTM}
-Metoda \textbf{setDTM} slouží k převedení digitálního modelů terénu do kreslícího okna.
+Metoda \textbf{setDTM} slouží k převedení digitálního modelu terénu do kreslícího okna.
 
 \subsubsection*{loadDTM}
-Metoda \textbf{loadDTM} slouží k načtení vstupních dat do aplikace. Součástí metody je i kontrola, zda se soubor úspěšně nahrál. Návratová hodnota je typu \textsl{QString} vrací hlášku, zda byly polygony úspěšně nahrány čí nikoli.
+Metoda \textbf{loadDTM} slouží k načtení vstupních dat do aplikace. Součástí metody je i kontrola, zda se soubor úspěšně nahrál. Návratová hodnota je typu \textsl{QString} vrací hlášku, zda byly polygony úspěšně nahrány či nikoli.
 
 \subsubsection*{drawSlope}
 Metoda \textbf{drawSlope} slouží k vykreslení sklonu trojúhelníků.
@@ -429,17 +467,17 @@ Metoda \textbf{drawAspect} slouží k vykreslení orientace trojúhelníků.
 Třída \textit{Edge} slouží k manipulaci s orientovanými hranami. Definuje dva body typu \texttt{QPoint3D} jako počáteční a koncový bod hrany.
 
 \subsubsection*{getS}
-Metoda \textbf{getS} slouží k získání počáteční body hrany. 
+Metoda \textbf{getS} slouží k získání počáteční bodu hrany. 
 
 \subsubsection*{getE}
-Metoda \textbf{getE} slouží k získání koncový body hrany. 
+Metoda \textbf{getE} slouží k získání koncového bodu hrany. 
 
 \subsubsection*{switchOrientation}
 Metoda \textbf{switchOrientation} prohazuje orientaci hrany.  
 
 
 \subsection{QPoint3D}
-Třída \textbf{QPpoint3D} slouží k definování nového datového typu \texttt{QPoint3D}, který je odvozen od typu \texttt{QPointF} a který navíc obsahuje souřadnici Z.
+Třída \textit{QPpoint3D} slouží k definování nového datového typu \texttt{QPoint3D}, který je odvozen od typu \texttt{QPointF} a který navíc obsahuje souřadnici Z.
 
 \subsubsection*{getZ}
 Metoda \textbf{getZ} slouží k získání souřadnice Z daného bodu.
@@ -449,7 +487,7 @@ Metoda \textbf{setZ} slouží k nastavení souřadnice Z daného bodu.
 
 
 \subsection{SortByXAsc}
-Třída \textbf{SortByXAsc} má na vstupu dva body typu \texttt{QPoint3D}, návratová hodnota je typu \texttt{bool}. Metoda vrací bod s nižší  souřadnicí X. Mají-li oba body shodnou souřadnici X, vrací bod s nižší souřadnicí Y.\\
+Třída \textit{SortByXAsc} má na vstupu dva body typu \texttt{QPoint3D}, návratová hodnota je typu \texttt{bool}. Metoda vrací bod s nižší  souřadnicí X. Mají-li oba body shodnou souřadnici X, vrací bod s nižší souřadnicí Y.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -464,10 +502,10 @@ Třída \textbf{SortByXAsc} má na vstupu dva body typu \texttt{QPoint3D}, návr
 \end{itemize}
 
 \subsection{Triangle}
-Třída \textbf{Triangle} slouží k definování nového datového typu \texttt{Triangle}, který v sobě uchovává informaci o třech bodech typu \texttt{QPoint3D}, které tvoří trojúhelník, a o sklonu a expozici trojúhelníku.
+Třída \textit{Triangle} slouží k definování nového datového typu \texttt{Triangle}, který v sobě uchovává informaci o třech bodech typu \texttt{QPoint3D}, které tvoří trojúhelník, a o sklonu a expozici trojúhelníku.
 
-\subsubsection*{getPi}
-Metoda \textbf{getSlope} slouží k získání bodu $P_i$ daného trojúhelníku. 
+\subsubsection*{getP\_i}
+Metoda \textbf{getP\_i} slouží k získání bodu $P_i$ daného trojúhelníku. 
 
 \subsubsection*{getSlope}
 Metoda \textbf{getSlope} slouží k získání sklonu daného trojúhelníku. 
@@ -477,7 +515,7 @@ Metoda \textbf{getAspect} slouží k získání orientace daného trojúhelníku
 
 
 \subsection{Widget}
-Metody třídy \textbf{Widget} slouží pro práci uživatele s aplikací. Metody na vstupu nemají žádné parametry a návratové hodnoty jsou typu \texttt{void}.
+Metody třídy \textit{Widget} slouží pro práci uživatele s aplikací. Metody na vstupu nemají žádné parametry a návratové hodnoty jsou typu \texttt{void}.
 
 \subsubsection*{on\_delaunay\_button\_clicked}
 Metoda \textbf{on\_delaunay\_button\_clicked} nad vstupní množinou bodů zobrazí Delaunayovu triangulaci. 
@@ -489,18 +527,22 @@ Metoda \textbf{on\_clear\_button\_clicked} vrací aplikaci do výchozí polohy s
 Metoda \textbf{on\_contours\_button\_clicked} nad vygenerovanou trojúhelníkovou sítí z Delaunayovy triangulace vykreslí vrstevnice. 
 
 \subsubsection*{on\_slope\_button\_clicked}
-Metoda \textbf{on\_slope\_button\_clicked} obarví trojúhelníky vygenerované Delaunayovou triangulací v odstínech šedi podle hodnoty sklonu daného trojúhelníku.
+Metoda \textbf{on\_slope\_button\_clicked} obarví trojúhelníky vygenerované Delaunayovou triangulací do odstínů šedi podle hodnoty sklonu daného trojúhelníku.
 
 \subsubsection*{on\_aspect\_button\_clicked}
-Metoda \textbf{on\_aspect\_button\_clicked} obarví trojúhelníky vygenerované Delaunayovou triangulací na základě jejich orientace  ke světové straně.
+Metoda \textbf{on\_aspect\_button\_clicked} obarví trojúhelníky vygenerované Delaunayovou triangulací na základě jejich orientace ke světové straně.
 
 \subsubsection*{on\_load\_button\_clicked}
-Metoda \textbf{on\_load\_button\_clicked} načítá data z textového formátu. Uživatel sám vyhledává cestu k požadovanému souboru.
-
+Metoda \textbf{on\_load\_button\_clicked} načítá data z textového souboru. Uživatel sám vyhledává cestu k požadovanému souboru.
 
 \clearpage
 \section{Závěr}
-V rámci úlohy \textit{Konvexní obálky} byla vytvořena aplikace, která nad vstupní množinou bodů vytváří striktně konvexní obálky. V rámci testování, která trvalo dlouho do noci a použitým počítačům dala pořádně zabrat, byla shromážděna data průměrné doby výpočtu striktně konvexní obálky pro jednotlivé algoritmy. Z časových důvodů byly implementovány jen některé bonusové úlohy. Opravená verze aplikace lépe implementuje odstraňo\-vá\-ní duplicitních bodů v algoritmu \textit{Sweep Line}, což výrazně přispělo ke snížení doby běhu algoritmu. V závislosti na tom byly upraveny hodnoty v tabulkách a grafy z nich vycházející.\\
+Kartografické hledisko
+nebude dávat výsledky
+slabiny algoritmu (povinné a lomové hrany)
+
+V rámci úlohy \textit{Digitální model terénu a jeho analýzy} byla vytvořena aplikace, která ze vstupní množiny bodů vytvoří digitální model terénu. Implementace některých algoritmů byla náročná, avšak výsledek je obstojný. 
+
 
 Po nově provedeném opravném testování považujeme za nejvhodnější algoritmus pro výpočet konvexní obálky algoritmus \textit{Sweep Line}, a to i přesto, že pro množinu \textit{Grid} byl o něco málo rychlejší algoritmus \textit{Quick Hull}. Jeho rychlost se projevila hlavně u množiny \textit{Circle} (striktně konvexní obálku nad milionem bodů generoval průměrně pod desetinu sekundy). Pro množiny \textit{Random} a \textit{Grid} lze považovat algoritmus \textit{Quick Hull} za srovnatelný s algoritmem \textit{Sweep Line} co se týče výpočetní doby. Jeho slabina se však projevila u množiny \textit{Circle}, jejíž prostorové uspořádání zaručuje, že všechny body náleží konvexní obálce. Tady \textit{Quick Hull} trochu zaváhal a výpočtení doba se prodloužila. Jako nevyhovujícím pro tvorbu konvexních obálek byl shledán algoritmus \textit{Jarvis Scan}. Výpočet obálky mu i na malých množinách trval o poznání déle než ostatním algoritmům, avšak překvapila nás rychlost, s jakou se vypořádal s kružnicí v porovnání s jinými množinami.\\
 
@@ -517,9 +559,8 @@ Dostupné z: \href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk5.p
 
 \item  \textsl{ArcGIS Blog - New Aspect-Slope Raster Function Now Available} [online] [cit. 5. 12. 2018].\\
 Dostupné z: \href{https://www.esri.com/arcgis-blog/products/arcgis-pro/imagery/new-aspect-slope-raster-function-now-available/?fbclid=IwAR0LX-HblA_iPSqg19aUKDW096LjaShp9r_ql8QwA_OJ26EkcFTpOEWJrlg}{https://www.esri.com/}
-
-
 \end{enumerate}
+
 \end{document}
 
 
