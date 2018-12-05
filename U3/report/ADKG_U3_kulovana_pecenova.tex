@@ -169,8 +169,8 @@ $$A = \arctan2\left(\frac{n_x}{n_y}\right)$$
 Pro účely této úlohy byla použita data, která byla naměřena v rámci geodetické výuky v terénu v Mariánské u Jáchymova. Souřadnice X a Y byly pro tuto úlohu zredukovány na rozumnou velikost, souřadnice Z byla zachována. Body byly zaměřeny metodou GNSS a totální stanicí a znázorňují tamní louku a část silnice. Seznam vstupních bodů je uložen v textovém souboru testovaci\_data.txt. Soubor je nutné do aplikace nahrát pomocí tlačítka \textsl{Load points}. Struktura textového souboru je následující:\\
 
 \noindent
-\textit{Sloupec 1}: souřadnice Y [m]\\
-\textit{Sloupec 2}: souřadnice X [m]\\
+\textit{Sloupec 1}: souřadnice X [m]\\
+\textit{Sloupec 2}: souřadnice Y [m]\\
 \textit{Sloupec 3}: souřadnice Z [m]\\
 
 Po úspěšném/neúspěšném nahrání souboru je uživatel upozorněn hláškou. Uživatel nemůže kliknout na žádné jiné tlačítko pro výpočty, nejsou-li nahrána data (tlačítka jsou zašedivělá). Aplikace dále nedovoluje spustit výpočty, jejichž fungování je závislé na vygenerované trojúhelníkové síti, nebyla-li předtím vytvořena. Uživatel má dále možnost zvolit krok, v jakém se budou vykreslovat vrstevnice. Hodnoty lze měnit šipkami nahoru/dolů po 5 m nebo ručně vepsat hodnotu celého čísla v rozmezí 0 m až 100 m. Delaunayova triangulace, vrstevnice, sklon a orientace se generují stisknutím příslušných tlačítek.
@@ -226,13 +226,13 @@ V následují kapitole je představen vizuální vzhled vytvořené aplikace tak
 \clearpage
 
 \section{Zhodnocení činnosti algoritmu}
-V následující kapitole jsou porovnány části DMT vytvořeného aplikací a DMT, který byl již dříve vytvořen v SW \textit{Atlas}. Aplikace nezvládá zobrazovat současně vykreslené vrstevnice a sklon trojúhelníků. Ukázka výstupů je rozdělena do dvou snímků. 
+V následující kapitole je porovnán DMT z aplikace a DMT, který byl již dříve vytvořen v SW \textit{Atlas}. Aplikace nezvládá zobrazovat současně vykreslené vrstevnice a sklon trojúhelníků. Ukázka výstupů je rozdělena do dvou snímků. 
 
 \subsection{Celý model}
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=11cm]{./pictures/kupec_dtm_contours.png}
-	\includegraphics[width=11cm]{./pictures/kupec_dtm_slope.png}
+	\includegraphics[width=12cm]{./pictures/kupec_dtm_contours.png}
+	\includegraphics[width=12cm]{./pictures/kupec_dtm_slope.png}
 	\caption{DMT vytvořený aplikací}
 \end{figure}
 
@@ -248,7 +248,7 @@ V následující kapitole jsou porovnány části DMT vytvořeného aplikací a 
 \subsection{Hrana}
 
 
-\subsection{Hřbetnice}
+\subsection{Údolnice}
 
 
 
