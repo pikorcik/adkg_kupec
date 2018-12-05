@@ -155,19 +155,14 @@ $$n_t = \vec{u}\times \vec{v}$$
 $$\varphi =\arccos\left(\frac{n_t \cdot n}{|n_t| |n|}\right)$$
 
 \subsection{Orientace}
-Orientace terénu $A$ je definována jako azimut průmětu gradientu normálového vektoru roviny trojúhelníku do roviny $x$,$y$. Nabývá hodnot $\textless$0$^\circ$;360$^\circ\textgreater$ a v aplikaci je zobrazen níže přiloženou barevnou škálou. (upravit že není řešen barevně sklo, rozsah.) PŘESUNOUT TO JINAM? rozsah -180 ař 180
+Orientace terénu $A$ je definována jako azimut průmětu gradientu normálového vektoru roviny trojúhelníku do roviny $x$,$y$. Nabývá hodnot $\textless$0$^\circ$;360$^\circ\textgreater$ a v aplikaci je zobrazen barevnou škálou.
 
 $$n_t = \vec{u}\times \vec{v}$$
 $$A = \arctan2\left(\frac{n_x}{n_y}\right)$$
 
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=8cm]{./pictures/skala.png}
-	\caption{Barevná škála orientace trojúhelníků ke světovým stranám \href{https://www.esri.com/arcgis-blog/products/arcgis-pro/imagery/new-aspect-slope-raster-function-now-available/?fbclid=IwAR0LX-HblA_iPSqg19aUKDW096LjaShp9r_ql8QwA_OJ26EkcFTpOEWJrlg}{[Zdroj]}}
-\end{figure}
-
 \section{Problematické situace}
-
+%canvas -> transformace aby byla data vidět
+%contours-> dostat se na celé číslo a od toho to počítat (nelze vzít nejmenší/největší hodnotu)
 
 \section{Vstupní data}
 Pro účely této úlohy byla použita data, která byla naměřena v rámci geodetické výuky v terénu v Mariánské u Jáchymova. Souřadnice X a Y byly pro tuto úlohu zredukovány na rozumnou velikost, souřadnice Z byla zachována. Body byly zaměřeny metodou GNSS a totální stanicí a znázorňují tamní louku a část silnice. Seznam vstupních bodů je uložen v textovém souboru testovaci\_data.txt. Soubor je nutné do aplikace nahrát pomocí tlačítka \textsl{Load points}. Struktura textového souboru je následující:\\
@@ -179,9 +174,13 @@ Pro účely této úlohy byla použita data, která byla naměřena v rámci geo
 Po úspěšném/neúspěšném nahrání souboru je uživatel upozorněn hláškou. Uživatel nemůže kliknout na žádné jiné tlačítko pro výpočty, nejsou-li nahrána data (tlačítka jsou zašedivělá). Aplikace dále nedovoluje spustit výpočty, jež jsou pro své fungování závislé na trojúhelníkové síti, nebyla-li předtím vytvořena. Uživatel má dále možnost zvolit krok, v jakém se budou vykreslovat vrstevnice. Hodnoty lze měnit šipkami nahoru/dolů po 5 m nebo ručně vepsat hodnotu v rozmezí 0 m až 100 m. Delaunayova triangulace, vrstevnice, sklon a orientace se vygenerují stisknutím příslušných tlačítek.
 
 \section{Výstupní data}
-Vygenerovaná množina bodů a její konvexní obálka je vykreslena v grafickém okně aplikace. Aplikace dále vypisuje časy [ms], jak dlouho trvalo generování množiny a jak dlouho nad danou množinou běžel výpočetní algoritmus.\\
+Vstupní množina bodů a nad ní vygenerovaná trojúhelníková síť je zobrazena ve grafickém okně aplikace. Vykreslování vrstevnic, sklonu a orientace je odděleno. U vrstevnic je každá pátá (hlavní) zvýrazněna. Sklon je v odstínech šedi (čím vyšší sklon, tím tmavší barva). Pro zobrazení orientace trojúhelníků ke světovým stranám byla využita prostřední kružnice barvené škály ze stránek společnosti \textit{esri}, viz níže.\\
 
-V rámci testování byly nad množinami bodů \textit{Random set}, \textit{Grid} a \textit{Circle} postupně spuštěny všechny tři algoritmy. Pro každou množinu a algoritmus byla pro daný počet bodů $n = \{1000, 5000, 10000, 25000, 50000, 75000, 100000, 200000, 500000, 1000000\}$ aplikace spuš\-tě\-na 10x, aby bylo získáno dostatečné množství testovacích dat. Z každé testované množiny bylo tedy získáno celkem 300 testovacích dat. Data byla ukládána do textového souboru a následně zpracována v \textit{Excelu}.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=8cm]{./pictures/skala.png}
+	\caption{Barevná škála orientace trojúhelníků ke světovým stranám \href{https://www.esri.com/arcgis-blog/products/arcgis-pro/imagery/new-aspect-slope-raster-function-now-available/?fbclid=IwAR0LX-HblA_iPSqg19aUKDW096LjaShp9r_ql8QwA_OJ26EkcFTpOEWJrlg}{[Zdroj]}}
+\end{figure}
 
 \clearpage
 \section{Aplikace}
@@ -189,47 +188,49 @@ V následují kapitole je představen vizuální vzhled vytvořené aplikace tak
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=13cm]{./pictures/app_default.png}
+	\includegraphics[width=14cm]{./pictures/app_default.png}
 	\caption{Výchozí vzhled aplikace po spuštění}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=13cm]{./pictures/app_load_points.png}
+	\includegraphics[width=14cm]{./pictures/app_load_points.png}
 	\caption{Aplikace po nahrání vstupních dat}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=13cm]{./pictures/app_delaunay.png}
+	\includegraphics[width=15cm]{./pictures/app_delaunay.png}
 	\caption{Trojúhelníková síť}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=13cm]{./pictures/app_contours.png}
+	\includegraphics[width=15cm]{./pictures/app_contours.png}
 	\caption{Vykreslení vrstevnic}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=13cm]{./pictures/app_slope.png}
+	\includegraphics[width=15cm]{./pictures/app_slope.png}
 	\caption{Sklon trojúhelníků}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=13cm]{./pictures/app_aspect.png}
+	\includegraphics[width=15cm]{./pictures/app_aspect.png}
 	\caption{Orientace trojúhelníků}
 \end{figure}
+\clearpage
 
+\section{Zhodnocení dosažených výsledků}
 
 \clearpage
  
 \section{Dokumentace}
 Tato kapitola obsahuje dokumentaci k jednotlivým třídám.
 
-\subsection{!Algorithms}
+\subsection{Algorithms}
 Třída \textit{Algorithms} obsahuje metody pro výpočet Delaunayho triangulace a analýzu DTM.
 
 \subsubsection*{delaunayTriangulation}
@@ -261,7 +262,7 @@ Metoda \textbf{createContours} vytváří nad vstupní množinou hran vrstevnice
 \item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$
 \end{itemize}
 
-\subsubsection*{getSlope}
+\subsection*{getSlope}
 Metoda \textbf{getSlope} počítá sklon trojúhelníku, který je tvořen třemi body. Návratová hodnota typu \texttt{double} nabývá hodnot $\textless$0$^\circ$;90$^\circ\textgreater$ a vrací sklon trojúhelníku.\\
 
 \textbf{Input}:
@@ -484,7 +485,7 @@ Do budoucna by jistě šla rozšířit nabídka generovaných množin bodů a na
 \item  \textsl{BAYER, Tomáš}. 2D triangulace, DMT [online][cit. 4. 12. 2018].\\
 Dostupné z: \href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk5.pdf}{https://web.natur.cuni.cz}
 
-\item  \textsl{ArcGIS Blog - New Aspect-Slope Raster Function Now Available} [online][cit. 5. 12. 2018].\\
+\item  \textsl{ArcGIS Blog - New Aspect-Slope Raster Function Now Available} [online] [cit. 5. 12. 2018].\\
 Dostupné z: \href{https://www.esri.com/arcgis-blog/products/arcgis-pro/imagery/new-aspect-slope-raster-function-now-available/?fbclid=IwAR0LX-HblA_iPSqg19aUKDW096LjaShp9r_ql8QwA_OJ26EkcFTpOEWJrlg}{https://www.esri.com/}
 
 
