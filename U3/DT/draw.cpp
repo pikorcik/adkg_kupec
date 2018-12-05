@@ -77,34 +77,39 @@ void Draw::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
     painter.begin(this);
-    painter.setPen(Qt::red);
+    QPen pen_point(Qt::red);
+    QPen pen_delaunay(Qt::black);
+    QPen pen_contour(Qt::red);
+
 
     //Draw points
-    for(int i = 0; i < points.size(); i++)
+    painter.setPen(pen_point);
+    for(unsigned int i = 0; i < points.size(); i++)
     {
-        painter.drawEllipse(points[i].x() - 2.5, points[i].y() - 2.55, 5, 5);
+        painter.drawEllipse(points[i].x() - 1, points[i].y() - 1, 2, 2);
         //painter.drawText(points[i].x() + 10, points[i].y() + 10, QString::number(points[i].getZ()));
     }
 
     //Draw Delaunay edges
-    for(int i = 0; i < dt.size(); i++)
+    painter.setPen(pen_delaunay);
+    for(unsigned int i = 0; i < dt.size(); i++)
     {
         painter.drawLine(dt[i].getS(), dt[i].getE());
     }
 
     //Draw contour lines
-    painter.setPen(Qt::green);
-
-    for(int i = 0; i < contours.size(); i++)
+    painter.setPen(pen_contour);
+    for(unsigned int i = 0; i < contours.size(); i++)
     {
         painter.drawLine(contours[i].getS(), contours[i].getE());
     }
 
     //Draw slope
+    painter.setPen(pen_delaunay);
     if(flag_slope)
     {
         double c = 255.0/180;
-        for(int i = 0; i < dtm.size(); i++)
+        for(unsigned int i = 0; i < dtm.size(); i++)
         {
             //Get triangle and its vertices
             Triangle t = dtm[i];
@@ -115,6 +120,49 @@ void Draw::paintEvent(QPaintEvent *e)
             //Get slope and set the brush
             int c_slope = c * t.getSlope();
             painter.setBrush(QColor(c_slope, c_slope, c_slope));
+
+            //Create polygon
+            QPolygon triangle;
+            triangle.append(QPoint(p1.x(), p1.y()));
+            triangle.append(QPoint(p2.x(), p2.y()));
+            triangle.append(QPoint(p3.x(), p3.y()));
+
+            //Draw polygon
+            painter.drawPolygon(triangle);
+        }
+    }
+
+    //Draw aspect
+    if(flag_aspect)
+    {
+        for(unsigned int i = 0; i < dtm.size(); i++)
+        {
+            //Get triangle and its vertices
+            Triangle t = dtm[i];
+            QPoint3D p1 = t.getP1();
+            QPoint3D p2 = t.getP2();
+            QPoint3D p3 = t.getP3();
+
+            //Get aspect and set the brush
+            int aspect = t.getAspect();
+            if(aspect > -180 && aspect <= -157.5)
+                painter.setBrush(QColor(192,77,156));
+            else if(aspect > -157.5 && aspect <= -112.5)
+                painter.setBrush(QColor(231,111,122));
+            else if(aspect > -112.5 && aspect <= -67.5)
+                painter.setBrush(QColor(226,166,108));
+            else if(aspect > -67.5 && aspect <= -22.5)
+                painter.setBrush(QColor(214,219,94));
+            else if(aspect > -22.5 && aspect <= 22.5)
+                painter.setBrush(QColor(141,196,88));
+            else if(aspect > 22.5 && aspect <= 67.5)
+                painter.setBrush(QColor(61,171,113));
+            else if(aspect > 67.5 && aspect <= 112.5)
+                painter.setBrush(QColor(80,120,183));
+            else if(aspect > 112.5 && aspect <= 157.5)
+                painter.setBrush(QColor(119,71,157));
+            else if(aspect > 157.5 && aspect <= 180)
+                painter.setBrush(QColor(192,77,156));
 
             //Create polygon
             QPolygon triangle;

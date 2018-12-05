@@ -41,8 +41,8 @@ void Widget::on_load_button_clicked()
     on_clear_button_clicked();
 
     //Get size of canvas
-    int canvas_width = ui->Canvas->width()-20;
-    int canvas_height = ui->Canvas->height()-20;
+    int canvas_width = ui->Canvas->width()-30;
+    int canvas_height = ui->Canvas->height()-30;
 
     //Get path to current directory
     QDir cur_path = QDir::currentPath();
