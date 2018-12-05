@@ -161,7 +161,7 @@ Orientace terénu $A$ je definována jako azimut průmětu gradientu normálové
 $$n_t = \vec{u}\times \vec{v}$$
 $$A = \arctan2\left(\frac{n_x}{n_y}\right)$$
 
-\section{Problematické situace}
+%\section{Problematické situace}
 %canvas -> transformace aby byla data vidět
 %contours-> dostat se na celé číslo a od toho to počítat (nelze vzít nejmenší/největší hodnotu)
 
@@ -176,7 +176,7 @@ Pro účely této úlohy byla použita data, která byla naměřena v rámci geo
 Po úspěšném/neúspěšném nahrání souboru je uživatel upozorněn hláškou. Uživatel nemůže kliknout na žádné jiné tlačítko pro výpočty, nejsou-li nahrána data (tlačítka jsou zašedivělá). Aplikace dále nedovoluje spustit výpočty, jejichž fungování je závislé na vygenerované trojúhelníkové síti, nebyla-li předtím vytvořena. Uživatel má dále možnost zvolit krok, v jakém se budou vykreslovat vrstevnice. Hodnoty lze měnit šipkami nahoru/dolů po 5 m nebo ručně vepsat hodnotu celého čísla v rozmezí 1 m až 100 m. Delaunayova triangulace, vrstevnice, sklon a orientace se generují stisknutím příslušných tlačítek.
 
 \section{Výstupní data}
-Vstupní množina bodů a nad ní vygenerovaná trojúhelníková síť je zobrazena ve grafickém okně aplikace. Vykreslování vrstevnic, sklonu a orientace je odděleno. U vrstevnic je každá pátá (hlavní) zvýrazněna. Sklon je v odstínech šedi (čím vyšší sklon, tím tmavší barva). Pro zobrazení orientace trojúhelníků ke světovým stranám byla využita prostřední kružnice barvené škály ze stránek společnosti \textit{esri}, viz níže. Aplikace je uvedena do výchozího stavu stisknutím tlačítka \textsl{Clear}.\\
+Vstupní množina bodů a nad ní vygenerovaná trojúhelníková síť je zobrazena ve grafickém okně aplikace. Vykreslování vrstevnic, sklonu a orientace je odděleno. U vrstevnic je každá pátá (hlavní) zvýrazněna. Sklon je v odstínech šedi (čím vyšší sklon, tím tmavší barva). Pro zobrazení orientace trojúhelníků ke světovým stranám byla využita prostřední kružnice barvené škály ze stránek společnosti \textit{ESRI}, viz níže. Aplikace je uvedena do výchozího stavu stisknutím tlačítka \textsl{Clear}.\\
 
 \begin{figure}[h!]
 	\centering
@@ -537,19 +537,9 @@ Metoda \textbf{on\_load\_button\_clicked} načítá data z textového souboru. U
 
 \clearpage
 \section{Závěr}
-Kartografické hledisko
-nebude dávat výsledky
-slabiny algoritmu (povinné a lomové hrany)
+V rámci úlohy \textit{Digitální model terénu a jeho analýzy} byla vytvořena aplikace, která ze vstupní množiny bodů vytváří digitální model terénu. Implementace některých algoritmů byla náročná, avšak výsledek je obstojný. Z kartografického hlediska by aplikace mohla být  vylepšena. Jedná se zejména o přidání možnosti navolení povinných a lomových hran, které by zpřesnily výsledný DMT. Algoritmus generuje přijatelné výsledky pro terén, který neobsahuje příliš výrazné terénní hrany. Dále by bylo vhodné zajistit aspoň zevrubní vyhlazení vrstevnic, jelikož působí kostrbatým dojmem. \\
 
-V rámci úlohy \textit{Digitální model terénu a jeho analýzy} byla vytvořena aplikace, která ze vstupní množiny bodů vytvoří digitální model terénu. Implementace některých algoritmů byla náročná, avšak výsledek je obstojný. 
-
-
-Po nově provedeném opravném testování považujeme za nejvhodnější algoritmus pro výpočet konvexní obálky algoritmus \textit{Sweep Line}, a to i přesto, že pro množinu \textit{Grid} byl o něco málo rychlejší algoritmus \textit{Quick Hull}. Jeho rychlost se projevila hlavně u množiny \textit{Circle} (striktně konvexní obálku nad milionem bodů generoval průměrně pod desetinu sekundy). Pro množiny \textit{Random} a \textit{Grid} lze považovat algoritmus \textit{Quick Hull} za srovnatelný s algoritmem \textit{Sweep Line} co se týče výpočetní doby. Jeho slabina se však projevila u množiny \textit{Circle}, jejíž prostorové uspořádání zaručuje, že všechny body náleží konvexní obálce. Tady \textit{Quick Hull} trochu zaváhal a výpočtení doba se prodloužila. Jako nevyhovujícím pro tvorbu konvexních obálek byl shledán algoritmus \textit{Jarvis Scan}. Výpočet obálky mu i na malých množinách trval o poznání déle než ostatním algoritmům, avšak překvapila nás rychlost, s jakou se vypořádal s kružnicí v porovnání s jinými množinami.\\
-
-Závěrem by bylo vhodné podotknout, že data z testování nejsou 100\% spolehlivá. Již v průběhu testování bylo zaznamenáno, že doba výpočtu algoritmu velmi závisí na výkonu použitého počítače (rozdíl v rychlostech byl až dvojnásobný) a také na tom, zda jsou v době testování na počítači spuštěny jiné aplikace (např. prohlížeč) nebo se provádí jiné úkony (např. psaní technické zprávy). To může být jednou z příčin vzniku odchylek a nepřesností, které se v datech občas vyskytují. Pro zachování přibližně konzistentních podmínek při testování byly použity dva notebooky s podobným výkonem.\\
-
-Do budoucna by jistě šla rozšířit nabídka generovaných množin bodů a naprogramovat celková automatizace testování. Aktuální verze kódu pro testování obsahovala pouze cyklus na 10 opakování téhož výpočtu. Dále by mohl být naprogramován další výpočetní algoritmus, \textit{Graham Scan}, na který již autorky neměly čas. Mezi pozitivní přínosy úlohy zajisté patří objevení způsobu hromadného exportu grafů z \textit{Excelu} do formátu *.png.
-
+Do budoucna by bylo vhodné přidat aspoň popis hlavních vrstevnic, případně barevnou hypsometrii. Autorky jsou s výslednou podobou aplikace spokojené. 
 \clearpage
 
 \section{Zdroje}
