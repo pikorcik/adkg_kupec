@@ -268,7 +268,7 @@ QPoint3D Algorithms::getContourPoint(QPoint3D &p1, QPoint3D &p2, double z)
     return p;
 }
 
-std::vector<Edge> Algorithms::createContours(std::vector<Edge> &dt, double z_min, double z_max, double dz)
+std::vector<Edge> Algorithms::createContours(std::vector<Edge> &dt, double z_min, double z_max, double dz, std::vector<double> &z_contours)
 {
     //Create contour lines
     std::vector<Edge> contours;
@@ -305,15 +305,24 @@ std::vector<Edge> Algorithms::createContours(std::vector<Edge> &dt, double z_min
 
             //Edge e12 is coplanar
             else if(dz1 == 0 && dz2 == 0)
+            {
                 contours.push_back(dt[i]);
+                z_contours.push_back(z);
+            }
 
             //Edge e23 is colinear
             else if(dz2 == 0 && dz3 == 0)
+            {
                 contours.push_back(dt[i+1]);
+                z_contours.push_back(z);
+            }
 
             //Edge e31 is colinear
             else if(dz3 == 0 && dz1 == 0)
+            {
                 contours.push_back(dt[i+2]);
+                z_contours.push_back(z);
+            }
 
             //Plane intersects edges e12 and e23
             else if((dz12 <= 0 && dz23 < 0) || (dz12 < 0 && dz23 <= 0))
@@ -323,6 +332,7 @@ std::vector<Edge> Algorithms::createContours(std::vector<Edge> &dt, double z_min
                 QPoint3D b = getContourPoint(p2, p3, z);
 
                 contours.push_back(Edge(a, b));
+                z_contours.push_back(z);
             }
 
             //Plane intersects edges e23 and e31
@@ -333,6 +343,7 @@ std::vector<Edge> Algorithms::createContours(std::vector<Edge> &dt, double z_min
                 QPoint3D b = getContourPoint(p3, p1, z);
 
                 contours.push_back(Edge(a, b));
+                z_contours.push_back(z);
             }
 
             //Plane intersects edges e31 and e12
@@ -343,6 +354,7 @@ std::vector<Edge> Algorithms::createContours(std::vector<Edge> &dt, double z_min
                 QPoint3D b = getContourPoint(p1, p2, z);
 
                 contours.push_back(Edge(a, b));
+                z_contours.push_back(z);
             }
         }
     }

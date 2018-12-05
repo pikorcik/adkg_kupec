@@ -94,7 +94,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QDoubleSpinBox" name="contours_spinbox"/>
+      <widget class="QSpinBox" name="contours_spinbox"/>
      </item>
      <item>
       <widget class="QPushButton" name="contours_button">

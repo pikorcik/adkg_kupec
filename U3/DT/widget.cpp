@@ -18,7 +18,7 @@ Widget::Widget(QWidget *parent) :
     ui->setupUi(this);
 
     //Set initial values
-    ui->contours_spinbox->setRange(0, 500);
+    ui->contours_spinbox->setRange(1, 500);
     ui->contours_spinbox->setValue(5);
     ui->contours_spinbox->setSingleStep(5);
 
@@ -106,9 +106,20 @@ void Widget::on_contours_button_clicked()
 {
     //Create contour lines
     std::vector<Edge> dt = ui->Canvas->getDT();
-    double step = ui->contours_spinbox->value();
-    std::vector<Edge> contours = Algorithms::createContours(dt, z_min, z_max, step);
-    ui->Canvas->setContours(contours);
+    std::vector<double> z_contours;
+
+    //Get selected step
+    int dz = ui->contours_spinbox->value();
+
+    //Change contour interval to int
+    int z_min_int = z_min;
+    int z_max_int = z_max;
+    z_min_int = z_min_int - z_min_int%dz;
+    z_max_int = z_max_int - z_max_int%dz + dz;
+
+    //Create contours
+    std::vector<Edge> contours = Algorithms::createContours(dt, z_min_int, z_max_int, dz, z_contours);
+    ui->Canvas->setContours(contours, z_contours, dz);
 
     repaint();
 }

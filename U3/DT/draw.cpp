@@ -77,10 +77,10 @@ void Draw::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
     painter.begin(this);
-    QPen pen_point(Qt::red);
+    QPen pen_point(Qt::red, 2);
     QPen pen_delaunay(Qt::black);
     QPen pen_contour(Qt::red);
-
+    QPen pen_contour_main(Qt::red, 3);
 
     //Draw points
     painter.setPen(pen_point);
@@ -98,10 +98,24 @@ void Draw::paintEvent(QPaintEvent *e)
     }
 
     //Draw contour lines
-    painter.setPen(pen_contour);
     for(unsigned int i = 0; i < contours.size(); i++)
     {
-        painter.drawLine(contours[i].getS(), contours[i].getE());
+        int z = z_contours[i];
+
+        //Draw rest of contour lines
+        if((z%(5*dz)))
+        {
+            painter.setPen(pen_contour);
+            painter.drawLine(contours[i].getS(), contours[i].getE());
+        }
+
+        //Draw main contour lines
+        else
+        {
+            painter.setPen(pen_contour_main);
+            painter.drawLine(contours[i].getS(), contours[i].getE());
+
+        }
     }
 
     //Draw slope
@@ -196,7 +210,16 @@ void Draw::clearDT()
     dt.clear();
     dtm.clear();
     contours.clear();
+    z_contours.clear();
     flag_slope = false;
     flag_aspect = false;
+}
+
+void Draw::setContours(std::vector<Edge> &contours_, std::vector<double> &z_contours_, double dz_)
+{
+    //Set contours, its heights and selected step
+    contours = contours_;
+    z_contours = z_contours_;
+    dz = dz_;
 }
 
