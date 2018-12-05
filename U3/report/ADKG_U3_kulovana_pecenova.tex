@@ -95,12 +95,6 @@ Způsobů, jak geometricky zkonstruovat trojúhelníkovou síť, je více. Pro �
 \item $DT$ je jednoznačná, pokud žádné čtyři body neleží na kružnici.\footnote{Zdroj: \href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk5.pdf}{https://web.natur.cuni.cz}, slide 22}
 \end{enumerate}
 
-%\begin{figure}[h!]
-	%\centering
-	%\includegraphics[width=13cm]{./pictures/ch.png}
-	%\caption{Ukázka konvexní obálky (\href{http://mind.cs.byu.edu/courses/312/projects/project2_files/ConvexHull_python.php}{\textsl{zdroj}})}
-%\end{figure}
-
 \section{Algoritmy}
 Tato kapitola se zabývá popisem algoritmů, které byly v aplikaci implementovány. 
 
@@ -154,55 +148,80 @@ $$ x_a = \frac{(x_2-x_1)}{(z_2-z_1)}(z_a-z_1)+x_1 $$
 $$ y_a = \frac{(y_2-y_1)}{(z_2-z_1)}(z_a-z_1)+y_1 $$
 
 \subsection{Sklon}
-Algoritmus pro výpočet sklonu počítá sklon jednotlivých trojúhelníků $t_i$. Sklon je úhel $\varphi$ mezi svislicí $n$ a normálou trojúhelníku $n_t$. Rovina trojúhelníku $t_i$ je určena vektory $u$, $v$. Sklon nabývá hodnot $\textless$0$^\circ$;180$^\circ$???$\textgreater$ a v aplikaci je zobrazen v odstínech šedi.\\
+Algoritmus pro výpočet sklonu počítá sklon jednotlivých trojúhelníků $t_i$. Sklon je úhel $\varphi$ mezi svislicí $n$ a normálou trojúhelníku $n_t$. Rovina trojúhelníku $t_i$ je určena vektory $u$, $v$. Sklon nabývá hodnot $\textless$0$^\circ$;90$^\circ\textgreater$ a v aplikaci je zobrazen v odstínech šedi.\\
 
 $$n = (0,0,1)$$
 $$n_t = \vec{u}\times \vec{v}$$
 $$\varphi =\arccos\left(\frac{n_t \cdot n}{|n_t| |n|}\right)$$
 
 \subsection{Orientace}
+Orientace terénu $A$ je definována jako azimut průmětu gradientu normálového vektoru roviny trojúhelníku do roviny $x$,$y$. Nabývá hodnot $\textless$0$^\circ$;360$^\circ\textgreater$ a v aplikaci je zobrazen níže přiloženou barevnou škálou. (upravit že není řešen barevně sklo, rozsah.) PŘESUNOUT TO JINAM? rozsah -180 ař 180
 
+$$n_t = \vec{u}\times \vec{v}$$
+$$A = \arctan2\left(\frac{n_x}{n_y}\right)$$
 
-
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=8cm]{./pictures/skala.png}
+	\caption{Barevná škála orientace trojúhelníků ke světovým stranám \href{https://www.esri.com/arcgis-blog/products/arcgis-pro/imagery/new-aspect-slope-raster-function-now-available/?fbclid=IwAR0LX-HblA_iPSqg19aUKDW096LjaShp9r_ql8QwA_OJ26EkcFTpOEWJrlg}{[Zdroj]}}
+\end{figure}
 
 \section{Problematické situace}
-V algoritmu \textit{Sweep Line} bylo nutné ošetřit singularitu, která způsobovala generování nekonvexní obálky. Konkrétně bylo nutné odstranit duplicitní body. V opravené verzi aplikace je situace ošetřena setříděním bodů podle souřadnice X a porovnáním vzdáleností mezi dvěma po sobě jdoucími body. Je-li vzdálenosti menší než stanovená mez $\epsilon$, body jsou považovány za duplicitní a bod s větší souřadnicí X je ze vstupní množiny odstraněn. \\
 
-Podmínka ($d_{p_i,p_j} < \epsilon$) $\rightarrow$ bod $p_j$ nezahrnut (viz. Obrázek 2)\\
-
-
-Algoritmus \textit{Jarvis Scan} generuje špatné výsledky, není-li ošetřeno, že žádné tři body nejsou spolu kolineární. Tento problém se zejména projevoval při generaci setu \textit{Grid}, který jich obsahuje spoustu. Singularita byla ošetřena vypočtením úhlu $\sphericalangle p_{jj}, p_j, p_i$, a pokud byl menší, než stanovená mez $\epsilon$, byl pro další výpočty vybrán bližší z kolineárních bodů.
-
-\begin{itemize}
-\item Podmínka ($\sphericalangle p_{jj}, p_j, p_i$) $< \epsilon$
-\subitem Podmínka ($d_{p_j,p_i} < d_{min}$) $\rightarrow$ vyber bod $p_i$, $d_{min} = d_{p_j,p_i}$
-\end{itemize}
-
-Dalším problémem bylo, jak zajistit, aby byl generovaný rastr pravidelný. To bylo ošetřeno zaokrouhlením počtu vstupních bodů směrem nahoru tak, aby po odmocnění vznikl pravidelný rastr.\\
-
-počet bodů v řádce/sloupci = $roundUp(\sqrt{num\_of\_points})$
 
 \section{Vstupní data}
-Aplikace si na základě ručního zadání vstupních parametrů uživatelem sama vygeneruje potřebná vstupní data. Z rozbalovací nabídky \textbf{Shape of set} uživatel volí prostorové uspořádání generované množiny bodů. Na výběr jsou možnosti \textit{Random set}, \textit{Grid} a \textit{Circle}. V kolonce \textbf{Number of points} uživatel volí, kolik bodů bude generováno. Lze tak učinit buď přímým zadáním počtu bodů, nebo zvýšením/snížením počtu bodů o 1000 šipkami na boku. Aplikace omezuje minimální a maximální počet generovaných bodů na interval $\textless$1, 1000000$\textgreater$. Množina bodů se vygeneruje stisknutím tlačítka \textsl{Generate set}.\\
+Pro účely této úlohy byla použita data, která byla naměřena v rámci geodetické výuky v terénu v Mariánské u Jáchymova. Souřadnice X a Y byly pro tuto úlohu zredukovány na rozumnou velikost, souřadnice Z byla zachována. Body byly zaměřeny metodou GNSS a totální stanicí a znázorňují tamní louku a část silnice. Seznam vstupních bodů je uložen v textovém souboru testovaci\_data.txt. Soubor je nutné do aplikace nahrát pomocí tlačítka \textsl{Load points}. Struktura textového souboru je následující:\\
 
-Uživatel má dále možnost volit, jaký výpočetní algoritmus bude použit pro tvorbu konvexní obálky. Rozbalovací nabídka \textbf{Method} nabízí celkem tři výpočetní algoritmy: \textit{Jarvis Scan}, \textit{Quick Hull} a \textit{Sweep Line}. Konvexní obálka je generována stisknutím tlačítka \textsl{Create CH}. Pokud před spuštěním procesu nebyla vygenerována žádná vstupní množina bodů, uživatel je upozorněn chybovou hláškou. 
+\textsl{Sloupec 1}: souřadnice Y [m]\\
+\textsl{Sloupec 2}: souřadnice X [m]\\
+\textsl{Sloupec 3}: souřadnice Z [m]\\
+
+Po úspěšném/neúspěšném nahrání souboru je uživatel upozorněn hláškou. Uživatel nemůže kliknout na žádné jiné tlačítko pro výpočty, nejsou-li nahrána data (tlačítka jsou zašedivělá). Aplikace dále nedovoluje spustit výpočty, jež jsou pro své fungování závislé na trojúhelníkové síti, nebyla-li předtím vytvořena. Uživatel má dále možnost zvolit krok, v jakém se budou vykreslovat vrstevnice. Hodnoty lze měnit šipkami nahoru/dolů po 5 m nebo ručně vepsat hodnotu v rozmezí 0 m až 100 m. Delaunayova triangulace, vrstevnice, sklon a orientace se vygenerují stisknutím příslušných tlačítek.
 
 \section{Výstupní data}
 Vygenerovaná množina bodů a její konvexní obálka je vykreslena v grafickém okně aplikace. Aplikace dále vypisuje časy [ms], jak dlouho trvalo generování množiny a jak dlouho nad danou množinou běžel výpočetní algoritmus.\\
 
 V rámci testování byly nad množinami bodů \textit{Random set}, \textit{Grid} a \textit{Circle} postupně spuštěny všechny tři algoritmy. Pro každou množinu a algoritmus byla pro daný počet bodů $n = \{1000, 5000, 10000, 25000, 50000, 75000, 100000, 200000, 500000, 1000000\}$ aplikace spuš\-tě\-na 10x, aby bylo získáno dostatečné množství testovacích dat. Z každé testované množiny bylo tedy získáno celkem 300 testovacích dat. Data byla ukládána do textového souboru a následně zpracována v \textit{Excelu}.
 
-
 \clearpage
 \section{Aplikace}
 V následují kapitole je představen vizuální vzhled vytvořené aplikace tak, jak ji vidí prostý uživatel.
 
-%\begin{figure}[h!]
-	%\centering
-	%\includegraphics[width=11.5cm]{./pictures/app_default.png}
-	%\caption{Výchozí vzhled aplikace po spuštění}
-%\end{figure}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=13cm]{./pictures/app_default.png}
+	\caption{Výchozí vzhled aplikace po spuštění}
+\end{figure}
 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=13cm]{./pictures/app_load_points.png}
+	\caption{Aplikace po nahrání vstupních dat}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=13cm]{./pictures/app_delaunay.png}
+	\caption{Trojúhelníková síť}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=13cm]{./pictures/app_contours.png}
+	\caption{Vykreslení vrstevnic}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=13cm]{./pictures/app_slope.png}
+	\caption{Sklon trojúhelníků}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=13cm]{./pictures/app_aspect.png}
+	\caption{Orientace trojúhelníků}
+\end{figure}
 
 
 \clearpage
@@ -242,8 +261,8 @@ Metoda \textbf{createContours} vytváří nad vstupní množinou hran vrstevnice
 \item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$
 \end{itemize}
 
-\subsubsection*{!getSlope}
-Metoda \textbf{getSlope} počítá sklon trojúhelníku, který je tvořen třemi body. Návratová hodnota typu \texttt{double} nabývá hodnot $\textless$0$^\circ$;180$^\circ$???$\textgreater$ a vrací sklon trojúhelníku.\\
+\subsubsection*{getSlope}
+Metoda \textbf{getSlope} počítá sklon trojúhelníku, který je tvořen třemi body. Návratová hodnota typu \texttt{double} nabývá hodnot $\textless$0$^\circ$;90$^\circ\textgreater$ a vrací sklon trojúhelníku.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -252,8 +271,8 @@ Metoda \textbf{getSlope} počítá sklon trojúhelníku, který je tvořen třem
 \item \texttt{QPoint3D} $p_3$
 \end{itemize}
 
-\subsubsection*{!getAspect}
-Metoda \textbf{getSlope} počítá orientaci trojúhelníku, který je tvořen třemi body, ke světovým stranám. Návratová hodnota typu \texttt{double} vrací orientaci trojúhelníku ve stupních. Hodnota 0$^\circ$ je umístěna na xxx, orientace je pravotočiná/levotočivá.\\
+\subsubsection*{getAspect}
+Metoda \textbf{getSlope} počítá orientaci trojúhelníku, který je tvořen třemi body, ke světovým stranám. Návratová hodnota typu \texttt{double} vrací orientaci trojúhelníku ve stupních. Orientace je pravotočivá a nabývá hodnot $\textless$-180$^\circ$;180$^\circ\textgreater$.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -292,15 +311,15 @@ Metoda \textbf{getPointLinePosition} určuje polohu bodu $q$ vzhledem k přímce
 \item \texttt{ON} $\rightarrow$ bod se nachází na přímce
 \end{itemize}
 
-\subsubsection*{!getCircleRadius}
-Metoda \textbf{getCircleRadius} počítá poloměr kružnice, která je tvořena 3 body. Na vstupu jsou 3 body typu \texttt{QPoint3D}, návratová hodnota typu \texttt{double} vrací velikost poloměru kružnice.\\ 
+\subsubsection*{getCircleRadius}
+Metoda \textbf{getCircleRadius} počítá poloměr kružnice, která je tvořena 3 body. Na vstupu jsou 4 body typu \texttt{QPoint3D}, návratová hodnota typu \texttt{double} vrací velikost poloměru kružnice.\\ 
 
 \textbf{Input}:
 \begin{itemize}
 \item \texttt{QPoint3D} $p_1$ 
 \item \texttt{QPoint3D} $p_2$ 
 \item \texttt{QPoint3D} $p_3$
-\item !!!\texttt{QPoint3D} $c$
+\item \texttt{QPoint3D} $c \rightarrow$ střed kružnice
 \end{itemize}
 
 \subsubsection*{getDistance}
@@ -341,7 +360,7 @@ Metoda \textbf{getContourPoint} počítá průsečík hrany trojúhelníku tvoř
 \item \texttt{double} $z$ 
 \end{itemize}
 
-\subsection{!Draw}
+\subsection{Draw}
 Třída \textit{Draw} obsahuje metody, které nahrávají a vykreslují vstupní množinu bodů. Dále zajišťuje vykreslení a smazání všech operací, kterou jsou nad množinou prováděny.
 
 \subsubsection*{paintEvent}
@@ -388,7 +407,7 @@ Metoda \textbf{getE} slouží k získání koncový body hrany.
 Metoda \textbf{switchOrientation} prohazuje orientaci hrany.  
 
 
-\subsection{QPpoint3D}
+\subsection{QPoint3D}
 Třída \textbf{QPpoint3D} slouží k definování nového datového typu \texttt{QPoint3D}, který je odvozen od typu \texttt{QPointF} a který navíc obsahuje souřadnici Z.
 
 \subsubsection*{getZ}
@@ -462,17 +481,20 @@ Do budoucna by jistě šla rozšířit nabídka generovaných množin bodů a na
 
 \section{Zdroje}
 \begin{enumerate}
-\item  \textsl{BAYER, Tomáš. 2D triangulace, DMT} [online][cit. 4. 12. 2018].\\
+\item  \textsl{BAYER, Tomáš}. 2D triangulace, DMT [online][cit. 4. 12. 2018].\\
 Dostupné z: \href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk5.pdf}{https://web.natur.cuni.cz}
 
-%\item  \textsl{CS 312 - Convex Hull Project} [online][cit. 10. 11. 2018].\\
-%Dostupné z: \href{http://mind.cs.byu.edu/courses/312/projects/project2_files/ConvexHull_python.php}{http://mind.cs.byu.edu}
+\item  \textsl{ArcGIS Blog - New Aspect-Slope Raster Function Now Available} [online][cit. 5. 12. 2018].\\
+Dostupné z: \href{https://www.esri.com/arcgis-blog/products/arcgis-pro/imagery/new-aspect-slope-raster-function-now-available/?fbclid=IwAR0LX-HblA_iPSqg19aUKDW096LjaShp9r_ql8QwA_OJ26EkcFTpOEWJrlg}{https://www.esri.com/}
 
 
 \end{enumerate}
 \end{document}
 
-%getCircleRadius c
+
 %smazat datové typy z popisu a dát je jen do input/output
-%hodnota sklonu
-%getAspect orientace
+
+%neumí vykreslovat povinné hrany a neumí smazat hrany
+%sklon je malý a nevýrazyný
+%škála je použita prostřední kruh
+%delaunayovy delaunayova
