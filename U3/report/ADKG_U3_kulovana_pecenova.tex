@@ -100,7 +100,7 @@ Způsobů, jak geometricky zkonstruovat trojúhelníkovou síť, je více. Pro �
 Tato kapitola se zabývá popisem algoritmů, které byly v aplikaci implementovány. 
 
 \subsection{Delanuayova triangulace}
-Delaunyova triangulace byla realizována metodou inkrementální konstrukce, která je založena na postupném přidávání bodů do již vytvořené triangulace. Během výpočtu je používaná struktura $AEL$ (Active Edge List), která obsahuje všechny hrany, proto které ještě nebyl nalezen třetí bod trojúhelníku. Hrana, pro kterou byl bod nalezen, je vzápětí ze seznamu odstraněna. Před přidáním hran do seznamu je kontrolováno, zda se v něm již nenachází hrana s opačnou orientací. V takovém případě není hrana do seznamu přidána.\\
+Delaunyova triangulace byla realizována metodou inkrementální konstrukce, která je zalo\-že\-na na postupném přidávání bodů do již vytvořené triangulace. Během výpočtu je používaná struktura $AEL$ (Active Edge List), která obsahuje všechny hrany, proto které ještě nebyl nalezen třetí bod trojúhelníku. Hrana, pro kterou byl bod nalezen, je vzápětí ze seznamu odstraněna. Před přidáním hran do seznamu je kontrolováno, zda se v něm již nenachází hrana s opačnou orientací. V takovém případě není hrana do seznamu přidána.\\
 
 Mějme množinu bodů $P$ a orientovanou hranu $e_i$. Hledáme takový bod $p_i \in P$, který se nachází v levé polorovině vymezené hranou $e_i$, pro který dále platí, že poloměr kružnice jemu a hraně opsané je minimální. Během výpočtu jsou upřednostňovány body, jejichž středy opsaných kružnic se nachází v pravé polorovině. Je-li bod splňující výše uvedená kritéria nalezen, vytvoří se dvě nové orientované hrany $e_{i+1}$ a $e_{i+2}$, které se přidají do triangulace a do $AEL$. Původní hrana $e_i$ je z $AEL$ odstraněna. Není-li žádný vhodný bod nalezen, dochází k prohození orientace hrany $e_i$ a postup je opakován. Celý proces je ukončen ve chvíli, kde se v $AEL$ nenachází již žádná hrana. \\ 
 
@@ -243,7 +243,7 @@ V následující kapitole je porovnán DMT z aplikace a DMT, který byl již dř
 	\caption{DMT ze SW \textit{Atlas}}
 \end{figure}
 
-Na první pohled je patrné, že DMT ze SW \textit{Atlas} je kvalitněji vyhotoven. Problémem  Delaunayovy triangulace implementované v aplikaci je zejména chybějící možnost nadefinovat lomové a povinné hrany pro triangulaci. V horní části modelu podél silnice se vygenerovaly štíhlé trojúhelníky, které by správně vůbec neměly existovat, jelikož se nachází mimo zájmovou oblast. Vrstevnice z \textit{Atlasu} jsou vyhlazenější, neboť to bylo během generování modelu zajištěno funkcí pro vyhlazení vrstevnic, a vytvořená aplikace toto neumožňuje. Jelikož sklon terénu byl víceméně rovnoměrný, sklon generovaný v aplikaci není příliš viditelný. 
+Na první pohled je patrné, že DMT ze SW \textit{Atlas} je kvalitněji vyhotoven. Problémem  Delaunayovy triangulace implementované v aplikaci je zejména chybějící možnost nadefinovat lomové a povinné hrany pro triangulaci, což způsobuje, že se v horní části modelu podél silnice vygenerovaly štíhlé trojúhelníky, které by správně vůbec neměly existovat, jelikož se nachází mimo zájmovou oblast. Vrstevnice z \textit{Atlasu} jsou vyhlazenější, neboť to bylo během generování modelu zajištěno funkcí pro vyhlazení vrstevnic, ale vytvořená aplikace toto neumožňuje. Jelikož sklon terénu byl víceméně rovnoměrný, sklon generovaný v aplikaci není příliš viditelný. 
 
 \subsection{Plošina}
 \begin{figure}[h!]
@@ -275,7 +275,7 @@ Plošina uprostřed území je rozeznatelná zejména z tvarů vrstevnic. Z troj
 	\caption{Hrana silnice ze SW \textit{Atlas}}
 \end{figure}
 
-Vygenerované vrstevnice v okolí silnice působí silně kostrbatým dojmem, avšak trojúhelníková síť poměrně věrně kopíruje tvar silnice. Jak již bylo zmíněno výše, velkým problémem jsou štíhlé trojúhelníky v horní části modelu, které by neměly existovat.
+Vygenerované vrstevnice v okolí silnice působí silně kostrbatým dojmem, avšak trojúhel\-ní\-ko\-vá síť poměrně věrně kopíruje tvar silnice. Jak již bylo zmíněno výše, velkým pro\-blé\-mem jsou štíhlé trojúhelníky v horní části modelu, které by neměly existovat.
 
 
 \subsection{Údolnice}
@@ -292,7 +292,7 @@ Vygenerované vrstevnice v okolí silnice působí silně kostrbatým dojmem, av
 	\caption{Údolnice ze SW \textit{Atlas}}
 \end{figure}
 
-Pro názornost porovnání byla tentokrát použita orientace trojúhelníků ke světovým stranám. Z jejich natočení je patrné, že ve středu dochází ke zlomu v terénním tvaru. Vrstevnice tento úkaz hezky vystihují. Ze všech částí DMT vystihla aplikace tento tvar v porovnání s DMT z \textit{Atlasu} nejvěrněji.
+Pro názornost porovnání byla tentokrát použita orientace trojúhelníků ke světovým stranám. Z jejich natočení je patrné, že ve středu dochází ke zlomu v terénu. Vrstevnice tento úkaz hezky vystihují. Ze všech částí DMT vystihla aplikace tento tvar v porovnání s DMT z \textit{Atlasu} nejvěrněji.
 \clearpage
  
 \section{Dokumentace}
@@ -315,7 +315,7 @@ Metoda \textbf{delaunayTriangulation} vytváří nad množinou bodů Delaunayovu
 \end{itemize}
 
 \subsubsection*{createContours}
-Metoda \textbf{createContours} vytváří nad vstupní množinou hran vrstevnice dle zadaného kroku, po kterém se vrstevnice budou vykreslovat.  Metoda vrací vektor hran, které představují vrstevnice.\\
+Metoda \textbf{createContours} vytváří nad vstupní množinou hran vrstevnice dle zadaného kroku, po kterém se vrstevnice budou vykreslovat.  Metoda vrací vektor hran, které před\-sta\-vu\-jí vrstevnice.\\
 
 \textbf{Input}:
 \begin{itemize}
