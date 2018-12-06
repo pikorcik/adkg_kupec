@@ -5,7 +5,8 @@ using namespace std;
 
 Draw::Draw(QWidget *parent) : QWidget(parent)
 {
-
+    flag_slope = false;
+    flag_aspect = false;
 }
 
 QString Draw::loadDTM(const char* path, int width, int height, double &z_min, double &z_max)

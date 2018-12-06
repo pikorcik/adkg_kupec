@@ -21,8 +21,8 @@ class Draw : public QWidget
         std::vector<double> z_contours;   //List of contours heights
         int dz;                           //Step of contours
         std::vector<Triangle> dtm;        //List of triangles
-        bool flag_slope = false;
-        bool flag_aspect = false;
+        bool flag_slope;
+        bool flag_aspect;
 
     public:
         explicit Draw(QWidget *parent = nullptr);
