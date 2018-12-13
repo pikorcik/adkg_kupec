@@ -22,7 +22,12 @@ typedef enum
     COLINEAR,
     INTERSECTING,
     NONINTERSECTING
-
 } T2LinesPosition;
 
+typedef enum
+{
+    LEFT,
+    RIGHT,
+    COL
+} TPointLinePosition;
 #endif // TYPES_H

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1292</width>
-    <height>957</height>
+    <width>1207</width>
+    <height>840</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,9 +15,9 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QWidget" name="Canvas" native="true">
+    <widget class="Draw" name="Canvas" native="true">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>1</horstretch>
        <verstretch>1</verstretch>
       </sizepolicy>
@@ -25,15 +25,15 @@
     </widget>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <widget class="QPushButton" name="polygon_button">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="pushButton">
        <property name="text">
         <string>Polygon A/B</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item>
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -46,15 +46,15 @@
        </property>
       </spacer>
      </item>
-     <item row="7" column="0">
-      <widget class="QPushButton" name="clear_res_button">
+     <item>
+      <widget class="QLabel" name="label">
        <property name="text">
-        <string>Clear results</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Boolean Operations:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
-      <widget class="QComboBox" name="operation_comboBox">
+     <item>
+      <widget class="QComboBox" name="comboBox">
        <item>
         <property name="text">
          <string>Intersection</string>
@@ -77,28 +77,7 @@
        </item>
       </widget>
      </item>
-     <item row="5" column="0">
-      <widget class="QPushButton" name="operation_button">
-       <property name="text">
-        <string>Boolean Operations</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="0">
-      <widget class="QPushButton" name="clear_button">
-       <property name="text">
-        <string>Clear all</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="operation_label">
-       <property name="text">
-        <string>Boolean Operations:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
+     <item>
       <spacer name="verticalSpacer_2">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -111,7 +90,14 @@
        </property>
       </spacer>
      </item>
-     <item row="6" column="0">
+     <item>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="text">
+        <string>Boolean Operations</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="verticalSpacer_3">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -124,7 +110,21 @@
        </property>
       </spacer>
      </item>
-     <item row="9" column="0">
+     <item>
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="text">
+        <string>Clear results</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="text">
+        <string>Clear All</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="verticalSpacer_4">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -142,6 +142,14 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>Draw</class>
+   <extends>QWidget</extends>
+   <header location="global">draw.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

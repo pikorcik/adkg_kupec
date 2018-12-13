@@ -1,111 +1,100 @@
 #include "algorithms.h"
 #include <map>
 
-int Algorithms::getPositionWinding(QPoint q, std::vector<QPoint> pol)
+
+TPointPolygon Algorithms::getPositionWinding(QPointFB q, std::vector<QPointFB> pol)
 {
-    int n = pol.size();
-    double sum_fi = 0.0;
-    double eps = 1.0e-3;
+       int n = pol.size();
+       double sum_fi=0.0;
+       double eps = 1.0e-10;
 
-    double xir = pol[0].x();
-    double yir = pol[0].y();
+       //Process all polygon segments
+       for (int i=0; i < n; i++)
+       {
+           //Get angle
+           double fi = get2LinesAngle(pol[i], q, pol[(i+1)%n], q);
 
-    for (int i = 1;i<n+1;i++)
-    {
-        //Reduce the coordinates
-        double xiir = pol[i%n].x(); //yiir = yi+1
-        double yiir = pol[i%n].y();
+           //Get position
+           int t = getPointLinePosition(q, pol[i], pol[(i+1)%n]);
 
-        //Get angle
-        double fi = getTwoVectorsAngle(q.x(), q.y(), xir, yir, q.x(), q.y(), xiir, yiir);
+           //Point on the boundary
+           if (t == COL && fabs(fabs(fi) - 180) < eps)
+               return ON;
 
-        //Get position of q
-        int t = getPointLinePosition(q.x(), q.y(), xir, yir, xiir, yiir);
+           //Point q in the left halfplane
+           if(t > 0)
+               sum_fi += fi;
 
-        //Point q in the left half-plane
-        if(t > 0)
-            sum_fi += fi;
+           //Point in the right halfplane
+           else
+               sum_fi -= fi;
+       }
 
-        //Point in the right half-plane
-        else
-            sum_fi -= fi;
 
-        //Assign coordinates
-        xir = xiir;
-        yir = yiir;
-    }
+       //Point q inside P
+       if (fabs(fabs(sum_fi)-360)< eps)
+           return INSIDE;
 
-    //Point q inside P
-    if (fabs(fabs(sum_fi)-360)< eps)
-        return 1;
-
-    //Point q outside P
-    if (fabs(sum_fi) < eps)
-        return 0;
-
-    //Point q on the boundary
-    else
-        return -1;
-
+       //Point q outside P
+       if (fabs(sum_fi) < eps)
+           return OUTSIDE;
 }
 
 
-int Algorithms::getPointLinePosition(QPointFB &q, QPointFB &p1, QPointFB &p2)
+TPointLinePosition Algorithms::getPointLinePosition(QPointFB &q, QPointFB &a, QPointFB &b)
 {
     //Point and line position
-    double eps = 1.0e-3;
+    double eps = 1.0e-10;
 
-    //Get vectors
-    double ux = p2.x()-p1.x();
-    double uy = p2.y()-p1.y();
-    double vx = q.x()-p1.x();
-    double vy = q.y()-p1.y();
+    double ux = b.x() - a.x();
+    double uy = b.y() - a.y();
+    double vx = q.x() - a.x();
+    double vy = q.y() - a.y();
 
-    //Cross product
-    double t = ux*vy-vx*uy;
+    //Determinant
+    double t = (ux * vy - uy * vx);
 
-    //Point in the left half-plane
+    //Point in the left half plane
     if(t > eps)
-        return 1;
+        return LEFT;
 
-    //Point in the right half-plane
+    //Point in the right half plane
     if(t < -eps)
-        return 0;
+        return RIGHT;
 
     //Point on the line
-    else
-        return -1;
+    return COL;
 }
 
 
-double Algorithms::getTwoVectorsAngle(QPointFB &p1, QPointFB &p2, QPointFB &p3, QPointFB &p4)
+double Algorithms::get2LinesAngle(QPointFB &p1,QPointFB &p2,QPointFB &p3, QPointFB &p4)
 {
-    //Get vectors
-    double ux = p2.x()-p1.x();
-    double uy = p2.y()-p1.y();
-    double vx = p4.x()-p3.x();
-    double vy = p4.y()-p3.y();
-
-    //Dot product
-    double dot = ux*vx+uy*vy;
-
-    //Norms
-    double nu = sqrt(ux*ux+uy*uy);
-    double nv = sqrt(vx*vx+vy*vy);
-
-    return acos(dot/(nu*nv))*180/M_PI;
-}
-
-T2LinesPosition Algorithms::get2LinesPosition(QPointFB &p1, QPointFB &p2, QPointFB &p3, QPointFB &p4, QPointFB &intersection)
-{
-    //Get position of two lines and intersection
-
-    double eps = 10e10;
-
+    //Angle between two lines
     double ux = p2.x() - p1.x();
     double uy = p2.y() - p1.y();
     double vx = p4.x() - p3.x();
     double vy = p4.y() - p3.y();
+
+    //Dot product
+    double dot = ux * vx + uy * vy;
+
+    //Norms
+    double nu = sqrt(ux * ux + uy * uy);
+    double nv = sqrt(vx * vx + vy * vy);
+
+    return fabs(acos(dot/(nu * nv)))*(180/M_PI);
+}
+
+T2LinesPosition Algorithms::get2LinesPosition(QPointFB &p1,QPointFB &p2,QPointFB &p3, QPointFB &p4, QPointFB &intersection)
+{
+    double eps = 10e-10;
+    //Get Position of two lines and compute their intersection
+    double ux = p2.x() - p1.x();
+    double uy = p2.y() - p1.y();
+
+    double vx = p4.x() - p3.x();
+    double vy = p4.y() - p3.y();
+
     double wx = p1.x() - p3.x();
     double wy = p1.y() - p3.y();
 
@@ -113,72 +102,257 @@ T2LinesPosition Algorithms::get2LinesPosition(QPointFB &p1, QPointFB &p2, QPoint
     double k2 = ux*wy - uy*wx;
     double k3 = vy*ux - vx*uy;
 
-    //Lines are colinear
-    if(fabs(k1) < eps && fabs(k2) < eps && fabs(k3) < eps)
+    // lines are colinear
+    if(fabs(k1)< eps && fabs(k2)< eps && fabs(k3)<eps)
+    {
         return COLINEAR;
+    }
 
-    //Lines are parallel
-    if(fabs(k1) < eps && fabs(k2) < eps)
+    // lines are parallel
+    if (fabs(k1) <eps && fabs(k2)< eps)
+    {
         return PARALLEL;
+    }
 
-    //Lines intersect each other
+    // lines intersect each other
     double alfa = k1/k3;
     double beta = k2/k3;
+
     if(alfa >= 0 && alfa <= 1 && beta >= 0 && beta <= 1)
     {
+
         //Compute intersection
         double xq = p1.x() + alfa*ux;
         double yq = p1.y() + alfa*uy;
 
         intersection.setX(xq);
         intersection.setY(yq);
+
         intersection.setAlfa(alfa);
         intersection.setBeta(beta);
-        intersection.setIntersection(true);
+        intersection.setInters(true);
 
         return INTERSECTING;
+
     }
-
     return NONINTERSECTING;
-
 }
 
-void Algorithms::computePolygonIntersection(std::vector<QPointFB> &pol1, std::vector<QPointFB> &pol2)
-{
-    //Compute intersections of two polygons and update the lists
-    for(unsigned int i = 0; i < pol1.size(); i++)
-    {
-        //Map of intersections sorted by alfa
-        std::map<double, QPointFB> inters;
 
-        for(unsigned int j = 0; j < pol2.size(), j++)
+void Algorithms::computePolygonIntersections(std::vector<QPointFB> &p1, std::vector<QPointFB> &p2)
+{
+    //Compute intersections of two polygons and update the list
+    for(int i = 0; i<p1.size(); i++)
+    {
+        // Map of intersection sorted by alpha
+        std::map<double, QPointFB> inters;
+        for(int j = 0;j<p2.size(); j++)
         {
             //Compute intersection
-            QPointFB p_inters;
-            if(get2LinesPosition(pol1[i], pol1[(i+1)%pol1.size()], pol2[j], pol2[(j+1)%pol2.size()], p_inters) == INTERSECTING)
+            QPointFB pi;
+            if(get2LinesPosition(p1[i],p1[(i+1)%p1.size()],p2[j],p2[(j+1)%p2.size()], pi) == INTERSECTING)
             {
                 //Add for later processing
-                inters[p_inters.getAlfa()] = p_inters;
+                inters[pi.getAlfa()] = pi;
 
-                //Intersection on pj
-                if(p_inters.getBeta() == 0)
-                    pol2[j].setIntersection(true);
-
-                //Intersection on pj+1
-                else if(p_inters.getBeta() == 1)
-                    pol2[(j+1)%pol2.size()].setIntersection(true);
-
-                //Intersection at current point
-                else
-                {
-                    pol2.insert(pol2.begin()+(j+1)%pol2.size(), p_inters);
-                    j++;
-                }
-
+                //Process intersection
+                processIntersection(pi, pi.getBeta(), p2, j);
             }
-
         }
 
+        //All intersections (pi, pi+1) with p2
+        if(!inters.empty())
+        {
+            for(auto pi2:inters)
+            {
+                //Process intersection
+                processIntersection(pi2.second, pi2.first, p1, i);
+
+            }
+        }
+    }
+}
+
+void Algorithms::processIntersection(QPointFB &b, double t, std::vector<QPointFB>& poly, int i)
+{
+    //Process intersection
+    double eps = 1e-10;
+
+    //Intersection on p[i]
+    if(fabs(t) < eps)
+    {
+        poly[i].setInters(true);
     }
 
+    //Intersection on pj+1
+    else if(fabs(fabs(t)-1) < eps)
+    {
+        poly[(i+1)%poly.size()].setInters(true);
+    }
+
+    //Intersection at current point
+    else
+    {
+        i++;
+        poly.insert(poly.begin()+i%poly.size(), b);
+    }
 }
+
+void Algorithms::setPositions(std::vector<QPointFB> &pol1, std::vector<QPointFB> &pol2)
+{
+    //Set positions of midpoints of edges
+
+    //Process first polygon
+    for(unsigned int i = 0; i < pol1.size(); i++)
+    {
+        QPointFB midpoint((pol1[i].x()+pol1[(i+1)%pol1.size()].x())*0.5, (pol1[i].y()+pol1[(i+1)%pol1.size()].y())*0.5);
+        TPointPolygon loc = getPositionWinding(midpoint, pol2);
+        pol1[i].setPosition(loc);
+    }
+
+    //Process second polygon
+    for(unsigned int i = 0; i < pol2.size(); i++)
+    {
+        QPointFB midpoint((pol2[i].x()+pol2[(i+1)%pol2.size()].x())*0.5, (pol2[i].y()+pol2[(i+1)%pol2.size()].y())*0.5);
+        TPointPolygon loc = getPositionWinding(midpoint, pol1);
+        pol2[i].setPosition(loc);
+    }
+
+
+}
+
+void Algorithms::createFragments(std::vector<QPointFB> &pol, TPointPolygon position, bool rev, std::map<QPointFB, std::vector<QPointFB> > &F)
+{
+    //Create fragments from points with the same position
+    int index = 0;
+    while(pol[index].getPosition() != position || !pol[index].getInters())
+    {
+        index++;
+    }
+
+    //Remember index of the first intersection with the given polygon
+    int indexS = index;
+
+    //Process all points of polygon
+    do
+    {
+        if(pol[index].getPosition() == position && pol[index].getInters())
+        {
+            //Intersection found
+            std::vector<QPointFB> f;
+
+            //Add all points with the same position
+            do
+            {
+                f.push_back(pol[index]);
+                index = (index+1)%pol.size();
+            } while(pol[index].getPosition() == position);
+
+            //Add next intersection
+            f.push_back(pol[index]);
+
+            //Reverse position (difference)
+            if(rev)
+                std::reverse(f.begin(), f.end());
+
+            F[f[0]] = f;
+        }
+
+        index = (index+1)%pol.size();
+
+    } while(index != indexS);
+}
+
+void Algorithms::mergeFragments(std::map<QPointFB, std::vector<QPointFB> > &Fa, std::map<QPointFB, std::vector<QPointFB> > &Fb, std::vector<std::vector<QPointFB> > &C)
+{
+    //Merge fragments to polygons
+
+    for(auto fa:Fa)
+    {
+        //Create emtpy polygon
+        std::vector<QPointFB> pol;
+
+        //Find start point of the fragment
+        QPointFB s = fa.first;
+
+        //Add fragment without the start point
+        pol.insert(pol.end(), fa.second.begin()+1, fa.second.end());
+
+        int iter = 1;
+
+        //Merge all connected fragments
+        do
+        {
+            //Reference to Fa or Fb
+            std::map<QPointFB, std::vector<QPointFB> > &F = (iter%2?Fa:Fb);
+
+            //Find segment with the same start point as is the end point
+            std::vector<QPointFB> segment = F[pol.back()];
+
+            //Add fragment without the start point
+            pol.insert(pol.end(), segment.begin()+1, segment.end());
+
+            iter++;
+
+        } while(pol.back() != s);
+
+        //Add polygon to the results
+        C.push_back(pol);
+
+    }
+}
+
+double Algorithms::getPolygonOrientation(std::vector<QPointFB> &pol)
+{
+    //Get polygon orientation using LH formula
+
+    double A = 0;
+
+    for(int i = 0; i < pol.size(); i++)
+    {
+        A += pol[i].x() * (pol[(i+1)%pol.size()].y() - pol[(i-1+pol.size())%pol.size()].y());
+    }
+
+    return A*0.5;
+}
+
+std::vector<std::vector<QPointFB> > Algorithms::booleanOperation(std::vector<QPointFB> &pol1, std::vector<QPointFB> &pol2, TBooleanOperation oper)
+{
+    //Perform boolean operation of polygons
+
+    //Maintain CCW orientation of the firts polygon
+    if(getPolygonOrientation(pol1) < 0)
+        std::reverse(pol1.begin(), pol1.end());
+
+    //Maintain CCW orientation of the firts polygon
+    if(getPolygonOrientation(pol2) < 0)
+        std::reverse(pol2.begin(), pol2.end());
+
+    //Compute intersection
+    computePolygonIntersections(pol1, pol2);
+
+    //Set positions
+    setPositions(pol1, pol2);
+
+    //Create map of fragments
+    std::map<QPointFB, std::vector<QPointFB> > Fa, Fb;
+
+    //Set type of vertices
+    TPointPolygon pos1 = (oper == INTERSECTION ? INSIDE : OUTSIDE);
+    TPointPolygon pos2 = (oper == UNION || oper == DIFFAB ? INSIDE : OUTSIDE);
+
+    bool rever = (oper == DIFFAB || oper == DIFFBA ? true : false);
+
+    //Create fragments
+    createFragments(pol1, pos1, false, Fa);
+    createFragments(pol2, pos2, rever, Fb);
+
+    //Merge fragments
+    std::vector<std::vector<QPointFB> > C;
+
+    mergeFragments(Fa, Fb, C);
+
+    return C;
+}
+
+

@@ -13,13 +13,19 @@ Widget::~Widget()
     delete ui;
 }
 
-void Widget::on_polygon_button_clicked()
+void Widget::on_pushButton_clicked()
 {
     ui->Canvas->setAB();
 }
 
-void Widget::on_clear_button_clicked()
+void Widget::on_pushButton_4_clicked()
 {
     ui->Canvas->clearAll();
+
     repaint();
+}
+
+void Widget::on_pushButton_2_clicked()
+{
+
 }

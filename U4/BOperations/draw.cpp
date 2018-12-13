@@ -7,57 +7,62 @@ Draw::Draw(QWidget *parent) : QWidget(parent)
 
 void Draw::paintEvent(QPaintEvent *e)
 {
-    QPainter painter(this);
+    QPainter painter (this);
 
     painter.begin(this);
 
     //Draw polygon A
     painter.setPen(Qt::green);
-    drawPolygon(polA, painter);
+    drawPol(polA, painter);
 
     //Draw polygon B
     painter.setPen(Qt::blue);
-    drawPolygon(polB, painter);
+    drawPol(polB, painter);
 
     //Draw result
     painter.setPen(Qt::red);
-    for(std::vector<QPointFB> vec: results)
+    for(std::vector<QPointFB> vec: res)
     {
-        drawPolygon(vec, painter);
+        drawPol(vec, painter);
     }
 }
 
-void Draw::drawPolygon(std::vector<QPointFB> &pol, QPainter &painter)
+void Draw::drawPol(std::vector<QPointFB> &pol, QPainter &painter)
 {
-    //Draw polygon
-    QPolygonF pol_q;
+    QPolygon pol_q;
 
     for(QPointFB p: pol)
     {
-        QPointFB pb(p.x(), p.y());
+        QPoint pb (p.x(), p.y());
         pol_q.append(pb);
     }
+
+    painter.drawPolygon(pol_q);
 }
 
 void Draw::mousePressEvent(QMouseEvent *e)
 {
     QPointFB p(e->x(), e->y());
 
-    //Add to polygon A
+    //Add to polA
     if(ab)
+    {
         polA.push_back(p);
+    }
 
-    //Add to polygon B
+    //Add to polB
     else
+    {
         polB.push_back(p);
+    }
 
     repaint();
 }
 
 void Draw::clearAll()
 {
-    //Clear all data structures
+    // Clear all in canvas
     polA.clear();
     polB.clear();
-    results.clear();
+    res.clear();
 }
