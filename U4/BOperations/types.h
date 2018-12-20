@@ -30,4 +30,5 @@ typedef enum
     RIGHT,
     COL
 } TPointLinePosition;
+
 #endif // TYPES_H

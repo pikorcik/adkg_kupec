@@ -26,7 +26,7 @@ class QPointFB : public QPointF
         void setInters(bool inters_){inters = inters_;}
         TPointPolygon getPosition(){return pos;}
         void setPosition(TPointPolygon pos_){pos = pos_;}
-        bool operator < (const QPointFB &p) const{return this->x() < p.x();}
+        bool operator < (const QPointFB &p) const{return this -> x() < p.x();}
 };
 
 #endif // QPOINTFB_H
