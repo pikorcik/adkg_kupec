@@ -229,37 +229,99 @@ Tato kapitola obsahuje dokumentaci k jednotlivým třídám.
 \subsection{!Algorithms}
 Třída \textit{Algorithms} obsahuje metody pro výpočet Delaunayovy triangulace a analýzu DTM.
 
-\subsubsection*{getPositionWinding}
-Metoda \textbf{delaunayTriangulation} vytváří nad množinou bodů Delaunayovu triangulaci. Na vstupu je vektor bodů typu \texttt{QPoint3D}, metoda vrací uspořádaný vektor hran \texttt{Edge}, které tvoří jednotlivé trojúhelníky.\\
+
+
+\subsubsection{getPositionWinding}
+Metoda \textbf{getPositionWinding} určuje polohu bodu $q$ vzhledem k polygonu $P$ za použití algoritmu \textsl{Winding Number}. Na vstupu je bod $q$ a vektor bodů polygonu třídy \texttt{QPointFB}. Návratová hodnota typu \texttt{TPointPolygon} vrací polohu bodu $q$ vůči polygonu $P$.\\
 
 \textbf{Input}:
 \begin{itemize}
-\item \textsl{vector} $\textless$\texttt{QPoint3D}$\textgreater$ $points$
+\item \texttt{QPointFB} $q$
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $P$
 \end{itemize}
 
 \textbf{Output}:
 \begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$
+\item \texttt{INSIDE} $\rightarrow q$ se nachází uvnitř polygonu $P$
+\item \texttt{OUTSIDE} $\rightarrow q$ se nachází vně polygonu $P$
+\item \texttt{ON} $\rightarrow q$ se nachází na hraně polygonu $P$
 \end{itemize}
 
-\subsubsection*{createContours}
-Metoda \textbf{createContours} vytváří nad vstupní množinou hran vrstevnice dle zadaného kroku, po kterém se vrstevnice budou vykreslovat.  Metoda vrací vektor hran, které před\-sta\-vu\-jí vrstevnice.\\
+\subsubsection*{getPointLinePosition}
+Metoda \textbf{getPointLinePosition} určuje polohu bodu $q$ vzhledem k přímce tvořené dvěma body. Na vstupu jsou 3 body typu \texttt{QPointFB}, návratová hodnota je nově definovaný typ \texttt{TPosition}.\\
 
 \textbf{Input}:
 \begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$ $dt$
-\item \texttt{double} $z\_min$ $\rightarrow$ minimální výška
-\item \texttt{double} $z\_max$ $\rightarrow$ maximální výška
-\item \texttt{double} $dz$ $\rightarrow$ krok vrstevnic
+\item \texttt{QPointFB} $q$
+\item \texttt{QPointFB} $a$
+\item \texttt{QPointFB} $b$
 \end{itemize}
 
 \textbf{Output}:
 \begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$
+\item \texttt{LEFT} $\rightarrow$ bod se nachází vlevo od přímky
+\item \texttt{RIGHT} $\rightarrow$ bod se nachází vpravo od přímky
+\item \texttt{ON} $\rightarrow$ bod se nachází na přímce
 \end{itemize}
 
-\subsection*{getSlope}
-Metoda \textbf{getSlope} počítá sklon trojúhelníku, který je tvořen třemi body. Návratová hodnota typu \texttt{double} nabývá hodnot $\textless$0$^\circ$;90$^\circ\textgreater$ a vrací sklon trojúhelníku.\\
+\subsubsection*{get2LinesAngle}
+Metoda \textbf{get2LinesAngle} počítá úhel mezi dvěma přímkami. Na vstupu jsou 4 body typu \texttt{QPointFB}, návratová hodnota typu \texttt{double} vrací velikost úhlu v radiánech. Body $p_1$ a $p_2$ definují první přímku, zbylé dva body druhou přímku.\\
+
+\textbf{Input}:
+\begin{itemize}
+\item \texttt{QPointFB} $p_1$ 
+\item \texttt{QPointFB} $p_2$ 
+\item \texttt{QPointFB} $p_3$
+\item \texttt{QPointFB} $p_4$
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item \texttt{double} 
+\end{itemize}
+
+\subsubsection*{get2LinesPosition}
+Metoda \textbf{get2LinesPosition} určuje vzájemnou polohu dvou přímek. Pokud se přímky protínají, metoda vypočte jejich průsečík $p_{inters}$. Na vstupu jsou 4 body typu \texttt{QPointFB}, návratová hodnota je nově definovaný typ \texttt{T2LinesPosition}. Body $p_1$ a $p_2$ definují první přímku, zbylé dva body druhou přímku.\\
+
+\textbf{Input}:
+\begin{itemize}
+\item \texttt{QPointFB} $p_1$ 
+\item \texttt{QPointFB} $p_2$ 
+\item \texttt{QPointFB} $p_3$
+\item \texttt{QPointFB} $p_4$
+\item \texttt{QPointFB} $p_{inters}$
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item \texttt{PARALLEL} $\rightarrow$ přímky jsou rovnoběžné
+\item \texttt{COLINEAR} $\rightarrow$ přímky jsou kolineární
+\item \texttt{INTERSECTING} $\rightarrow$ přímky se protínají v průsečíku $p_{inters}$
+\item \texttt{NONINTERSECTING} $\rightarrow$ přímky se neprotínají
+\end{itemize}
+
+\subsubsection*{computePolygonIntersections}
+Metoda \textbf{computePolygonIntersections} počítá průsečíky dvou polygonů $A$ a $B$. Na vstupu jsou dva vektory bodů polygonů, návratová hodnota je typu \texttt{void}.\\
+
+\textbf{Input}:
+\begin{itemize}
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $polA$
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $polB$
+\end{itemize}
+
+\subsection*{processIntersection}
+Metoda \textbf{processIntersection} slouží k aktualizování seznamu bodů (tzv. map) obou polygonů po přidání nově nalezeného průsečíku. Na vstupu je .... Návratová hodnota je typu \texttt{void}.\\
+
+\textbf{Input}:
+\begin{itemize}
+\item \texttt{QPointFB} $b$
+\item \texttt{double} $t$
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $pol$
+\item \texttt{int} $i$
+\end{itemize}
+
+\subsubsection*{setPositions}
+Metoda \textbf{setPositions} počítá orientaci trojúhelníku, který je tvořen třemi body, ke světovým stranám. Návratová hodnota typu \texttt{double} vrací orientaci trojúhelníku ve stupních. Orientace je pravotočivá a nabývá hodnot $\textless$-180$^\circ$;180$^\circ\textgreater$.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -268,18 +330,8 @@ Metoda \textbf{getSlope} počítá sklon trojúhelníku, který je tvořen třem
 \item \texttt{QPoint3D} $p_3$
 \end{itemize}
 
-\subsubsection*{getAspect}
-Metoda \textbf{getAspect} počítá orientaci trojúhelníku, který je tvořen třemi body, ke světovým stranám. Návratová hodnota typu \texttt{double} vrací orientaci trojúhelníku ve stupních. Orientace je pravotočivá a nabývá hodnot $\textless$-180$^\circ$;180$^\circ\textgreater$.\\
-
-\textbf{Input}:
-\begin{itemize}
-\item \texttt{QPoint3D} $p_1$
-\item \texttt{QPoint3D} $p_2$
-\item \texttt{QPoint3D} $p_3$
-\end{itemize}
-
-\subsubsection*{analyzeDTM}
-Metoda \textbf{analyzeDTM} vytváří z vektoru hran trojúhelníky a počítá pro ně sklon a orientaci. Vypočtené hodnoty ukládá do datového typu \texttt{Triangle}. Návratová hodnota metody je vektor trojúhelníků typu \texttt{Triangle}.\\
+\subsubsection*{createFragments}
+Metoda \textbf{createFragments} vytváří z vektoru hran trojúhelníky a počítá pro ně sklon a orientaci. Vypočtené hodnoty ukládá do datového typu \texttt{Triangle}. Návratová hodnota metody je vektor trojúhelníků typu \texttt{Triangle}.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -291,25 +343,10 @@ Metoda \textbf{analyzeDTM} vytváří z vektoru hran trojúhelníky a počítá 
 \item \textsl{vector} $\textless$\texttt{Triangle}$\textgreater$
 \end{itemize}
 
-\subsubsection*{getPointLinePosition}
-Metoda \textbf{getPointLinePosition} určuje polohu bodu $q$ vzhledem k přímce tvořené dvěma body. Na vstupu jsou 3 body typu \texttt{QPoint3D}, návratová hodnota je nově definovaný typ \texttt{TPosition}.\\
 
-\textbf{Input}:
-\begin{itemize}
-\item \texttt{QPoint3D} $q$
-\item \texttt{QPoint3D} $a$
-\item \texttt{QPoint3D} $b$
-\end{itemize}
 
-\textbf{Output}:
-\begin{itemize}
-\item \texttt{LEFT} $\rightarrow$ bod se nachází vlevo od přímky
-\item \texttt{RIGHT} $\rightarrow$ bod se nachází vpravo od přímky
-\item \texttt{ON} $\rightarrow$ bod se nachází na přímce
-\end{itemize}
-
-\subsubsection*{getCircleRadius}
-Metoda \textbf{getCircleRadius} počítá poloměr kružnice, která je tvořena 3 body. Na vstupu jsou 4 body typu \texttt{QPoint3D}, návratová hodnota typu \texttt{double} vrací velikost poloměru kružnice.\\ 
+\subsubsection*{createFragmentFromVertices}
+Metoda \textbf{createFragmentFromVertices} počítá poloměr kružnice, která je tvořena 3 body. Na vstupu jsou 4 body typu \texttt{QPoint3D}, návratová hodnota typu \texttt{double} vrací velikost poloměru kružnice.\\ 
 
 \textbf{Input}:
 \begin{itemize}
@@ -319,8 +356,8 @@ Metoda \textbf{getCircleRadius} počítá poloměr kružnice, která je tvořena
 \item \texttt{QPoint3D} $c \rightarrow$ střed kružnice
 \end{itemize}
 
-\subsubsection*{getDistance}
-Metoda \textbf{getDistance} počítá vzdálenost mezi dvěma body. Na vstupu jsou 2 body typu \texttt{QPoint3D}, návratová hodnota typu \texttt{double} vrací vzdálenost mezi dvěma body.\\ 
+\subsubsection*{mergeFragments}
+Metoda \textbf{mergeFragments} počítá vzdálenost mezi dvěma body. Na vstupu jsou 2 body typu \texttt{QPoint3D}, návratová hodnota typu \texttt{double} vrací vzdálenost mezi dvěma body.\\ 
 
 \textbf{Input}:
 \begin{itemize}
@@ -328,8 +365,8 @@ Metoda \textbf{getDistance} počítá vzdálenost mezi dvěma body. Na vstupu js
 \item \texttt{QPoint3D} $p_2$
 \end{itemize}
 
-\subsubsection*{getNearestPoint}
-Metoda \textbf{getNearestPoint} slouží k nalezení nejbližšího bodu z množiny bodů vzhledem k danému bodu $p$. Na vstupu je daný bod $p$ a vektor bodů typu \texttt{QPoint3D}. Návratová hodnota typu \texttt{int} vrací index nejbližšího bodu.
+\subsubsection*{createPolygonFromFragments}
+Metoda \textbf{createPolygonFromFragments} slouží k nalezení nejbližšího bodu z množiny bodů vzhledem k danému bodu $p$. Na vstupu je daný bod $p$ a vektor bodů typu \texttt{QPoint3D}. Návratová hodnota typu \texttt{int} vrací index nejbližšího bodu.
 
 \textbf{Input}:
 \begin{itemize}
@@ -337,8 +374,8 @@ Metoda \textbf{getNearestPoint} slouží k nalezení nejbližšího bodu z množ
 \item \textsl{vector} $\textless$\texttt{QPoint3D}$\textgreater$ $points$
 \end{itemize}
 
-\subsubsection*{getDelaunayPoint}
-Metoda \textbf{getDelaunayPoint} slouží k nalezení třetího bodu trojúhelníku, který splňuje Delaunayovo kritérium nejmenší opsané kružnice. Na vstupu jsou dva body typu \texttt{QPoint3D}, které představují orientovanou hranu, a vektor bodů typu \texttt{QPoint3D}. Návratová hodnota typu \texttt{int} vrací index hledaného bodu.\\
+\subsubsection*{getPolygonOrientation}
+Metoda \textbf{getPolygonOrientation} slouží k nalezení třetího bodu trojúhelníku, který splňuje Delaunayovo kritérium nejmenší opsané kružnice. Na vstupu jsou dva body typu \texttt{QPoint3D}, které představují orientovanou hranu, a vektor bodů typu \texttt{QPoint3D}. Návratová hodnota typu \texttt{int} vrací index hledaného bodu.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -347,14 +384,79 @@ Metoda \textbf{getDelaunayPoint} slouží k nalezení třetího bodu trojúheln�
 \item \textsl{vector} $\textless$\texttt{QPoint3D}$\textgreater$ $points$
 \end{itemize}
 
-\subsubsection*{getContourPoint}
-Metoda \textbf{getContourPoint} počítá průsečík hrany trojúhelníku tvořené dvěma body typu \texttt{QPoint3D} s rovinou o dané výšce Z. Návratová hodnota je typu \texttt{QPoint3D}.\\
+\subsubsection*{BooleanOper}
+Metoda \textbf{BooleanOper} počítá průsečík hrany trojúhelníku tvořené dvěma body typu \texttt{QPoint3D} s rovinou o dané výšce Z. Návratová hodnota je typu \texttt{QPoint3D}.\\
 
 \textbf{Input}:
 \begin{itemize}
 \item \texttt{QPoint3D} $p_1$ 
 \item \texttt{QPoint3D} $p_2$ 
 \item \texttt{double} $z$ 
+\end{itemize}
+
+\subsubsection*{resetIntersections}
+Metoda \textbf{resetIntersections} vytváří z vektoru hran trojúhelníky a počítá pro ně sklon a orientaci. Vypočtené hodnoty ukládá do datového typu \texttt{Triangle}. Návratová hodnota metody je vektor trojúhelníků typu \texttt{Triangle}.\\
+
+\textbf{Input}:
+\begin{itemize}
+\item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$ $dt$
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item \textsl{vector} $\textless$\texttt{Triangle}$\textgreater$
+\end{itemize}
+
+\subsubsection*{lineOffset}
+Metoda \textbf{lineOffset} vytváří z vektoru hran trojúhelníky a počítá pro ně sklon a orientaci. Vypočtené hodnoty ukládá do datového typu \texttt{Triangle}. Návratová hodnota metody je vektor trojúhelníků typu \texttt{Triangle}.\\
+
+\textbf{Input}:
+\begin{itemize}
+\item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$ $dt$
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item \textsl{vector} $\textless$\texttt{Triangle}$\textgreater$
+\end{itemize}
+
+\subsubsection*{lineOffset}
+Metoda \textbf{lineOffset} vytváří z vektoru hran trojúhelníky a počítá pro ně sklon a orientaci. Vypočtené hodnoty ukládá do datového typu \texttt{Triangle}. Návratová hodnota metody je vektor trojúhelníků typu \texttt{Triangle}.\\
+
+\textbf{Input}:
+\begin{itemize}
+\item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$ $dt$
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item \textsl{vector} $\textless$\texttt{Triangle}$\textgreater$
+\end{itemize}
+
+\subsubsection*{sampleArc}
+Metoda \textbf{sampleArc} vytváří z vektoru hran trojúhelníky a počítá pro ně sklon a orientaci. Vypočtené hodnoty ukládá do datového typu \texttt{Triangle}. Návratová hodnota metody je vektor trojúhelníků typu \texttt{Triangle}.\\
+
+\textbf{Input}:
+\begin{itemize}
+\item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$ $dt$
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item \textsl{vector} $\textless$\texttt{Triangle}$\textgreater$
+\end{itemize}
+
+\subsubsection*{polygonOffset}
+Metoda \textbf{polygonOffset} vytváří z vektoru hran trojúhelníky a počítá pro ně sklon a orientaci. Vypočtené hodnoty ukládá do datového typu \texttt{Triangle}. Návratová hodnota metody je vektor trojúhelníků typu \texttt{Triangle}.\\
+
+\textbf{Input}:
+\begin{itemize}
+\item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$ $dt$
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item \textsl{vector} $\textless$\texttt{Triangle}$\textgreater$
 \end{itemize}
 
 \subsection{Draw}
@@ -366,33 +468,30 @@ Metoda \textbf{paintEvent} vykresluje vstupní množinu bodů, Delaunayovu trian
 \subsubsection*{clearDT}
 Metoda \textbf{clearDT} slouží k vymazání všech vykreslených dat.
 
-\subsubsection*{getPoints}
-Metoda \textbf{getPoints} slouží k získání vektoru bodů z kreslící plochy. Metoda vrací vektor bodů typu \texttt{QPoint3D}.
+\subsubsection*{setAB}
+Metoda \textbf{setAB} slouží k získání vektoru bodů z kreslící plochy. Metoda vrací vektor bodů typu \texttt{QPoint3D}.
 
-\subsubsection*{getDT}
-Metoda \textbf{getDT} slouží k získání vektoru hran z kreslící plochy. Metoda vrací vektor hran typu \texttt{Edge}.
+\subsubsection*{setRes}
+Metoda \textbf{setRes} slouží k získání vektoru hran z kreslící plochy. Metoda vrací vektor hran typu \texttt{Edge}.
 
-\subsubsection*{setDT}
-Metoda \textbf{setDT} slouží k převedení Delaunayovy triangulace do kreslícího okna.
+\subsubsection*{setA}
+Metoda \textbf{setA} slouží k převedení Delaunayovy triangulace do kreslícího okna.
 
-\subsubsection*{setContours}
-Metoda \textbf{setContours} slouží k převedení vrstevnic do kreslícího okna.
+\subsubsection*{getA}
+Metoda \textbf{getA} slouží k převedení digitálního modelu terénu do kreslícího okna.
 
-\subsubsection*{setDTM}
-Metoda \textbf{setDTM} slouží k převedení digitálního modelu terénu do kreslícího okna.
+\subsubsection*{setB}
+Metoda \textbf{setB} slouží k načtení vstupních dat do aplikace. Součástí metody je i kontrola, zda se soubor úspěšně nahrál. Návratová hodnota je typu \textsl{QString} vrací hlášku, zda byly polygony úspěšně nahrány či nikoli.
 
-\subsubsection*{loadDTM}
-Metoda \textbf{loadDTM} slouží k načtení vstupních dat do aplikace. Součástí metody je i kontrola, zda se soubor úspěšně nahrál. Návratová hodnota je typu \textsl{QString} vrací hlášku, zda byly polygony úspěšně nahrány či nikoli.
+\subsubsection*{getB}
+Metoda \textbf{getB} slouží k vykreslení sklonu trojúhelníků.
 
-\subsubsection*{drawSlope}
-Metoda \textbf{drawSlope} slouží k vykreslení sklonu trojúhelníků.
-
-\subsubsection*{drawAspect}
-Metoda \textbf{drawAspect} slouží k vykreslení orientace trojúhelníků.
+\subsubsection*{setBuffer}
+Metoda \textbf{setBuffer} slouží k vykreslení orientace trojúhelníků.
 
 
 \subsection{QPointFB}
-Třída \textit{QPointFB} slouží k definování nového datového typu \texttt{QPointFB}, který je odvozen od typu \texttt{QPointF} a který navíc obsahuje směrnice přímek \textsl{alfa} a \textsl{beta}, informaci, zda bod je průsečíkem, a polohu bodu.
+Třída \textit{QPointFB} slouží k definování nového datového typu \texttt{QPointFB}, který je odvozen od typu \texttt{QPointF} a který navíc obsahuje směrnice přímek \textsl{alfa} a \textsl{beta}, informaci, zda bod je průsečíkem, a polohu bodu. Defaultně je nastaveno, že bod není průsečíkem a hodnoty směrnic jsou rovny nule.
 
 \subsubsection*{getAlfa}
 Metoda \textbf{getAlfa} slouží k získání směrnice \textsl{alfa}.
