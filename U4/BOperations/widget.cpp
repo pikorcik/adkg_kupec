@@ -14,19 +14,12 @@ Widget::~Widget()
     delete ui;
 }
 
-void Widget::on_pushButton_clicked()
+void Widget::on_load_button_clicked()
 {
     ui->Canvas->setAB();
 }
 
-void Widget::on_pushButton_4_clicked()
-{
-    ui->Canvas->clearAll();
-
-    repaint();
-}
-
-void Widget::on_pushButton_2_clicked()
+void Widget::on_operation_button_clicked()
 {
     //Perform boolean operation
 
@@ -50,23 +43,30 @@ void Widget::on_pushButton_2_clicked()
     repaint();
 }
 
-void Widget::on_pushButton_3_clicked()
+void Widget::on_buffer_button_clicked()
+{
+    // Create buffer over polygons
+    std::vector<QPointFB> A = ui->Canvas->getA();
+    std::vector<QPointFB> B = ui->Canvas->getB();
+
+    std::vector<std::vector<QPointFB> > bufferA = Algorithms::polygonOffset(A, 20,  30.0 * M_PI / 180);
+    //std::vector<std::vector<QPointFB> > bufferB = Algorithms::polygonOffset(B, 20,  7.0 * M_PI / 180);
+
+    //bufferB.insert(bufferB.end(), bufferA.begin(), bufferA.end());
+
+    ui->Canvas->setBuff(bufferA);
+
+    repaint();
+}
+
+void Widget::on_clear_res_button_clicked()
 {
 
 }
 
-void Widget::on_buffer_button_clicked()
+void Widget::on_clear_all_button_clicked()
 {
-    //Create buffer over polygon
-    std::vector<QPointFB> A = ui->Canvas->getA();
-    std::vector<QPointFB> B = ui->Canvas->getB();
-
-    std::vector<std::vector<QPointFB> > bufferA = Algorithms::polygonOffset(A, 10, 10 * M_PI / 180);
-    std::vector<std::vector<QPointFB> > bufferB = Algorithms::polygonOffset(B, 10, 10 * M_PI / 180);
-
-    bufferB.insert(bufferB.end(), bufferA.begin(), bufferB.end());
-
-    ui->Canvas->setBuffer(bufferB);
+    ui->Canvas->clearAll();
 
     repaint();
 }

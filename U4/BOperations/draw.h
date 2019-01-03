@@ -15,7 +15,7 @@ private:
     std::vector<QPointFB> polB;
     std::vector<std::vector<QPointFB> > res;
     bool ab;
-    std::vector<std::vector<QPointFB> > pol_buffer;
+    std::vector<std::vector<QPointFB> > buff;
 
 
 public:
@@ -31,7 +31,9 @@ public:
     void setB(std::vector<QPointFB> polB_){polB = polB_;}
     std::vector<QPointFB> getA(){return polA;}
     std::vector<QPointFB> getB(){return polB;}
-    void setBuffer(std::vector<std::vector<QPointFB> > buff) {pol_buffer = buff;}
+    void setBuff(std::vector<std::vector<QPointFB> > buff_) {buff=buff_;}
+
+
 
 
 

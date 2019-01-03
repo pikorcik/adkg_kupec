@@ -143,24 +143,24 @@ T2LinesPosition Algorithms::get2LinesPosition(QPointFB &p1,QPointFB &p2,QPointFB
 }
 
 
-void Algorithms::computePolygonIntersections(std::vector<QPointFB> &p1, std::vector<QPointFB> &p2)
+void Algorithms::computePolygonIntersections(std::vector<QPointFB> &polA, std::vector<QPointFB> &polB)
 {
     //Compute intersections of two polygons and update the list
-    for(int i = 0; i < p1.size(); i++)
+    for(int i = 0; i < polA.size(); i++)
     {
         // Map of intersection sorted by alpha
         std::map<double, QPointFB> inters;
-        for(int j = 0;j < p2.size(); j++)
+        for(int j = 0;j < polB.size(); j++)
         {
             //Compute intersection
             QPointFB pi;
-            if(get2LinesPosition(p1[i], p1[(i+1)%p1.size()], p2[j],p2[(j+1)%p2.size()], pi) == INTERSECTING)
+            if(get2LinesPosition(polA[i], polA[(i+1)%polA.size()], polB[j], polB[(j+1)%polB.size()], pi) == INTERSECTING)
             {
                 //Add for later processing
                 inters[pi.getAlfa()] = pi;
 
                 // Process intersection
-                processIntersection(pi, pi.getBeta(), p2, j);
+                processIntersection(pi, pi.getBeta(), polB, j);
             }
         }
 
@@ -169,7 +169,7 @@ void Algorithms::computePolygonIntersections(std::vector<QPointFB> &p1, std::vec
             for(auto pi2:inters)
             {
                 // Process intersection
-                processIntersection(pi2.second, pi2.second.getAlfa(), p1, i);
+                processIntersection(pi2.second, pi2.second.getAlfa(), polA, i);
             }
         }
     }
@@ -202,23 +202,23 @@ void Algorithms::processIntersection(QPointFB &b, double t, std::vector<QPointFB
 }
 
 
-void Algorithms::setPositions (std::vector<QPointFB> &pol1,std::vector<QPointFB> &pol2)
+void Algorithms::setPositions (std::vector<QPointFB> &polA,std::vector<QPointFB> &polB)
 {
     //Set positions of midpoints of edges
     //Process first polygon
-    for (int i = 0; i < pol1.size(); i++)
+    for (int i = 0; i < polA.size(); i++)
     {
-        QPointFB m((pol1[i].x() + pol1[(i+1)%pol1.size()].x())*0.5, (pol1[i].y() + pol1[(i+1)%pol1.size()].y())*0.5);
-        TPointPolygon loc= getPositionWinding(m,pol2);
-        pol1[i].setPosition(loc);
+        QPointFB m((polA[i].x() + polA[(i+1)%polA.size()].x())*0.5, (polA[i].y() + polA[(i+1)%polA.size()].y())*0.5);
+        TPointPolygon loc = getPositionWinding(m,polB);
+        polA[i].setPosition(loc);
     }
 
     //Process second polygon
-    for (int i = 0; i < pol2.size(); i++)
+    for (int i = 0; i < polB.size(); i++)
     {
-        QPointFB m((pol2[i].x() + pol2[(i+1)%pol2.size()].x())*0.5, (pol2[i].y() + pol2[(i+1)%pol2.size()].y())*0.5);
-        TPointPolygon loc= getPositionWinding(m,pol1);
-        pol2[i].setPosition(loc);
+        QPointFB m((polB[i].x() + polB[(i+1)%polB.size()].x())*0.5, (polB[i].y() + polB[(i+1)%polB.size()].y())*0.5);
+        TPointPolygon loc = getPositionWinding(m,polA);
+        polB[i].setPosition(loc);
     }
 }
 
@@ -356,27 +356,27 @@ double Algorithms::getPolygonOrientation(std::vector<QPointFB> &pol){
 }
 
 
-std::vector<std::vector<QPointFB> > Algorithms::BooleanOper(std::vector<QPointFB> &A, std::vector<QPointFB> &B, TBooleanOperation oper)
+std::vector<std::vector<QPointFB> > Algorithms::BooleanOper(std::vector<QPointFB> &polA, std::vector<QPointFB> &polB, TBooleanOperation oper)
 {
     //Perform boolean operation of polygons
 
     //Switch orientation of polygon A
-    if (getPolygonOrientation(A) < 0)
+    if (getPolygonOrientation(polA) < 0)
     {
-        reverse (A.begin(), A.end());
+        reverse (polA.begin(), polA.end());
     }
 
     //Switch orientation of polygon B
-    if (getPolygonOrientation(B) < 0)
+    if (getPolygonOrientation(polB) < 0)
     {
-        reverse (B.begin(), B.end());
+        reverse (polB.begin(), polB.end());
     }
 
     //Compute Intersection
-    computePolygonIntersections(A, B);
+    computePolygonIntersections(polA, polB);
 
     //Set Positions
-    setPositions(A,B);
+    setPositions(polA, polB);
 
     //Create map of fragments
     std::map<QPointFB, std::pair<bool, std::vector<QPointFB> > > F;
@@ -388,10 +388,10 @@ std::vector<std::vector<QPointFB> > Algorithms::BooleanOper(std::vector<QPointFB
     bool rever2 = (oper == DIFFBA ? true : false);
 
     //Create fragments
-    createFragments(A,pos1, rever1, F);
-    createFragments(A, ON, rever1, F);
-    createFragments(B,pos2, rever2, F);
-    createFragments(B, ON, rever1, F);
+    createFragments(polA, pos1, rever1, F);
+    createFragments(polA, ON, rever1, F);
+    createFragments(polB, pos2, rever2, F);
+    createFragments(polB, ON, rever1, F);
 
     //Merge fragments
     std::vector<std::vector<QPointFB> > res;
@@ -401,8 +401,8 @@ std::vector<std::vector<QPointFB> > Algorithms::BooleanOper(std::vector<QPointFB
     for (int i = 0; i < res.size();i++)
        resetIntersections(res[i]);
 
-    resetIntersections(A);
-    resetIntersections(B);
+    resetIntersections(polA);
+    resetIntersections(polB);
        //for (int j = 0; j < res[i].size();j++)
        //         res[i][j].setInters(false);
     //for (int i = 0; i < A.size();i++)
@@ -474,7 +474,7 @@ void Algorithms::sampleArc(QPointFB &s, double radius, double fi_start, double f
 
 std::vector<std::vector<QPointFB> > Algorithms::lineOffset(std::vector<QPointFB> &pol, double d, double delta)
 {
-    //Create bufer over polygon
+    //Create buffer over polygon
     std::vector<std::vector<QPointFB> > buff;
     for(int i = 0; i < pol.size(); i++)
     {
@@ -526,23 +526,3 @@ std::vector<std::vector<QPointFB> > Algorithms::polygonOffset(std::vector<QPoint
 
     return buff;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

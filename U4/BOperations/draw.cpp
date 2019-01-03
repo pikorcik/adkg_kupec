@@ -45,9 +45,9 @@ void Draw::paintEvent(QPaintEvent *e)
 
     //Draw offset
     painter.setPen(Qt::cyan);
-    for(std::vector<QPointFB> buff: pol_buffer)
+    for(std::vector<QPointFB> b: buff)
     {
-        drawPol(buff, painter);
+        drawPol(b, painter);
     }
 }
 

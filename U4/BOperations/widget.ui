@@ -27,7 +27,7 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="load_button">
        <property name="text">
         <string>Polygon A/B</string>
        </property>
@@ -91,7 +91,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="operation_button">
        <property name="text">
         <string>Boolean Operations</string>
        </property>
@@ -118,14 +118,14 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="clear_res_button">
        <property name="text">
         <string>Clear results</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="clear_all_button">
        <property name="text">
         <string>Clear All</string>
        </property>
