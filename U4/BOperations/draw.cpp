@@ -9,6 +9,8 @@ Draw::Draw(QWidget *parent) : QWidget(parent)
 
 QString Draw::loadPolygon(const char* path)
 {
+    clearAll();
+
     //Open polygon file
     ifstream input_data;
     input_data.open(path);
