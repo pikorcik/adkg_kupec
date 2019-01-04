@@ -1,25 +1,70 @@
 #include "draw.h"
+#include <fstream>
+using namespace std;
 
 Draw::Draw(QWidget *parent) : QWidget(parent)
 {
     ab = true;
-    /*
-    QPointFB p1(0,0);
-    QPointFB p2(100,0);
-    QPointFB p3(0,100);
+}
 
-    polA.push_back(p1);
-    polA.push_back(p2);
-    polA.push_back(p3);
+QString Draw::loadPolygon(const char* path)
+{
+    //Open polygon file
+    ifstream input_data;
+    input_data.open(path);
 
-    QPointFB p4(50,10);
-    QPointFB p5(150,10);
-    QPointFB p6(50,110);
+    //Check whether file is open
+    if (!input_data.is_open())
+    {
+        input_data.close();
+        return "Unable to open file.";
+    }
 
-    polB.push_back(p4);
-    polB.push_back(p5);
-    polB.push_back(p6);
-    */
+    //Declare variables
+    double num_of_points;
+    double x, y;
+
+    while(!input_data.eof())
+    {
+        input_data >> num_of_points;
+
+        //Check for invalid polygons
+        if(num_of_points < 3)
+        {
+            polA.clear();
+            polB.clear();
+            input_data.close();
+            return "Invalid polygon detected!";
+        }
+
+        //Insert point into polygon
+        for(int i = 0; i < num_of_points; i++)
+        {
+            input_data >> x;
+            input_data >> y;
+            QPointFB p(x, y);
+
+            //Add to polA
+            if(ab)
+            {
+                polA.push_back(p);
+            }
+
+            //Add to polB
+            else
+            {
+                polB.push_back(p);
+            }
+        }
+
+        setAB();
+    }
+
+    input_data.close();
+
+    repaint();
+
+    return "File successfully open.";
 }
 
 void Draw::paintEvent(QPaintEvent *e)
@@ -64,28 +109,9 @@ void Draw::drawPol(std::vector<QPointFB> &pol, QPainter &painter)
     painter.drawPolygon(pol_q);
 }
 
-void Draw::mousePressEvent(QMouseEvent *e)
-{
-    QPointFB p(e->x(), e->y());
-
-    //Add to polA
-    if(ab)
-    {
-        polA.push_back(p);
-    }
-
-    //Add to polB
-    else
-    {
-        polB.push_back(p);
-    }
-
-    repaint();
-}
-
 void Draw::clearAll()
 {
-    // Clear all in canvas
+    //Clear all in canvas
     polA.clear();
     polB.clear();
     res.clear();
@@ -93,6 +119,6 @@ void Draw::clearAll()
 
 void Draw::clearResults()
 {
-    // Clear results in canvas
+    //Clear results in canvas
     res.clear();
 }

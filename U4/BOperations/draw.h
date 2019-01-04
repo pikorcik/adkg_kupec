@@ -22,7 +22,7 @@ public:
     explicit Draw(QWidget *parent = nullptr);
     void paintEvent(QPaintEvent *e);
     void drawPol(std::vector<QPointFB> &pol, QPainter &painter);
-    void mousePressEvent(QMouseEvent *e);
+    QString loadPolygon(const char* path);
     void setAB(){ab = !ab;}
     void clearAll();
     void clearResults();

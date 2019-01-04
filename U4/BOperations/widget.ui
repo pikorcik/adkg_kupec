@@ -27,9 +27,19 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
+      <widget class="QLineEdit" name="load_line"/>
+     </item>
+     <item>
       <widget class="QPushButton" name="load_button">
        <property name="text">
-        <string>Polygon A/B</string>
+        <string>Load polygon file</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="load_label">
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </item>
