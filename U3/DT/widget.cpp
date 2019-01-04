@@ -70,6 +70,7 @@ void Widget::on_load_button_clicked()
     //Enable triangulation button
     if(load_message == "File successfully open.")
         ui->delaunay_button->setEnabled(true);
+
 }
 
 void Widget::on_delaunay_button_clicked()

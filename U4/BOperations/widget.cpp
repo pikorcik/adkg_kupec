@@ -8,6 +8,11 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
+
+    ui->operation_button->setEnabled(false);
+    ui->buffer_button->setEnabled(false);
+    ui->clear_res_button->setEnabled(false);
+    ui->clear_all_button->setEnabled(false);
 }
 
 Widget::~Widget()
@@ -42,6 +47,12 @@ void Widget::on_load_button_clicked()
 
     //Write load message
     ui->load_label->setText(load_message);
+
+    //Enable operation button
+    if(load_message == "File successfully open.")
+        ui->operation_button->setEnabled(true);
+    else
+        on_clear_all_button_clicked();
 }
 
 void Widget::on_operation_button_clicked()
@@ -64,6 +75,9 @@ void Widget::on_operation_button_clicked()
     std::vector<std::vector<QPointFB>> result = Algorithms::BooleanOper(A, B, operation);
 
     ui->Canvas->setRes(result);
+
+    ui->clear_res_button->setEnabled(true);
+    ui->clear_all_button->setEnabled(true);
 
     repaint();
 }
@@ -94,6 +108,10 @@ void Widget::on_clear_res_button_clicked()
 void Widget::on_clear_all_button_clicked()
 {
     ui->Canvas->clearAll();
+
+    ui->operation_button->setEnabled(false);
+    ui->clear_res_button->setEnabled(false);
+    ui->clear_all_button->setEnabled(false);
 
     repaint();
 }
