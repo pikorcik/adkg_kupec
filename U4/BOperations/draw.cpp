@@ -72,17 +72,20 @@ void Draw::paintEvent(QPaintEvent *e)
     QPainter painter (this);
 
     painter.begin(this);
+    QPen penA(Qt::green, 1);
+    QPen penB(Qt::blue, 1);
+    QPen pen_res(Qt::red, 2);
 
     //Draw polygon A
-    painter.setPen(Qt::green);
+    painter.setPen(penA);
     drawPol(polA, painter);
 
     //Draw polygon B
-    painter.setPen(Qt::blue);
+    painter.setPen(penB);
     drawPol(polB, painter);
 
     //Draw result
-    painter.setPen(Qt::red);
+    painter.setPen(pen_res);
     for(std::vector<QPointFB> vec: res)
     {
         drawPol(vec, painter);
