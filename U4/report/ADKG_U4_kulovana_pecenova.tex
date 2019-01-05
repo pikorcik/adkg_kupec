@@ -81,85 +81,149 @@ Zadání úlohy bylo staženo ze stránek předmětu \href{https://web.natur.cun
 	\includegraphics[clip, trim=0cm 8.5cm 0cm 3cm, width=1.0\textwidth]{./pictures/zadani04.pdf}
 \end{figure}
 
-V rámci této úlohy byly implementovány bonusové úlohy č. .
+V rámci této úlohy nebyly implementovány žádné bonusové úlohy.
 \clearpage
 
 \section{Popis a rozbor problému}
-Úloha \textbf{Množinové operace s polygony} se zabývá vytvořením aplikace, která Delaunayovou triangulací nad vstupní množinou bodů $P$ vytvoří trojúhelníkovou síť, pro kterou se lineární interpolací vypočítají vrstevnice. Aplikace dále počítá a vhodně vizualizuje sklon a orientaci trojúhelníků ke světovým stranám.\\ 
+Úloha \textbf{Množinové operace s polygony} se zabývá vytvořením aplikace, která nad libovolnými dvěma vstupními polygony provede zvolenou množinovou operaci. 
 
-Způsobů, jak geometricky zkonstruovat trojúhelníkovou síť, je více. Pro účely této úlohy byla vybrána Delaunayova triangulace, protože poskytuje optimální trojúhelníky z hlediska tvaru, což je zejména v kartografii velmi důležité. Delaunayova triangulace má čtyři základní vlastnosti:
+Mějme vstupní polygony $A$ a $B$. Množinové operace, které nad nimi lze vykonat, jsou následující:
 \begin{enumerate}
-\item Uvnitř kružnice opsané trojúhelníku $t_i \in DT$ neleží žádný jiný bod množiny $P$.
-\item $DT$ maximalizuje minimální úhel v $\forall t_i$, avšak $DT$ neminimalizuje maximální úhel v $t_i$.
-\item $DT$ je lokálně optimální i globálně optimální vůči kritériu minimálního úhlu.
-\item $DT$ je jednoznačná, pokud žádné čtyři body neleží na kružnici.\footnote{Zdroj: \href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk5.pdf}{https://web.natur.cuni.cz}, slide 22}
+\item Průnik (Intersection): $\longrightarrow A \cap B$
+\item Sjednocení (Union) $\longrightarrow A \cup B$
+\item Rozdíl (Difference) $\longrightarrow A$\textbackslash $B$ nebo $B$\textbackslash $A$
 \end{enumerate}
-\vspace{0.4cm}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=6cm]{./pictures/operations.png}
+	\caption{Ukázka množinových operací [\href{http://www.efgh.com/math/algebra/sets.htm}{Zdroj}]}
+\end{figure}
 
 \section{Algoritmy}
-Tato kapitola se zabývá popisem algoritmů, které byly v aplikaci implementovány. 
+Tato kapitola se zabývá popisem algoritmů, které byly v aplikaci implementovány. Vzhledem k jejich složitosti je popis výsledného algoritmu rozdělen do jednotlivých fází. Výsledný algoritmus, který spojuje všechny kroky dohromady, se nazývá \textit{BooleanOper}. Vstupní polygony $A$ a $B$ jsou reprezentovány kruhovými seznamy s orientací proti směru hodinových ručiček (CCW). Body, které oba polygony tvoří, mají nově vytvořený datový typ \texttt{QPointFB}.
 
-\subsection{Delanuayova triangulace}
-Delaunyova triangulace byla realizována metodou inkrementální konstrukce, která je zalo\-že\-na na postupném přidávání bodů do již vytvořené triangulace. Během výpočtu je používaná struktura $AEL$ (Active Edge List), která obsahuje všechny hrany, proto které ještě nebyl nalezen třetí bod trojúhelníku. Hrana, pro kterou byl bod nalezen, je vzápětí ze seznamu odstraněna. Před přidáním hran do seznamu je kontrolováno, zda se v něm již nenachází hrana s opačnou orientací. V takovém případě není hrana do seznamu přidána.\\
+\subsection{Výpočet průsečíků}
+\subsubsection{computePolygonIntersections}
+dopsat kecy okolo\\
+Průsečíky jsou ukládány do proměnné $M$ datového typu \texttt{map}, která funguje na principu hashování. Spolu s výsledkem je ukládán i tzv. klíč, který na něj odkazuje. Za klíč byl zvolen parametr $\alpha$.\\
 
-Mějme množinu bodů $P$ a orientovanou hranu $e_i$. Hledáme takový bod $p_i \in P$, který se nachází v levé polorovině vymezené hranou $e_i$, pro který dále platí, že poloměr kružnice jemu a hraně opsané je minimální. Během výpočtu jsou upřednostňovány body, jejichž středy opsaných kružnic se nachází v pravé polorovině. Je-li bod splňující výše uvedená kritéria nalezen, vytvoří se dvě nové orientované hrany $e_{i+1}$ a $e_{i+2}$, které se přidají do triangulace a do $AEL$. Původní hrana $e_i$ je z $AEL$ odstraněna. Není-li žádný vhodný bod nalezen, dochází k prohození orientace hrany $e_i$ a postup je opakován. Celý proces je ukončen ve chvíli, kde se v $AEL$ nenachází již žádná hrana. \\ 
+Po nalezení každého nového průsečíku je nutné aktualizovat stávající seznamy bodů obou polygonů. K tomu slouží lokální procedura \textit{ProcessIntersection}. Parametr $t$ reprezentuje směrnice $\alpha$ nebo $\beta$, parametr $i$ index daného bodu. DO DOKUMENTACE\\
 
-Zjednodušený zápis algoritmu lze zapsat způsobem uvedeným níže:
+Zjednodušený zápis algoritmů lze zapsat způsobem uvedeným níže:
 
 \begin{enumerate}
-\item Nalezení pivota $a$: $a$ = min($x$) a jemu nejbližší bod $b$
-\item Vytvoření $e_1 = (a,b)$
-\item Nalezení Delaunayova bodu: $r(k_i)$ = min, $k_i = (e_1,p_i)$
-\item Podmínka: $p_i$ nenalezen $\rightarrow e_1 = (b,a)$, opakuj krok 3
-\item Vytvoř zbylé hrany trojúhelníku: $e_2 = (b,p_i)$, $e_3 = (p_i,a)$
-\item Přidej hrany do $AEL$: $AEL \leftarrow e_1$, $AEL \leftarrow e_2$, $AEL \leftarrow e_3$
-\item Přidej hrany do triangulace $DT$: $DT \leftarrow e_1$, $DT \leftarrow e_2$, $DT \leftarrow e_3$
-\item Dokud $AEL \neq \emptyset$:
-\subitem Vezmi první hranu z $AEL \rightarrow e_1$
-\subitem Prohoď orientaci: $e_1 = (b,a)$
-\subitem Nalezení Delaunayova bodu: $r(k_i)$ = min, $k_i = (e_1,p_i)$
-\subitem Podmínka: $p_i$ nalezen 
-\subsubitem Vytvoř zbylé hrany trojúhelníku: $e_2 = (b,p_i)$, $e_3 = (p_i,a)$
-\subsubitem Přidej hranu do $DT$: $DT \leftarrow e_1$
-\subsubitem $add(e_2,AEL,DT), add(e_3,AEL,DT)$
+\item Postupně pro všechny $p_i \in A$:
+\subitem Vytvoř mapu M 
+\subitem Postupně pro všechny $p_j \in B$:
+\subitem \hspace {0.5cm} Podmínka ($\exists$ průsečík $b_{ij}$):
+\subitem \hspace {1cm} Přidej: M[$\alpha_{i}] \leftarrow b_{ij}$
+\subitem \hspace {1cm} Zpracuj průsečík pro $B$: \textit{ProcessIntersection($b_{ij}, \beta, B, j$)}
+\subitem Podmínka ($M \neq \emptyset$):
+\subitem \hspace {0.5cm} Postupně pro všechny $b_{ij} \in M$:
+\subitem \hspace {1cm} Nalezni průsečík pro $A$: \textit{ProcessIntersection($b_{ij}, \alpha, A, i$)}
 \end{enumerate}
 ~\\
-Lokální algoritmus $add$:
+
+Lokální procedura \textit{ProcessIntersection($b, t, P, i$)}:
 \begin{enumerate}
-\item Prohoď orientaci: $e' = (b,a)$
-\item Podmínka: $e' \in AEL \rightarrow$ odstraň $e'$ z $AEL$
-\item Jinak: $AEL \leftarrow e$  
-\item $DT \leftarrow e$
+\item  Podmínka ($|t| < \epsilon)$: 
+\subitem Průsečíkem je počáteční bod: $P[i] \leftarrow inters$
+\item  Podmínka ($(|t-1| < \epsilon)$:
+\subitem Průsečíkem je koncový bod: $P[(i+1)\%m] \leftarrow inters$
+\item  Jinak:
+\subitem $i = i+1$
+\subitem $P \leftarrow (b,i)$
 \end{enumerate}
 
-\subsection{Vrstevnice}
-Druhý algoritmus použitý v aplikaci slouží k výpočtu vrstevnic. Vrstevnice byly zkonstruovány metodou lineární interpolace, která je založena na předpokladu, že spád terénu mezi dvěma body $p_i$ se mění stejně, tedy konstantně. Výpočet byl proveden postupně pro všechny trojúhelníky a vrstevnice byly ukládány jako seznam hran.\\
+\subsubsection{setPositions}
+Všechny vrcholy polygonu A, resp. B (včetně nalezených průsečíků) jsou následně ohodnoceny, zda leží uvnitř, vně nebo na hraně polygonu B, resp. A. Pro všechny hrany $e_i$ jsou vypočteny jejich středy $\bar{p}$, pro které se následně určuje jejich pozice (ohodnocení $g$) vůči druhému polygonu. Tato informace je uložena do počátečního bodu hrany $e_i$ do parametru pozice. K určení pozice bodů vůči polygonu byl použit algoritmus \textit{GetPositionWinding} z úlohy č.~1. Nejprve jsou zpracovány všechny hrany prvního polygonu a stejný postup je analogicky aplikován i pro druhý polygon. \\
 
-Mějme trojúhelník $t_i$ tvořený třemi hranami $e_{1}(p_{1},p_{2})$, $e_{2}(p_{2},p_{3})$ a $e_{3}(p_{3},p_{1})$ a rovinu $\rho$ o výšce Z. Hledáme průsečnici roviny trojúhelníku $t_i$ s rovinou $\rho$. Pro kritérium $t=(z-z_i)(z-z_{i+1})$ mohou nastat tři základní situace:
-
+Zjednodušený zápis algoritmů lze zapsat způsobem uvedeným níže:
 \begin{enumerate}
-\item $t > 0 \rightarrow e_i \notin \rho$ 
-\item $t = 0 \rightarrow e_i \in \rho$
-\item $t < 0 \rightarrow e_i \cap \rho$
+\item [] Postupně pro všechny $p_i \in A$:
+\subitem $\bar{p} = \frac{p_i(x,y)+p_{i+1}(x,y)}{2}$
+\subitem pozice = \textit{GetPositionWinding($\bar{p},B$)}
+\subitem $p_i[pozice]$ = pozice
+\end{enumerate}
+
+\subsection{Fragmenty}
+Sousedící vrcholy se stejným ohodnocením jsou uloženy do samostatných fragmentů $f$. Seznam bodů každého fragmentu začíná průsečíkem a končí bodem s jiným ohodnocením. Pro odlišení je orientace vrcholů ve fragmentech po směru hodinových ručiček (CW). 
+
+\subsubsection{createFragments}
+Do metody vstupuje polygon $P$ o velikosti $n$, ohodnocení vrcholů $g$ a seznam fragmentů $F$. Algoritmus obsahuje lokální proceduru \textit{createFragmentFromVertices}, která ze sousedících bodů o stejném ohodnocení vytváří fragment $f$. $i_s$ je index počátečního bodu fragmentu, $i$ je index přidávaného bodu a $g$ ohodnocení.\\
+
+Zjednodušený zápis algoritmů lze zapsat způsobem uvedeným níže:
+\begin{enumerate}
+\item Inicializace: $i = n-1;~i_s = -1$
+\item Dokud ($i > 0$)
+\subitem Podmínka ($P[i] =$ průsečík $\land~g(P[i]) = g$)
+\subitem \hspace {0.5cm} $i_s = i$; $i--$ 
+\item Podmínka ($i_s < 0$) $\rightarrow$ žádný bod neexistuje, ukonči proces
+\item Inicializace: $i = i_s$
+\item Proveď: 
+\subitem Podmínka ($P[i] =$ průsečík $\land~g(P[i]) = g$)
+\subitem \hspace {0.5cm} Vytvoř fragment $f = \emptyset$ 
+\subitem \hspace {0.5cm} Podmínka (\textit{createFragmentFromVertices} vytvořen)
+\subitem \hspace {1cm} Je-li potřeba, prohoď orientaci
+\subitem \hspace {1cm} Přidej $f$ do seznamu fragmentů $F$: $F[f[0]] \leftarrow f$
+\subitem Jinak inkrementace: $i = (i+1)\%n$
+\item[] Dokud ($i \neq i_s$)
 \end{enumerate}
 ~\\
-Pro případy 1 a 2 nebyly vrstevnice řešeny. Nastane-li případ 3 ($e_i \cap \rho$), je pro hranu $e_i$ a rovinu $\rho$ níže uvedenými vzorci vypočten průsečík $a$ o výšce $z_a$: (pro přehlednost uvedeno pro hranu $e_1$)
 
-$$ x_a = \frac{(x_2-x_1)}{(z_2-z_1)}(z_a-z_1)+x_1 $$
-$$ y_a = \frac{(y_2-y_1)}{(z_2-z_1)}(z_a-z_1)+y_1 $$
+Lokální procedura \textit{createFragmentFromVertices($i_s, P, g, i, f$)}:
+\begin{enumerate}
+\item[] Opakuj:
+\subitem Přidej bod do fragmentu: $f \leftarrow P[i]$
+\subitem Inkrementace: $i = (i+1)\%n$
+\subitem Podmínka ($i = i_s$) $\rightarrow$ return FALSE
+\subitem Podmínka ($g(P[i]) \neq g$)
+\subitem \hspace {0.5cm} Přidej bod do fragmentu: $f \leftarrow P[i]$
+\subitem \hspace {0.5cm} Return TRUE
+\end{enumerate}
 
-\subsection{Sklon}
-Algoritmus pro výpočet sklonu počítá sklon jednotlivých trojúhelníků $t_i$. Sklon je úhel $\varphi$ mezi svislicí $n$ a normálou trojúhelníku $n_t$. Rovina trojúhelníku $t_i$ je určena vektory $u$, $v$. Sklon nabývá hodnot $\textless$0$^\circ$;90$^\circ\textgreater$ a v aplikaci je zobrazen v odstínech šedi.\\
+\subsubsection{mergeFragments}
+Algoritmus spojuje jednotlivé fragmenty $f$ do výstupních polygonů. Metoda má na vstupu seznam fragmentů $F$ a seznam polygonů $C$, do kterého jsou ukládány výsledné polygony. Metoda nejprve spojí jednotlivé fragmenty do oblastí a ty jsou následně lokální procedurou \textit{createPolygonFromFragments} převedeny na polygony. Počáteční bod fragmentu je značen jako $s$, $n$ značí následující bod.
 
-$$n = (0,0,1)$$
-$$n_t = \vec{u}\times \vec{v}$$
-$$\varphi =\arccos\left(\frac{n_t \cdot n}{|n_t| |n|}\right)$$
+\begin{enumerate}
+\item[] Postupně pro všechna $f \in F$:
+\subitem Vytvoř: $P = \emptyset$
+\subitem Najdi startovní bod fragmentu: $s = f.first$
+\subitem Podmínka ($f$ nebyl ještě zpracován)
+\subsubitem Podmínka (\textit{createPolygonFromFragments})
+\subsubitem Přidej: $C \leftarrow P$
+\end{enumerate}
+~\\
 
-\subsection{Orientace}
-Orientace terénu $A$ je definována jako azimut průmětu gradientu normálového vektoru roviny trojúhelníku do roviny $x$,$y$. Nabývá hodnot $\textless$0$^\circ$;360$^\circ\textgreater$ a v aplikaci je zobrazen barevnou škálou.
+Lokální procedura \textit{createPolygonFromFragments($s, F, P$)}:
+\begin{enumerate}
+\item[] Inicializace: $n = s$
+\subitem Opakuj:
+\subsubitem Nalezni další fragment: $f = F.find(n)$
+\subsubitem Podmínka (fragment s daným počátečním bodem $\nexists$) $\rightarrow$ return FALSE
+\subsubitem Označ fragment za zpracovaný: $f.second.first \leftarrow$ TRUE
+\subsubitem Nalezni další bod: $n \leftarrow f.second.second.back()$
+\subsubitem Přidej ho bez počátečního bodu: $P \leftarrow f.second.second - {f.second.second[0]}$
+\subsubitem Podmínka ($n = s$) $\rightarrow$ return TRUE
+\end{enumerate}
 
-$$n_t = \vec{u}\times \vec{v}$$
-$$A = \arctan2\left(\frac{n_x}{n_y}\right)$$
+\subsection{BooleanOper}
+Tento algoritmus spojuje všechny výše uvedené kroky. Na vstupu jsou polygony $A$ a $B$ a typ zvolené množinové operace.
+\begin{enumerate}
+\item Podmínka (orientace $A \lor B \neq$ CCW) $\rightarrow$ prohoď orientaci
+\item \textit{computePolygonIntersections($A,B$)}
+\item \textit{setPositions($A,B$)}
+\item Vytvoř mapu fragmentů $F$
+\item Zvolení ohodnocení: $pos1 = (oper \equiv intersection \lor oper \equiv DiffAB?Inner:Outer)$
+\subitem \hspace {2.8cm} $pos2 = (oper \equiv intersection \lor oper \equiv DiffBA?Inner:Outer)$
+\item Prohození: $swap1 = (oper \equiv DiffAB? : true : false)$
+\subitem \hspace {1.2cm} $swap2 = (oper \equiv DiffBA? : true : false)$
+\item \textit{CreateFragments (A, pos1, swap1, F)}
+\item[] \textit{CreateFragments (B, pos2, swap2, F)}
+\item \textit{MergeFragments (A,B,C)}
+
+\end{enumerate}
 
 
 \section{Vstupní data}
@@ -231,7 +295,7 @@ Třída \textit{Algorithms} obsahuje metody pro výpočet Delaunayovy triangulac
 
 
 
-\subsubsection{getPositionWinding}
+\subsubsection*{getPositionWinding}
 Metoda \textbf{getPositionWinding} určuje polohu bodu $q$ vzhledem k polygonu $P$ za použití algoritmu \textsl{Winding Number}. Na vstupu je bod $q$ a vektor bodů polygonu třídy \texttt{QPointFB}. Návratová hodnota typu \texttt{TPointPolygon} vrací polohu bodu $q$ vůči polygonu $P$.\\
 
 \textbf{Input}:
@@ -490,8 +554,8 @@ Metoda \textbf{getB} slouží k vykreslení sklonu trojúhelníků.
 Metoda \textbf{setBuffer} slouží k vykreslení orientace trojúhelníků.
 
 
-\subsection{QPointFB}
-Třída \textit{QPointFB} slouží k definování nového datového typu \texttt{QPointFB}, který je odvozen od typu \texttt{QPointF} a který navíc obsahuje směrnice přímek \textsl{alfa} a \textsl{beta}, informaci, zda bod je průsečíkem, a polohu bodu. Defaultně je nastaveno, že bod není průsečíkem a hodnoty směrnic jsou rovny nule.
+\subsection{!QPointFB}
+Třída \textit{QPointFB} slouží k definování nového datového typu \texttt{QPointFB}, který je odvozen od typu \texttt{QPointF} a který navíc obsahuje směrnice přímek \textsl{alfa} a \textsl{beta}, informaci, zda bod je průsečíkem, a poloha bodu vůči druhému polygonu. Defaultně je nastaveno, že bod není průsečíkem a hodnoty obou směrnic jsou rovny nule. A co poloha????
 
 \subsubsection*{getAlfa}
 Metoda \textbf{getAlfa} slouží k získání směrnice \textsl{alfa}.
@@ -591,8 +655,8 @@ Do budoucna by bylo vhodné přidat aspoň popis hlavních vrstevnic, případn�
 \item  \textsl{BAYER, Tomáš}. Množinové operace s polygony [online][cit. 4. 1. 2019].\\
 Dostupné z: \href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk9.pdf}{https://web.natur.cuni.cz}
 
-\item  \textsl{ArcGIS Blog - New Aspect-Slope Raster Function Now Available} [online] [cit. 5. 12. 2018].\\
-Dostupné z: \href{https://www.esri.com/arcgis-blog/products/arcgis-pro/imagery/new-aspect-slope-raster-function-now-available/?fbclid=IwAR0LX-HblA_iPSqg19aUKDW096LjaShp9r_ql8QwA_OJ26EkcFTpOEWJrlg}{https://www.esri.com/}
+\item  \textsl{Elementary Set Theory} [online] [cit. 4. 1. 2019].\\
+Dostupné z: \href{http://www.efgh.com/math/algebra/sets.htm}{http://www.efgh.com/}
 \end{enumerate}
 
 \end{document}
