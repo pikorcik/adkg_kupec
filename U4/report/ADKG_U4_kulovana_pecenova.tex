@@ -113,7 +113,7 @@ Po nalezení každého nového průsečíku je nutné aktualizovat stávající 
 Zjednodušený zápis algoritmů lze zapsat způsobem uvedeným níže:
 
 \begin{enumerate}
-\item Postupně pro všechny $p_i \in A$:
+\item[] Postupně pro všechny $p_i \in A$:
 \subitem Vytvoř mapu M 
 \subitem Postupně pro všechny $p_j \in B$:
 \subitem \hspace {0.5cm} Podmínka ($\exists$ průsečík $b_{ij}$):
@@ -291,17 +291,15 @@ V následují kapitole je představen vizuální vzhled vytvořené aplikace tak
 Tato kapitola obsahuje dokumentaci k jednotlivým třídám.
 
 \subsection{!Algorithms}
-Třída \textit{Algorithms} obsahuje metody pro výpočet Delaunayovy triangulace a analýzu DTM.
-
-
+Třída \textit{Algorithms} obsahuje metody pro realizaci množinových operací. Dále obsahuje pomocné algoritmy k jejich fungování.
 
 \subsubsection*{getPositionWinding}
-Metoda \textbf{getPositionWinding} určuje polohu bodu $q$ vzhledem k polygonu $P$ za použití algoritmu \textsl{Winding Number}. Na vstupu je bod $q$ a vektor bodů polygonu třídy \texttt{QPointFB}. Návratová hodnota typu \texttt{TPointPolygon} vrací polohu bodu $q$ vůči polygonu $P$.\\
+Metoda \textbf{getPositionWinding} určuje polohu bodu $q$ vzhledem k polygonu $pol$ za použití algoritmu \textsl{Winding Number}. Na vstupu je bod $q$ a vektor bodů polygonu třídy \texttt{QPointFB}. Návratová hodnota typu \texttt{TPointPolygon} vrací polohu bodu $q$ vůči polygonu $pol$.\\
 
 \textbf{Input}:
 \begin{itemize}
 \item \texttt{QPointFB} $q$
-\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $P$
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $pol$
 \end{itemize}
 
 \textbf{Output}:
@@ -345,7 +343,7 @@ Metoda \textbf{get2LinesAngle} počítá úhel mezi dvěma přímkami. Na vstupu
 \end{itemize}
 
 \subsubsection*{get2LinesPosition}
-Metoda \textbf{get2LinesPosition} určuje vzájemnou polohu dvou přímek. Pokud se přímky protínají, metoda vypočte jejich průsečík $p_{inters}$. Na vstupu jsou 4 body typu \texttt{QPointFB}, návratová hodnota je nově definovaný typ \texttt{T2LinesPosition}. Body $p_1$ a $p_2$ definují první přímku, zbylé dva body druhou přímku.\\
+Metoda \textbf{get2LinesPosition} určuje vzájemnou polohu dvou přímek. Pokud se přímky protínají, metoda vypočte jejich průsečík $p_{intersection}$. Na vstupu jsou 4 body typu \texttt{QPointFB}, návratová hodnota je nově definovaný typ \texttt{T2LinesPosition}. Body $p_1$ a $p_2$ definují první přímku, zbylé dva body druhou přímku.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -353,14 +351,14 @@ Metoda \textbf{get2LinesPosition} určuje vzájemnou polohu dvou přímek. Pokud
 \item \texttt{QPointFB} $p_2$ 
 \item \texttt{QPointFB} $p_3$
 \item \texttt{QPointFB} $p_4$
-\item \texttt{QPointFB} $p_{inters}$
+\item \texttt{QPointFB} $p_{intersection}$
 \end{itemize}
 
 \textbf{Output}:
 \begin{itemize}
 \item \texttt{PARALLEL} $\rightarrow$ přímky jsou rovnoběžné
 \item \texttt{COLINEAR} $\rightarrow$ přímky jsou kolineární
-\item \texttt{INTERSECTING} $\rightarrow$ přímky se protínají v průsečíku $p_{inters}$
+\item \texttt{INTERSECTING} $\rightarrow$ přímky se protínají v průsečíku $p_{intersection}$
 \item \texttt{NONINTERSECTING} $\rightarrow$ přímky se neprotínají
 \end{itemize}
 
@@ -374,88 +372,105 @@ Metoda \textbf{computePolygonIntersections} počítá průsečíky dvou polygon�
 \end{itemize}
 
 \subsection*{processIntersection}
-Metoda \textbf{processIntersection} slouží k aktualizování seznamu bodů (tzv. map) obou polygonů po přidání nově nalezeného průsečíku. Na vstupu je .... Návratová hodnota je typu \texttt{void}.\\
+Metoda \textbf{processIntersection} slouží k aktualizování seznamu bodů (tzv. map) polygonu po přidání nově nalezeného průsečíku. Na vstupu jsou čtyři parametry: průsečík $b$, směrnice přímky $t$, vektor bodů polygonu $poly$ a index $i$ aktuálního bodu. Návratová hodnota je typu \texttt{void}.\\
 
 \textbf{Input}:
 \begin{itemize}
 \item \texttt{QPointFB} $b$
 \item \texttt{double} $t$
-\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $pol$
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $poly$
 \item \texttt{int} $i$
 \end{itemize}
 
 \subsubsection*{setPositions}
-Metoda \textbf{setPositions} počítá orientaci trojúhelníku, který je tvořen třemi body, ke světovým stranám. Návratová hodnota typu \texttt{double} vrací orientaci trojúhelníku ve stupních. Orientace je pravotočivá a nabývá hodnot $\textless$-180$^\circ$;180$^\circ\textgreater$.\\
+Metoda \textbf{setPositions} určuje pozici vrcholů prvního polygonu vzhledem k druhému polygonu, tzv. je ohodnocuje. Informace o pozici, která je datového typu \texttt{TPointPolygon}, je ukládána do parametru \textit{pos} daného bodu. Na vstupu jsou dva vektory bodů polygonu, návratová hodnota typu \texttt{void}.\\
 
 \textbf{Input}:
 \begin{itemize}
-\item \texttt{QPoint3D} $p_1$
-\item \texttt{QPoint3D} $p_2$
-\item \texttt{QPoint3D} $p_3$
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $polA$
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $polB$
 \end{itemize}
 
 \subsubsection*{createFragments}
-Metoda \textbf{createFragments} vytváří z vektoru hran trojúhelníky a počítá pro ně sklon a orientaci. Vypočtené hodnoty ukládá do datového typu \texttt{Triangle}. Návratová hodnota metody je vektor trojúhelníků typu \texttt{Triangle}.\\
+Metoda \textbf{createFragments} vytváří ze sousedních bodů o stejném ohodnocení jednotlivé fragmenty $f$ a ukládá je do seznamu (mapy) fragmentů. Na vstupu je vektor bodů polygonu, ohodnocení (pozice) hledaných bodů, orientace fragmentu a seznam se vzniklými fragmenty. Návratová hodnota je typu \texttt{void}.\\
 
 \textbf{Input}:
 \begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$ $dt$
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $pol$
+\item \texttt{TPointPolygon} $pos$
+\item \texttt{bool} $swap$
+\item \textsl{map} $\textless$\texttt{QPointFB}, \textsl{pair} $\textless$\texttt{bool},\textsl{vector} $\textless$\texttt{QPointFB}$\textgreater \textgreater \textgreater$ $fragments$
+\end{itemize}
+
+\subsubsection*{createFragmentFromVertices}
+Metoda \textbf{createFragmentFromVertices} je lokální procedurou metody \textbf{createFragments}, která zajišťuje vytváření fragmentů $f$. Na vstupu je index $i_s$ počátečního bodu fragmentu, vektor bodů polygonu a fragmentu, pozice (ohodnocení) bodů a index $i$ daného bodu. Návratová hodnota typu \texttt{bool} vrací, zda byl fragment vytvořen či nikoli.\\ 
+
+\textbf{Input}:
+\begin{itemize}
+\item \texttt{int} $i_s$ 
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $pol$
+\item \texttt{TPointPolygon} $pos$
+\item \texttt{int} $i$ 
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $fr$
 \end{itemize}
 
 \textbf{Output}:
 \begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Triangle}$\textgreater$
-\end{itemize}
-
-
-
-\subsubsection*{createFragmentFromVertices}
-Metoda \textbf{createFragmentFromVertices} počítá poloměr kružnice, která je tvořena 3 body. Na vstupu jsou 4 body typu \texttt{QPoint3D}, návratová hodnota typu \texttt{double} vrací velikost poloměru kružnice.\\ 
-
-\textbf{Input}:
-\begin{itemize}
-\item \texttt{QPoint3D} $p_1$ 
-\item \texttt{QPoint3D} $p_2$ 
-\item \texttt{QPoint3D} $p_3$
-\item \texttt{QPoint3D} $c \rightarrow$ střed kružnice
+\item 0 $\rightarrow$ fragment nebyl vytvořen 
+\item 1 $\rightarrow$ fragment byl vytvořen 
 \end{itemize}
 
 \subsubsection*{mergeFragments}
-Metoda \textbf{mergeFragments} počítá vzdálenost mezi dvěma body. Na vstupu jsou 2 body typu \texttt{QPoint3D}, návratová hodnota typu \texttt{double} vrací vzdálenost mezi dvěma body.\\ 
+Metoda \textbf{mergeFragments} spojuje fragmenty do jednotlivých oblastí a následně je i do polygonů, které ukládá do seznamu polygonů.  Na vstupu je seznam fragmentů \textit{FR} a sez\-nam polygonů $res$. Návratová hodnota je typu \texttt{void}.\\ 
 
 \textbf{Input}:
 \begin{itemize}
-\item \texttt{QPoint3D} $p_1$ 
-\item \texttt{QPoint3D} $p_2$
+\item \textsl{map} $\textless$\texttt{QPointFB}, \textsl{pair} $\textless$\texttt{bool},\textsl{vector} $\textless$\texttt{QPointFB}$\textgreater \textgreater \textgreater$ \textit{FR}
+\item \textsl{vector} $\textless$\textsl{vector} $\textless$\texttt{QPointFB}$\textgreater \textgreater$ $res$
 \end{itemize}
 
 \subsubsection*{createPolygonFromFragments}
-Metoda \textbf{createPolygonFromFragments} slouží k nalezení nejbližšího bodu z množiny bodů vzhledem k danému bodu $p$. Na vstupu je daný bod $p$ a vektor bodů typu \texttt{QPoint3D}. Návratová hodnota typu \texttt{int} vrací index nejbližšího bodu.
+Metoda \textbf{createPolygonFromFragments} je lokální procedurou metody \textbf{mergeFragments} a vytváří z fragmentů polygony. Na vstupu je index $start$, seznam fragmentů \textit{FR} a vektor bodů polygonu. Návratová hodnota typu \texttt{bool} vrací, zda byl z fragmentu vytvořen polygon či nikoli.\\
 
 \textbf{Input}:
 \begin{itemize}
-\item \texttt{QPoint3D} $p$ 
-\item \textsl{vector} $\textless$\texttt{QPoint3D}$\textgreater$ $points$
+\item \texttt{int} $start$ 
+\item \textsl{map} $\textless$\texttt{QPointFB}, \textsl{pair} $\textless$\texttt{bool},\textsl{vector} $\textless$\texttt{QPointFB}$\textgreater \textgreater \textgreater$ \textit{FR}
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $pol$
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item 0 $\rightarrow$ polygon nebyl vytvořen 
+\item 1 $\rightarrow$ polygon byl vytvořen 
 \end{itemize}
 
 \subsubsection*{getPolygonOrientation}
-Metoda \textbf{getPolygonOrientation} slouží k nalezení třetího bodu trojúhelníku, který splňuje Delaunayovo kritérium nejmenší opsané kružnice. Na vstupu jsou dva body typu \texttt{QPoint3D}, které představují orientovanou hranu, a vektor bodů typu \texttt{QPoint3D}. Návratová hodnota typu \texttt{int} vrací index hledaného bodu.\\
+Metoda \textbf{getPolygonOrientation} slouží k získání orientace bodů v polygonu za využití l'Huilierových vzorců. Na vstupu je vektor bodů polygonu, návratová hodnota typu \texttt{double} vrací plochu polygonu.\\
 
 \textbf{Input}:
 \begin{itemize}
-\item \texttt{QPoint3D} $s$ $\rightarrow$ počáteční bod hrany
-\item \texttt{QPoint3D} $e$ $\rightarrow$ koncový bod hrany
-\item \textsl{vector} $\textless$\texttt{QPoint3D}$\textgreater$ $points$
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $pol$
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item \texttt{double} $< 0 \rightarrow$ CW orientace
+\item \texttt{double} $> 0 \rightarrow$ CCW orientace
 \end{itemize}
 
 \subsubsection*{BooleanOper}
-Metoda \textbf{BooleanOper} počítá průsečík hrany trojúhelníku tvořené dvěma body typu \texttt{QPoint3D} s rovinou o dané výšce Z. Návratová hodnota je typu \texttt{QPoint3D}.\\
+Metoda \textbf{BooleanOper} spojuje výše uvedené algoritmy. Na vstupu jsou dva vektory bodů polygonu, metoda vrací vektor vektoru bodů \texttt{QPointFB}, který obsahuje výsledek zvolené množinové operace.\\
 
 \textbf{Input}:
 \begin{itemize}
-\item \texttt{QPoint3D} $p_1$ 
-\item \texttt{QPoint3D} $p_2$ 
-\item \texttt{double} $z$ 
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $polA$
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $polB$
+\end{itemize}
+
+\textbf{Output}:
+\begin{itemize}
+\item \textsl{vector} $\textless$\textsl{vector} $\textless$\texttt{QPointFB}$\textgreater \textgreater$
 \end{itemize}
 
 \subsubsection*{resetIntersections}
@@ -555,7 +570,7 @@ Metoda \textbf{setBuffer} slouží k vykreslení orientace trojúhelníků.
 
 
 \subsection{!QPointFB}
-Třída \textit{QPointFB} slouží k definování nového datového typu \texttt{QPointFB}, který je odvozen od typu \texttt{QPointF} a který navíc obsahuje směrnice přímek \textsl{alfa} a \textsl{beta}, informaci, zda bod je průsečíkem, a poloha bodu vůči druhému polygonu. Defaultně je nastaveno, že bod není průsečíkem a hodnoty obou směrnic jsou rovny nule. A co poloha????
+Třída \textit{QPointFB} slouží k definování nového datového typu \texttt{QPointFB}, který je odvozen od typu \texttt{QPointF} a který navíc obsahuje směrnice přímek \textsl{alfa} a \textsl{beta}, informaci, zda bod je průsečíkem, a poloha bodu vůči druhému polygonu. Defaultně je nastaveno, že bod není průsečíkem, leží na hraně druhého polygonu a hodnoty obou směrnic jsou rovny nule.
 
 \subsubsection*{getAlfa}
 Metoda \textbf{getAlfa} slouží k získání směrnice \textsl{alfa}.
