@@ -101,14 +101,13 @@ Mějme vstupní polygony $A$ a $B$. Množinové operace, které nad nimi lze vyk
 \end{figure}
 
 \section{Algoritmy}
-Tato kapitola se zabývá popisem algoritmů, které byly v aplikaci implementovány. Vzhledem k jejich složitosti je popis výsledného algoritmu rozdělen do jednotlivých fází. Vý\-sled\-ný algoritmus, který spojuje všechny kroky dohromady, se nazývá \textit{BooleanOper}. Vstupní polygony $A$ a $B$ jsou reprezentovány kruhovými seznamy s orientací proti směru hodinových ručiček (CCW). Body, které oba polygony tvoří, mají nově vytvořený datový typ \texttt{QPointFB}.
+Tato kapitola se zabývá popisem algoritmů, které byly v aplikaci implementovány. Vzhledem k jejich složitosti je popis výsledného algoritmu rozdělen do jednotlivých fází. Vý\-sled\-ný algoritmus, který spojuje všechny kroky dohromady, se nazývá \textit{BooleanOper}. Vstupní polygony $A$ a $B$ jsou reprezentovány kruhovými seznamy s orientací proti směru hodinových ručiček (CCW). Body, které tvoří oba polygony, mají nově vytvořený datový typ \texttt{QPointFB}.
 
 \subsection{Výpočet průsečíků}
-DOPSAT NĚCO
 \subsubsection{computePolygonIntersections}
-Průsečíky jsou ukládány do proměnné $M$ datového typu \texttt{map}, která funguje na principu hashování. Spolu s výsledkem je ukládán i tzv. klíč, který na něj odkazuje. Za klíč byl zvolen parametr $\alpha$.\\
+Průsečíky $b_{ij}$ jsou ukládány do proměnné $M$ datového typu \texttt{map}, která funguje na principu hashování. Spolu s výsledkem je ukládán i tzv. klíč, který na něj odkazuje. Za klíč byl zvolen parametr $\alpha$.\\
 
-Po nalezení každého nového průsečíku je nutné aktualizovat stávající seznamy bodů obou polygonů. K tomu slouží lokální procedura \textit{ProcessIntersection}. Parametr $t$ reprezentuje směrnice $\alpha$ nebo $\beta$, parametr $i$ index daného bodu. DO DOKUMENTACE\\
+Po nalezení každého nového průsečíku je nutné aktualizovat stávající seznamy bodů obou polygonů. K tomu slouží lokální procedura \textit{ProcessIntersection}. Parametr $t$ reprezentuje směrnice $\alpha$ nebo $\beta$, parametr $i$ index daného bodu.\\
 
 Zjednodušený zápis algoritmů lze zapsat způsobem uvedeným níže:
 
@@ -121,7 +120,7 @@ Zjednodušený zápis algoritmů lze zapsat způsobem uvedeným níže:
 \subitem \hspace {1cm} Zpracuj průsečík pro $B$: \textit{ProcessIntersection($b_{ij}, \beta, B, j$)}
 \subitem Podmínka ($M \neq \emptyset$):
 \subitem \hspace {0.5cm} Postupně pro všechny $b_{ij} \in M$:
-\subitem \hspace {1cm} Nalezni průsečík pro $A$: \textit{ProcessIntersection($b_{ij}, \alpha, A, i$)}
+\subitem \hspace {1cm} Zpracuj průsečík pro $A$: \textit{ProcessIntersection($b_{ij}, \alpha, A, i$)}
 \end{enumerate}
 ~\\
 
@@ -130,14 +129,14 @@ Lokální procedura \textit{ProcessIntersection($b, t, P, i$)}:
 \item  Podmínka ($|t| < \epsilon)$: 
 \subitem Průsečíkem je počáteční bod: $P[i] \leftarrow inters$
 \item  Podmínka ($(|t-1| < \epsilon)$:
-\subitem Průsečíkem je koncový bod: $P[(i+1)\%m] \leftarrow inters$
+\subitem Průsečíkem je koncový bod: $P[(i+1)\%n] \leftarrow inters$
 \item  Jinak:
-\subitem $i = i+1$
+\subitem Inkrementace: $i = i+1$
 \subitem $P \leftarrow (b,i)$
 \end{enumerate}
 
 \subsubsection{setPositions}
-Všechny vrcholy polygonu A, resp. B (včetně nalezených průsečíků) jsou následně ohodnoceny, zda leží uvnitř, vně nebo na hraně polygonu B, resp. A. Pro všechny hrany $e_i$ jsou vypočteny jejich středy $\bar{p}$, pro které se následně určuje jejich pozice (ohodnocení $g$) vůči druhému polygonu. Tato informace je uložena do počátečního bodu hrany $e_i$ do parametru pozice. K určení pozice bodů vůči polygonu byl použit algoritmus \textit{GetPositionWinding} z úlohy č.~1. Nejprve jsou zpracovány všechny hrany prvního polygonu a stejný postup je analogicky aplikován i pro druhý polygon. \\
+Všechny vrcholy polygonu A, resp. B (včetně nalezených průsečíků) jsou následně ohodnoceny, zda leží uvnitř, vně nebo na hraně polygonu B, resp. A. Pro všechny hrany $e_i$ jsou vypočteny jejich středy $\bar{p}$, pro které se následně určuje jejich pozice (ohodnocení $g$) vůči druhému polygonu. Tato informace je uložena do počátečního bodu hrany $e_i$ do parametru pozice. K určení pozice bodu vůči polygonu byl použit algoritmus \textit{GetPositionWinding} z úlohy č.~1. Nejprve jsou zpracovány všechny hrany prvního polygonu a stejný postup je analogicky aplikován i pro druhý polygon. \\
 
 Zjednodušený zápis algoritmů lze zapsat způsobem uvedeným níže:
 \begin{enumerate}
@@ -204,7 +203,7 @@ Lokální procedura \textit{createPolygonFromFragments($s, F, P$)}:
 \subsubitem Podmínka (fragment s daným počátečním bodem $\nexists$) $\rightarrow$ return FALSE
 \subsubitem Označ fragment za zpracovaný: $f.second.first \leftarrow$ TRUE
 \subsubitem Nalezni další bod: $n \leftarrow f.second.second.back()$
-\subsubitem Přidej ho bez počátečního bodu: $P \leftarrow f.second.second - {f.second.second[0]}$
+\subsubitem Přidej fragment bez počátečního bodu: $P \leftarrow f.second.second - {f.second.second[0]}$
 \subsubitem Podmínka ($n = s$) $\rightarrow$ return TRUE
 \end{enumerate}
 
@@ -344,7 +343,7 @@ Metoda \textbf{get2LinesAngle} počítá úhel mezi dvěma přímkami. Na vstupu
 \end{itemize}
 
 \subsubsection*{get2LinesPosition}
-Metoda \textbf{get2LinesPosition} určuje vzájemnou polohu dvou přímek. Pokud se přímky protínají, metoda vypočte jejich průsečík $p_{intersection}$. Na vstupu jsou 4 body typu \texttt{QPointFB}, návratová hodnota je nově definovaný typ \texttt{T2LinesPosition}. Body $p_1$ a $p_2$ definují první přímku, zbylé dva body druhou přímku.\\
+Metoda \textbf{get2LinesPosition} určuje vzájemnou polohu dvou přímek. Pokud se přímky protínají, metoda vypočte jejich průsečík $p_{intersection}$. Na vstupu jsou 4 body typu \texttt{QPointFB}, návratová hodnota je nově definovaný typ \texttt{T2LinesPosition}. Body $p_1$ a $p_2$ definují první přímku, další dva body druhou přímku.\\
 
 \textbf{Input}:
 \begin{itemize}
@@ -422,7 +421,7 @@ Metoda \textbf{createFragmentFromVertices} je lokální procedurou metody \textb
 \end{itemize}
 
 \subsubsection*{mergeFragments}
-Metoda \textbf{mergeFragments} spojuje fragmenty do jednotlivých oblastí a následně je i do polygonů, které ukládá do seznamu polygonů.  Na vstupu je seznam fragmentů \textit{FR} a sez\-nam polygonů $res$. Návratová hodnota je typu \texttt{void}.\\ 
+Metoda \textbf{mergeFragments} spojuje fragmenty do jednotlivých oblastí a následně do polygonů, které ukládá do seznamu polygonů. Na vstupu je seznam fragmentů \textit{FR} a sez\-nam polygonů $res$. Návratová hodnota je typu \texttt{void}.\\ 
 
 \textbf{Input}:
 \begin{itemize}
@@ -482,73 +481,17 @@ Metoda \textbf{BooleanOper} spojuje výše uvedené algoritmy. Na vstupu jsou dv
 \item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $pol$
 \end{itemize}
 
-\begin{comment}
-
-\subsubsection*{lineOffset}
-Metoda \textbf{lineOffset} vytváří z vektoru hran trojúhelníky a počítá pro ně sklon a orientaci. Vypočtené hodnoty ukládá do datového typu \texttt{Triangle}. Návratová hodnota metody je vektor trojúhelníků typu \texttt{Triangle}.\\
-
-\textbf{Input}:
-\begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$ $dt$
-\end{itemize}
-
-\textbf{Output}:
-\begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Triangle}$\textgreater$
-\end{itemize}
-
-\subsubsection*{lineOffset}
-Metoda \textbf{lineOffset} vytváří z vektoru hran trojúhelníky a počítá pro ně sklon a orientaci. Vypočtené hodnoty ukládá do datového typu \texttt{Triangle}. Návratová hodnota metody je vektor trojúhelníků typu \texttt{Triangle}.\\
-
-\textbf{Input}:
-\begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$ $dt$
-\end{itemize}
-
-\textbf{Output}:
-\begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Triangle}$\textgreater$
-\end{itemize}
-
-\subsubsection*{sampleArc}
-Metoda \textbf{sampleArc} vytváří z vektoru hran trojúhelníky a počítá pro ně sklon a orientaci. Vypočtené hodnoty ukládá do datového typu \texttt{Triangle}. Návratová hodnota metody je vektor trojúhelníků typu \texttt{Triangle}.\\
-
-\textbf{Input}:
-\begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$ $dt$
-\end{itemize}
-
-\textbf{Output}:
-\begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Triangle}$\textgreater$
-\end{itemize}
-
-\subsubsection*{polygonOffset}
-Metoda \textbf{polygonOffset} vytváří z vektoru hran trojúhelníky a počítá pro ně sklon a orientaci. Vypočtené hodnoty ukládá do datového typu \texttt{Triangle}. Návratová hodnota metody je vektor trojúhelníků typu \texttt{Triangle}.\\
-
-\textbf{Input}:
-\begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$ $dt$
-\end{itemize}
-
-\textbf{Output}:
-\begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Triangle}$\textgreater$
-\end{itemize}
-
-\end{comment}
-
 \subsection{Draw}
-Třída \textit{Draw} obsahuje metody, které nahrávají a vykreslují vstupní množinu bodů. Dále zajišťuje vykreslení a smazání všech operací, kterou jsou nad množinou prováděny.
+Třída \textit{Draw} obsahuje metody, které nahrávají a vykreslují vstupní polygony. Dále zajišťuje vykreslení a smazání všech operací, kterou jsou nad polygony prováděny.
 
 \subsubsection*{paintEvent}
 Metoda \textbf{paintEvent} vykresluje vstupní polygony a výsledek množinové operace.
 
 \subsubsection*{drawPol}
-Metoda \textbf{drawPol} vykresluje vstupní polygony. Na vstupu je vektor bodů polygonu. 
+Metoda \textbf{drawPol} vykresluje vstupní polygon. Na vstupu je vektor bodů polygonu. 
 
 \subsubsection*{loadPolygon}
-Metoda \textbf{loadPolygon} slouží k načtení vstupních dat do aplikace. Součástí metody je i kontrola, zda se soubor úspěšně nahrál. Návratová hodnota je typu \textsl{QString} vrací hlášku, zda byly polygony úspěšně nahrány či nikoli.
+Metoda \textbf{loadPolygon} slouží k načtení vstupních dat do aplikace. Součástí metody je i kontrola, zda se soubor úspěšně nahrál. Návratová hodnota typu \textsl{QString} vrací hlášku, zda byly polygony úspěšně nahrány či nikoli.
 
 \subsubsection*{setAB}
 Metoda \textbf{setAB} slouží k převedení nahraných polygonů do kreslící plochy.
@@ -572,7 +515,7 @@ Metoda \textbf{getA} slouží k získání vektoru bodů polygonu.
 Metoda \textbf{setB} slouží k převedení vektoru bodů polygonu B do kreslící plochy.
 
 \subsubsection*{getB}
-Metoda \textbf{getB} slouží k získání vektoru bodů polygonu A.
+Metoda \textbf{getB} slouží k získání vektoru bodů polygonu B.
 
 %\subsubsection*{setBuffer}
 %Metoda \textbf{setBuffer} slouží k vykreslení orientace trojúhelníků.
@@ -667,9 +610,9 @@ Metoda \textbf{on\_contours\_button\_clicked} vrací aplikaci do výchozí poloh
 
 \clearpage
 \section{Závěr}
-V rámci úlohy \textit{Digitální model terénu a jeho analýzy} byla vytvořena aplikace, která ze vstupní množiny bodů vytváří digitální model terénu. Implementace některých algoritmů byla náročná, avšak výsledek je obstojný. Z kartografického hlediska by aplikace mohla být  vylepšena. Jedná se zejména o přidání možnosti navolení povinných a lomových hran, které by zpřesnily výsledný DMT. Algoritmus generuje přijatelné výsledky pro terén, který neobsahuje příliš výrazné terénní hrany. Je také nevhodný pro vstupní data, která jsou rozmístěna pravidelně na mřížce, jelikož hledaná kružnice s nejmenším poloměrem je pro tyto body nejednoznačná. Dále by bylo vhodné zajistit aspoň zevrubní vyhlazení vrstevnic, jelikož působí kostrbatým dojmem. \\
+V rámci úlohy \textit{Množinové operace s polygony} byla vytvořena aplikace, která nad dvěma vstupními polygony aplikuje zvolenou množinovou operaci. Implementace algoritmů byla často dost náročná a nad naše síly. Nepodařilo se nám tedy naplnit všechny cíle této úlohy, jako je například ošetření singulárních případů či dodělání bufferu, který byl vytvořen na poslední hodině, ale který obsahoval chybu, kterou se nám nepodařilo nalézt.\\
 
-Do budoucna by bylo vhodné přidat aspoň popis hlavních vrstevnic, případně barevnou hypsometrii. Autorky jsou s výslednou podobou aplikace spokojené. 
+Do budoucna by jistě bylo vhodné ošetřit právě singulární případy, např. mají-li oba polygony právě jeden společný vrchol nebo celou hranu. Dále by se dal ošetřit případ, má-li jeden (nebo oba) polygony v sobě díru (pro představu, vypadají jako donut).
 \clearpage
 
 \section{Zdroje}
