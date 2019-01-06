@@ -241,52 +241,49 @@ Seznam bodů vstupních polygonů je uložen v textovém souboru \textit{polygon
 Po úspěšném/neúspěšném nahrání souboru je uživatel upozorněn hláškou. Uživatel nemůže kliknout na žádné jiné tlačítko, nejsou-li nahrána data (tlačítka jsou zašedivělá). Po nahrání vstupního souboru jsou data vykreslena a uživatel získá možnost zvolit, jaký typ množinové operace bude nad daty prováděn rozbalením nabídky \textsl{Boolean Operations}. Výpočet se provede stisknutím tlačítka \textsl{Boolean Operations}. 
 
 \section{Výstupní data}
-Vstupní polygony a nad nimi provedená množinová operace jsou zobrazeny v grafickém okně aplikace. Polygon A je vykreslen zelenou barvou, polygon B modrou barvou a výsledek operace je zobrazen červeně. Tlačítkem \textsl{Clear results} má uživatel možnost smazat výsledek operace při zachování vykreslení původních polygonů. Tlačítko \textsl{Clear All} maže veškerá vykreslená data.\\
-\clearpage
-
+Vstupní polygony a nad nimi provedená množinová operace jsou zobrazeny v grafickém okně aplikace. Polygon A je vykreslen zelenou barvou, polygon B modrou barvou a výsledek operace je zobrazen červeně. Tlačítkem \textsl{Clear results} má uživatel možnost smazat výsledek operace při zachování vykreslení původních polygonů. Tlačítko \textsl{Clear All} maže veškerá vykreslená data.
 
 \section{Aplikace}
-V následují kapitole je představen vizuální vzhled vytvořené aplikace tak, jak ji vidí prostý uživatel.
-
-\begin{comment}
+V následují kapitole je představen vizuální vzhled vytvořené aplikace tak, jak ji vidí prostý uživatel.\\
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=14cm]{./pictures/app_default.png}
+	\includegraphics[width=15cm]{./pictures/app_default.png}
 	\caption{Výchozí vzhled aplikace po spuštění}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[t]
 	\centering
-	\includegraphics[width=14cm]{./pictures/app_load_points.png}
+	\includegraphics[width=14.5cm]{./pictures/app_load_data.png}
 	\caption{Aplikace po nahrání vstupních dat}
 \end{figure}
+\vspace{2cm}
 
-\begin{figure}[h!]
+\begin{figure}[b]
 	\centering
-	\includegraphics[width=15cm]{./pictures/app_delaunay.png}
-	\caption{Trojúhelníková síť}
+	\includegraphics[width=14.5cm]{./pictures/app_intersection.png}
+	\caption{Průnik polygonů $A \cap B$}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=15cm]{./pictures/app_contours.png}
-	\caption{Vykreslení vrstevnic}
+	\includegraphics[width=14.5cm]{./pictures/app_union.png}
+	\caption{Sjednocení polygonů $A \cup B$}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=15cm]{./pictures/app_slope.png}
-	\caption{Sklon trojúhelníků}
+	\includegraphics[width=14.5cm]{./pictures/app_diffAB.png}
+	\caption{Rozdíl polygonů $A$\textbackslash$B$}
 \end{figure}
+\clearpage
 
-\begin{figure}[h!]
+\begin{figure}[t!]
 	\centering
-	\includegraphics[width=15cm]{./pictures/app_aspect.png}
-	\caption{Orientace trojúhelníků}
+	\includegraphics[width=14.5cm]{./pictures/app_diffBA.png}
+	\caption{Rozdíl polygonů $B$\textbackslash$A$}
 \end{figure}
-
-\end{comment}
+~\\
 \clearpage
 
 
@@ -682,6 +679,9 @@ Dostupné z: \href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk9.p
 
 \item  \textsl{Elementary Set Theory} [online] [cit. 4. 1. 2019].\\
 Dostupné z: \href{http://www.efgh.com/math/algebra/sets.htm}{http://www.efgh.com/}
+
+\item \textsl{Record XY mouse coordinates} [online][cit. 5. 1. 2019].\\
+Dostupné z: \href{https://mobilefish.com/services/record_mouse_coordinates/record_mouse_coordinates.php}{https://mobilefish.com/}\\
 \end{enumerate}
 
 \end{document}
