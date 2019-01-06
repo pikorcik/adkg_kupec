@@ -85,7 +85,7 @@ V rámci této úlohy nebyly implementovány žádné bonusové úlohy.
 \clearpage
 
 \section{Popis a rozbor problému}
-Úloha \textbf{Množinové operace s polygony} se zabývá vytvořením aplikace, která nad libovolnými dvěma vstupními polygony provede zvolenou množinovou operaci. 
+Úloha \textbf{Množinové operace s polygony} se zabývá vytvořením aplikace, která nad libovolnými dvěma vstupními polygony provede zvolenou množinovou operaci. \\
 
 Mějme vstupní polygony $A$ a $B$. Množinové operace, které nad nimi lze vykonat, jsou následující:
 \begin{enumerate}
@@ -101,11 +101,11 @@ Mějme vstupní polygony $A$ a $B$. Množinové operace, které nad nimi lze vyk
 \end{figure}
 
 \section{Algoritmy}
-Tato kapitola se zabývá popisem algoritmů, které byly v aplikaci implementovány. Vzhledem k jejich složitosti je popis výsledného algoritmu rozdělen do jednotlivých fází. Výsledný algoritmus, který spojuje všechny kroky dohromady, se nazývá \textit{BooleanOper}. Vstupní polygony $A$ a $B$ jsou reprezentovány kruhovými seznamy s orientací proti směru hodinových ručiček (CCW). Body, které oba polygony tvoří, mají nově vytvořený datový typ \texttt{QPointFB}.
+Tato kapitola se zabývá popisem algoritmů, které byly v aplikaci implementovány. Vzhledem k jejich složitosti je popis výsledného algoritmu rozdělen do jednotlivých fází. Vý\-sled\-ný algoritmus, který spojuje všechny kroky dohromady, se nazývá \textit{BooleanOper}. Vstupní polygony $A$ a $B$ jsou reprezentovány kruhovými seznamy s orientací proti směru hodinových ručiček (CCW). Body, které oba polygony tvoří, mají nově vytvořený datový typ \texttt{QPointFB}.
 
 \subsection{Výpočet průsečíků}
+DOPSAT NĚCO
 \subsubsection{computePolygonIntersections}
-dopsat kecy okolo\\
 Průsečíky jsou ukládány do proměnné $M$ datového typu \texttt{map}, která funguje na principu hashování. Spolu s výsledkem je ukládán i tzv. klíč, který na něj odkazuje. Za klíč byl zvolen parametr $\alpha$.\\
 
 Po nalezení každého nového průsečíku je nutné aktualizovat stávající seznamy bodů obou polygonů. K tomu slouží lokální procedura \textit{ProcessIntersection}. Parametr $t$ reprezentuje směrnice $\alpha$ nebo $\beta$, parametr $i$ index daného bodu. DO DOKUMENTACE\\
@@ -227,20 +227,24 @@ Tento algoritmus spojuje všechny výše uvedené kroky. Na vstupu jsou polygony
 
 
 \section{Vstupní data}
-Pro účely této úlohy byla použita data, která byla naměřena v rámci geodetické výuky v terénu v Mariánské u Jáchymova. Souřadnice X a Y byly pro tuto úlohu zredukovány na rozumnou velikost, souřadnice Z byla zachována. Body byly zaměřeny metodou GNSS a totální stanicí a znázorňují tamní louku a část silnice. Seznam vstupních bodů je uložen v textovém souboru testing\_data.txt. Soubor je nutné do aplikace nahrát pomocí tlačítka \textsl{Load points}. Struktura textového souboru je následující:\\
+Seznam bodů vstupních polygonů je uložen v textovém souboru \textit{polygons.txt}. Pro vykreslení polygonů v aplikaci je nutno tento soubor do aplikace nahrát pomocí tlačítka \textsl{Load polygon file}. K vygenerování souřadnic bodů byla použita online aplikace ze stránek mobilefish.com. Struktura souboru s polygony je následující:\\
 
 \noindent
-\textit{Sloupec 1}: souřadnice X [m]\\
-\textit{Sloupec 2}: souřadnice Y [m]\\
-\textit{Sloupec 3}: souřadnice Z [m]\\
+\textsl{První řádek}: počet bodů $n$ v polygonu A\\
+\textsl{Sloupec 2}: souřadnice X bodu polygonu A\\
+\textsl{Sloupec 3}: souřadnice Y bodu polygonu A\\
+...\\
+\textsl{(n+2)-tý řádek}: počet bodů $m$ v polygonu B\\
+\textsl{Sloupec 2}: souřadnice X bodu polygonu B\\
+\textsl{Sloupec 3}: souřadnice Y daného polygonu B\\
 
-Po úspěšném/neúspěšném nahrání souboru je uživatel upozorněn hláškou. Uživatel nemůže kliknout na žádné jiné tlačítko pro výpočty, nejsou-li nahrána data (tlačítka jsou zašedivělá). Aplikace dále nedovoluje spustit výpočty, jejichž fungování je závislé na vygenerované trojúhelníkové síti, nebyla-li předtím vytvořena. Uživatel má dále možnost zvolit krok, v jakém se budou vykreslovat vrstevnice. Hodnoty lze měnit šipkami nahoru/dolů po 5 m nebo ručně vepsat hodnotu celého čísla v rozmezí 1 m až 100 m. Delaunayova triangulace, vrstevnice, sklon a orientace se generují stisknutím příslušných tlačítek.
+Po úspěšném/neúspěšném nahrání souboru je uživatel upozorněn hláškou. Uživatel nemůže kliknout na žádné jiné tlačítko, nejsou-li nahrána data (tlačítka jsou zašedivělá). Po nahrání vstupního souboru jsou data vykreslena a uživatel získá možnost zvolit, jaký typ množinové operace bude nad daty prováděn rozbalením nabídky \textsl{Boolean Operations}. Výpočet se provede stisknutím tlačítka \textsl{Boolean Operations}. 
 
 \section{Výstupní data}
-Vstupní množina bodů a nad ní vygenerovaná trojúhelníková síť je zobrazena ve grafickém okně aplikace. Vykreslování vrstevnic, sklonu a orientace je odděleno. U vrstevnic je každá pátá (hlavní) zvýrazněna. Sklon je v odstínech šedi (čím vyšší sklon, tím tmavší barva). Pro zobrazení orientace trojúhelníků ke světovým stranám byla využita prostřední kružnice barvené škály ze stránek společnosti \textit{ESRI}, viz níže. Aplikace je uvedena do výchozího stavu stisknutím tlačítka \textsl{Clear}.\\
-
-
+Vstupní polygony a nad nimi provedená množinová operace jsou zobrazeny v grafickém okně aplikace. Polygon A je vykreslen zelenou barvou, polygon B modrou barvou a výsledek operace je zobrazen červeně. Tlačítkem \textsl{Clear results} má uživatel možnost smazat výsledek operace při zachování vykreslení původních polygonů. Tlačítko \textsl{Clear All} maže veškerá vykreslená data.\\
 \clearpage
+
+
 \section{Aplikace}
 V následují kapitole je představen vizuální vzhled vytvořené aplikace tak, jak ji vidí prostý uživatel.
 
@@ -290,7 +294,7 @@ V následují kapitole je představen vizuální vzhled vytvořené aplikace tak
 \section{Dokumentace}
 Tato kapitola obsahuje dokumentaci k jednotlivým třídám.
 
-\subsection{!Algorithms}
+\subsection{Algorithms}
 Třída \textit{Algorithms} obsahuje metody pro realizaci množinových operací. Dále obsahuje pomocné algoritmy k jejich fungování.
 
 \subsubsection*{getPositionWinding}
@@ -304,9 +308,9 @@ Metoda \textbf{getPositionWinding} určuje polohu bodu $q$ vzhledem k polygonu $
 
 \textbf{Output}:
 \begin{itemize}
-\item \texttt{INSIDE} $\rightarrow q$ se nachází uvnitř polygonu $P$
-\item \texttt{OUTSIDE} $\rightarrow q$ se nachází vně polygonu $P$
-\item \texttt{ON} $\rightarrow q$ se nachází na hraně polygonu $P$
+\item \texttt{INSIDE} $\rightarrow q$ se nachází uvnitř polygonu $pol$
+\item \texttt{OUTSIDE} $\rightarrow q$ se nachází vně polygonu $pol$
+\item \texttt{ON} $\rightarrow q$ se nachází na hraně polygonu $pol$
 \end{itemize}
 
 \subsubsection*{getPointLinePosition}
@@ -474,17 +478,14 @@ Metoda \textbf{BooleanOper} spojuje výše uvedené algoritmy. Na vstupu jsou dv
 \end{itemize}
 
 \subsubsection*{resetIntersections}
-Metoda \textbf{resetIntersections} vytváří z vektoru hran trojúhelníky a počítá pro ně sklon a orientaci. Vypočtené hodnoty ukládá do datového typu \texttt{Triangle}. Návratová hodnota metody je vektor trojúhelníků typu \texttt{Triangle}.\\
+\textbf{resetIntersections} je pomocná metoda, která pro všechny body v polygonu nastaví, že nejsou průsečíky. Na vstupu je vektor bodů polygonu, návratová hodnota je typu \texttt{void}.\\
 
 \textbf{Input}:
 \begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Edge}$\textgreater$ $dt$
+\item \textsl{vector} $\textless$\texttt{QPointFB}$\textgreater$ $pol$
 \end{itemize}
 
-\textbf{Output}:
-\begin{itemize}
-\item \textsl{vector} $\textless$\texttt{Triangle}$\textgreater$
-\end{itemize}
+\begin{comment}
 
 \subsubsection*{lineOffset}
 Metoda \textbf{lineOffset} vytváří z vektoru hran trojúhelníky a počítá pro ně sklon a orientaci. Vypočtené hodnoty ukládá do datového typu \texttt{Triangle}. Návratová hodnota metody je vektor trojúhelníků typu \texttt{Triangle}.\\
@@ -538,39 +539,50 @@ Metoda \textbf{polygonOffset} vytváří z vektoru hran trojúhelníky a počít
 \item \textsl{vector} $\textless$\texttt{Triangle}$\textgreater$
 \end{itemize}
 
+\end{comment}
+
 \subsection{Draw}
 Třída \textit{Draw} obsahuje metody, které nahrávají a vykreslují vstupní množinu bodů. Dále zajišťuje vykreslení a smazání všech operací, kterou jsou nad množinou prováděny.
 
 \subsubsection*{paintEvent}
-Metoda \textbf{paintEvent} vykresluje vstupní množinu bodů, Delaunayovu triangulaci, vrstevnice a sklon a orientaci trojúhelníků.
+Metoda \textbf{paintEvent} vykresluje vstupní polygony a výsledek množinové operace.
 
-\subsubsection*{clearDT}
-Metoda \textbf{clearDT} slouží k vymazání všech vykreslených dat.
+\subsubsection*{drawPol}
+Metoda \textbf{drawPol} vykresluje vstupní polygony. Na vstupu je vektor bodů polygonu. 
+
+\subsubsection*{loadPolygon}
+Metoda \textbf{loadPolygon} slouží k načtení vstupních dat do aplikace. Součástí metody je i kontrola, zda se soubor úspěšně nahrál. Návratová hodnota je typu \textsl{QString} vrací hlášku, zda byly polygony úspěšně nahrány či nikoli.
 
 \subsubsection*{setAB}
-Metoda \textbf{setAB} slouží k získání vektoru bodů z kreslící plochy. Metoda vrací vektor bodů typu \texttt{QPoint3D}.
+Metoda \textbf{setAB} slouží k převedení nahraných polygonů do kreslící plochy.
+
+\subsubsection*{clearAll}
+Metoda \textbf{clearAll} slouží k vymazání všech vykreslených dat.
+
+\subsubsection*{clearResults}
+Metoda \textbf{clearResults} slouží k vymazání výsledku množinové operace. Vstupní polygony zůstávají nedotčené.
 
 \subsubsection*{setRes}
-Metoda \textbf{setRes} slouží k získání vektoru hran z kreslící plochy. Metoda vrací vektor hran typu \texttt{Edge}.
+Metoda \textbf{setRes} slouží k převedení výsledného vektoru vektoru bodů do kreslící plochy.
 
 \subsubsection*{setA}
-Metoda \textbf{setA} slouží k převedení Delaunayovy triangulace do kreslícího okna.
+Metoda \textbf{setA} slouží k převedení vektoru bodů polygonu A do kreslící plochy.
 
 \subsubsection*{getA}
-Metoda \textbf{getA} slouží k převedení digitálního modelu terénu do kreslícího okna.
+Metoda \textbf{getA} slouží k získání vektoru bodů polygonu.
 
 \subsubsection*{setB}
-Metoda \textbf{setB} slouží k načtení vstupních dat do aplikace. Součástí metody je i kontrola, zda se soubor úspěšně nahrál. Návratová hodnota je typu \textsl{QString} vrací hlášku, zda byly polygony úspěšně nahrány či nikoli.
+Metoda \textbf{setB} slouží k převedení vektoru bodů polygonu B do kreslící plochy.
 
 \subsubsection*{getB}
-Metoda \textbf{getB} slouží k vykreslení sklonu trojúhelníků.
+Metoda \textbf{getB} slouží k získání vektoru bodů polygonu A.
 
-\subsubsection*{setBuffer}
-Metoda \textbf{setBuffer} slouží k vykreslení orientace trojúhelníků.
+%\subsubsection*{setBuffer}
+%Metoda \textbf{setBuffer} slouží k vykreslení orientace trojúhelníků.
 
 
-\subsection{!QPointFB}
-Třída \textit{QPointFB} slouží k definování nového datového typu \texttt{QPointFB}, který je odvozen od typu \texttt{QPointF} a který navíc obsahuje směrnice přímek \textsl{alfa} a \textsl{beta}, informaci, zda bod je průsečíkem, a poloha bodu vůči druhému polygonu. Defaultně je nastaveno, že bod není průsečíkem, leží na hraně druhého polygonu a hodnoty obou směrnic jsou rovny nule.
+\subsection{QPointFB}
+Třída \textit{QPointFB} slouží k definování nového datového typu \texttt{QPointFB}, který je odvozen od typu \texttt{QPointF} a který navíc obsahuje směrnice přímek \textsl{alfa} a \textsl{beta}, informaci, zda bod je průsečíkem, a polohu bodu vůči druhému polygonu. Defaultně je nastaveno, že bod není průsečíkem, leží na hraně druhého polygonu a hodnoty obou směrnic jsou rovny nule.
 
 \subsubsection*{getAlfa}
 Metoda \textbf{getAlfa} slouží k získání směrnice \textsl{alfa}.
@@ -585,16 +597,16 @@ Metoda \textbf{getBeta} slouží k získání směrnice \textsl{beta}.
 Metoda \textbf{setBeta} slouží k nastavení směrnice \textsl{beta}. 
 
 \subsubsection*{getInters}
-Metoda \textbf{getInters} slouží k získání informace, zda bod je průsečík či nikoli.
+Metoda \textbf{getInters} slouží k získání informace, zda bod je průsečíkem (\textit{true}) či nikoli (\textit{false}).
 
 \subsubsection*{setInters}
-Metoda \textbf{setInters} slouží k nastavení informace, zda bod je průsečík či nikoli. 
+Metoda \textbf{setInters} slouží k nastavení informace, zda bod je průsečíkem či nikoli. 
 
 \subsubsection*{getPosition}
-Metoda \textbf{getPosition} slouží k získání polohy bodu.
+Metoda \textbf{getPosition} slouží k získání pozice (ohodnocení) bodu.
 
 \subsubsection*{setPosition}
-Metoda \textbf{setPosition} slouží k nastavení polohy bodu. 
+Metoda \textbf{setPosition} slouží k nastavení pozice (ohodnocení) bodu. 
 
 
 \subsection{Types}
@@ -640,23 +652,21 @@ Datový typ \textbf{TPointLinePosition} definuje polohu bodu $q$ a přímky $a$.
 \subsection{Widget}
 Metody třídy \textit{Widget} slouží pro práci uživatele s aplikací. Metody na vstupu nemají žádné parametry a návratové hodnoty jsou typu \texttt{void}.
 
-\subsubsection*{on\_delaunay\_button\_clicked}
-Metoda \textbf{on\_delaunay\_button\_clicked} nad vstupní množinou bodů zobrazí Delaunayovu triangulaci. 
-
-\subsubsection*{on\_clear\_button\_clicked}
-Metoda \textbf{on\_clear\_button\_clicked} vrací aplikaci do výchozí polohy smazáním všeho, co bylo vykresleno. 
-
-\subsubsection*{on\_contours\_button\_clicked}
-Metoda \textbf{on\_contours\_button\_clicked} nad vygenerovanou trojúhelníkovou sítí z Delaunayovy triangulace vykreslí vrstevnice. 
-
-\subsubsection*{on\_slope\_button\_clicked}
-Metoda \textbf{on\_slope\_button\_clicked} obarví trojúhelníky vygenerované Delaunayovou triangulací do odstínů šedi podle hodnoty sklonu daného trojúhelníku.
-
-\subsubsection*{on\_aspect\_button\_clicked}
-Metoda \textbf{on\_aspect\_button\_clicked} obarví trojúhelníky vygenerované Delaunayovou triangulací na základě jejich orientace ke světové straně.
-
 \subsubsection*{on\_load\_button\_clicked}
 Metoda \textbf{on\_load\_button\_clicked} načítá data z textového souboru. Uživatel sám vyhledává cestu k požadovanému souboru.
+
+\subsubsection*{on\_operation\_button\_clicked}
+Metoda \textbf{on\_operation\_button\_clicked} nad vstupními polygony provede zvolenou mno\-ži\-no\-vou operaci.
+
+\subsubsection*{on\_clear\_res\_button\_clicked}
+Metoda \textbf{on\_clear\_button\_clicked} vymaže výsledek množinové operace z kreslící plochy. 
+
+\subsubsection*{on\_clear\_all\_button\_clicked}
+Metoda \textbf{on\_contours\_button\_clicked} vrací aplikaci do výchozí polohy smazáním všeho, co bylo vykresleno. 
+
+%\subsubsection*{on\_buffer\_button\_clicked}
+%Metoda \textbf{on\_slope\_button\_clicked} vykreslí nad vstupními polygony buffer o zvolené šířce.
+
 
 \clearpage
 \section{Závěr}
