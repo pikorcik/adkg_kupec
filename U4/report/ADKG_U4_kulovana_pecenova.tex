@@ -55,7 +55,7 @@ Množinové operace s polygony\\
 
 \normalsize  
 Zimní semestr 2018/2019\\
-%(oprava: 24. 11. 2018)
+(oprava: 17. 1. 2019)
 \vspace{14cm}
 \end{center}
 
@@ -109,6 +109,12 @@ Průsečíky $b_{ij}$ jsou ukládány do proměnné $M$ datového typu \texttt{m
 
 Po nalezení každého nového průsečíku je nutné aktualizovat stávající seznamy bodů obou polygonů. K tomu slouží lokální procedura \textit{ProcessIntersection}. Parametr $t$ reprezentuje směrnice $\alpha$ nebo $\beta$, parametr $i$ index daného bodu.\\
 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=7cm]{./pictures/doc_intersections.png}
+	\caption{Průsečíky segmentů [\href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk9.pdf}{Zdroj}]}
+\end{figure}
+
 Zjednodušený zápis algoritmů lze zapsat způsobem uvedeným níže:
 
 \begin{enumerate}
@@ -122,7 +128,7 @@ Zjednodušený zápis algoritmů lze zapsat způsobem uvedeným níže:
 \subitem \hspace {0.5cm} Postupně pro všechny $b_{ij} \in M$:
 \subitem \hspace {1cm} Zpracuj průsečík pro $A$: \textit{ProcessIntersection($b_{ij}, \alpha, A, i$)}
 \end{enumerate}
-~\\
+\clearpage
 
 Lokální procedura \textit{ProcessIntersection($b, t, P, i$)}:
 \begin{enumerate}
@@ -137,6 +143,12 @@ Lokální procedura \textit{ProcessIntersection($b, t, P, i$)}:
 
 \subsubsection{setPositions}
 Všechny vrcholy polygonu A, resp. B (včetně nalezených průsečíků) jsou následně ohodnoceny, zda leží uvnitř, vně nebo na hraně polygonu B, resp. A. Pro všechny hrany $e_i$ jsou vypočteny jejich středy $\bar{p}$, pro které se následně určuje jejich pozice (ohodnocení $g$) vůči druhému polygonu. Tato informace je uložena do počátečního bodu hrany $e_i$ do parametru pozice. K určení pozice bodu vůči polygonu byl použit algoritmus \textit{GetPositionWinding} z úlohy č.~1. Nejprve jsou zpracovány všechny hrany prvního polygonu a stejný postup je analogicky aplikován i pro druhý polygon. \\
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=7cm]{./pictures/doc_evaluation.png}
+	\caption{Ohodnocení hran polygonů [\href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk9.pdf}{Zdroj}]}
+\end{figure}
 
 Zjednodušený zápis algoritmů lze zapsat způsobem uvedeným níže:
 \begin{enumerate}
@@ -181,6 +193,12 @@ Lokální procedura \textit{createFragmentFromVertices($i_s, P, g, i, f$)}:
 \subitem \hspace {0.5cm} Přidej bod do fragmentu: $f \leftarrow P[i]$
 \subitem \hspace {0.5cm} Return TRUE
 \end{enumerate}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=7cm]{./pictures/doc_fragments.png}
+	\caption{Fragmenty [\href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk9.pdf}{Zdroj}]}
+\end{figure}
 
 \subsubsection{mergeFragments}
 Algoritmus spojuje jednotlivé fragmenty $f$ do výstupních polygonů. Metoda má na vstupu seznam fragmentů $F$ a seznam polygonů $C$, do kterého jsou ukládány výsledné polygony. Metoda nejprve spojí jednotlivé fragmenty do oblastí a ty jsou následně lokální procedurou \textit{createPolygonFromFragments} převedeny na polygony. Počáteční bod fragmentu je značen jako $s$, $n$ značí následující bod.
@@ -241,6 +259,9 @@ Po úspěšném/neúspěšném nahrání souboru je uživatel upozorněn hlášk
 
 \section{Výstupní data}
 Vstupní polygony a nad nimi provedená množinová operace jsou zobrazeny v grafickém okně aplikace. Polygon A je vykreslen zelenou barvou, polygon B modrou barvou a výsledek operace je zobrazen červeně. Tlačítkem \textsl{Clear results} má uživatel možnost smazat výsledek operace při zachování vykreslení původních polygonů. Tlačítko \textsl{Clear All} maže veškerá vykreslená data.
+
+\section{Problematické situace}
+Vzhledem k náročnosti použitých algoritmů může docházet k velkému množství problematických situací. Konkrétně se jedná o případy, dotýkají-li se vzájemně dva polygony pouze svými vrcholy (ať už jedním nebo více) nebo mají-li společnou jednu či více hran. Další problém by nastal, pokud by byly oba polygonu shodné, či se v některém z nich nacházel otvor. Aplikace v nynějším stavu si není schopna poradit ani s jednou výše uvedenou situací. 
 
 \section{Aplikace}
 V následují kapitole je představen vizuální vzhled vytvořené aplikace tak, jak ji vidí prostý uživatel.\\
@@ -610,14 +631,14 @@ Metoda \textbf{on\_contours\_button\_clicked} vrací aplikaci do výchozí poloh
 
 \clearpage
 \section{Závěr}
-V rámci úlohy \textit{Množinové operace s polygony} byla vytvořena aplikace, která nad dvěma vstupními polygony aplikuje zvolenou množinovou operaci. Implementace algoritmů byla často dost náročná a nad naše síly. Nepodařilo se nám tedy naplnit všechny cíle této úlohy, jako je například ošetření singulárních případů či dodělání bufferu, který byl vytvořen na poslední hodině, ale který obsahoval chybu, kterou se nám nepodařilo nalézt.\\
+V rámci úlohy \textit{Množinové operace s polygony} byla vytvořena aplikace, která nad dvěma vstupními polygony aplikuje zvolenou množinovou operaci. Implementace algoritmů byla často dost náročná a nad naše síly. Nepodařilo se nám tedy naplnit všechny cíle této úlohy, jako je například ošetření singulárních případů či dodělání bufferu, který byl vytvořen na poslední hodině, ale který obsahoval chybu, kterou se nám nepodařilo nalézt. V rámci opravy úlohy byly doplněny obrázky ilustrující princip fungování dílčích algoritmů a doplněna kapitola \textit{Problematické situace}.\\
 
 Do budoucna by jistě bylo vhodné ošetřit právě singulární případy, např. mají-li oba polygony právě jeden společný vrchol nebo celou hranu. Dále by se dal ošetřit případ, má-li jeden (nebo oba) polygony v sobě díru (pro představu, vypadají jako donut).
 \clearpage
 
 \section{Zdroje}
 \begin{enumerate}
-\item  \textsl{BAYER, Tomáš}. Množinové operace s polygony [online][cit. 4. 1. 2019].\\
+\item  \textsl{BAYER, Tomáš}. Množinové operace s polygony [online][cit. 17. 1. 2019].\\
 Dostupné z: \href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk9.pdf}{https://web.natur.cuni.cz}
 
 \item  \textsl{Elementary Set Theory} [online] [cit. 4. 1. 2019].\\
