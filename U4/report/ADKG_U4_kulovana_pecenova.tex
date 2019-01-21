@@ -150,6 +150,14 @@ Všechny vrcholy polygonu A, resp. B (včetně nalezených průsečíků) jsou n
 	\caption{Ohodnocení hran polygonů [\href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk9.pdf}{Zdroj}]}
 \end{figure}
 
+Množinové operace dle ohodnocení hran jsou uvedeny níže na obrázku (zleva: $A \cup B$, $A \cap B$, $A$\textbackslash $B$ a $B$\textbackslash $A$):
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=9.3cm]{./pictures/doc_results2.png}
+	\caption{Množinové operace dle ohodnocení hran [\href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk9.pdf}{Zdroj}, upraveno]}
+\end{figure}
+
 Zjednodušený zápis algoritmů lze zapsat způsobem uvedeným níže:
 \begin{enumerate}
 \item [] Postupně pro všechny $p_i \in A$:
@@ -239,9 +247,7 @@ Tento algoritmus spojuje všechny výše uvedené kroky. Na vstupu jsou polygony
 \item \textit{CreateFragments (A, pos1, swap1, F)}
 \item[] \textit{CreateFragments (B, pos2, swap2, F)}
 \item \textit{MergeFragments (A,B,C)}
-
 \end{enumerate}
-
 
 \section{Vstupní data}
 Seznam bodů vstupních polygonů je uložen v textovém souboru \textit{polygons.txt}. Pro vykreslení polygonů v aplikaci je nutno tento soubor do aplikace nahrát pomocí tlačítka \textsl{Load polygon file}. K vygenerování souřadnic bodů byla použita online aplikace ze stránek mobilefish.com. Struktura souboru s polygony je následující:\\
@@ -261,49 +267,57 @@ Po úspěšném/neúspěšném nahrání souboru je uživatel upozorněn hlášk
 Vstupní polygony a nad nimi provedená množinová operace jsou zobrazeny v grafickém okně aplikace. Polygon A je vykreslen zelenou barvou, polygon B modrou barvou a výsledek operace je zobrazen červeně. Tlačítkem \textsl{Clear results} má uživatel možnost smazat výsledek operace při zachování vykreslení původních polygonů. Tlačítko \textsl{Clear All} maže veškerá vykreslená data.
 
 \section{Problematické situace}
-Vzhledem k náročnosti použitých algoritmů může docházet k velkému množství problematických situací. Konkrétně se jedná o případy, dotýkají-li se vzájemně dva polygony pouze svými vrcholy (ať už jedním nebo více) nebo mají-li společnou jednu či více hran. Další problém by nastal, pokud by byly oba polygonu shodné, či se v některém z nich nacházel otvor. Aplikace v nynějším stavu si není schopna poradit ani s jednou výše uvedenou situací. 
-
-\section{Aplikace}
-V následují kapitole je představen vizuální vzhled vytvořené aplikace tak, jak ji vidí prostý uživatel.\\
+Vzhledem k náročnosti použitých algoritmů může docházet k velkému množství problematických situací. Konkrétně se jedná o případy, dotýkají-li se vzájemně dva polygony pouze svými vrcholy (ať už jedním nebo více) nebo mají-li společnou jednu či více hran. Jako řešení se nabízí vytvořit další typ ohodnocení hran, \textit{Boundary}, právě pro takovéto případy. Další problém by nastal, pokud by byly oba polygonu shodné, či se v některém z nich nacházel otvor. Aplikace v nynějším stavu si není schopna poradit ani s jednou výše uvedenou situací. 
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=15cm]{./pictures/app_default.png}
+	\includegraphics[width=7cm]{./pictures/doc_problems.png}
+	\includegraphics[width=7cm]{./pictures/doc_boundary.png}
+	\caption{Problematické situace a jejich možné řešení [\href{https://web.natur.cuni.cz/~bayertom/images/courses/Adk/adk9.pdf}{Zdroj}]}
+\end{figure}
+
+\section{Aplikace}
+V následují kapitole je představen vizuální vzhled vytvořené aplikace tak, jak ji vidí prostý uživatel.\\
+\clearpage
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=14.5cm]{./pictures/app_default.png}
 	\caption{Výchozí vzhled aplikace po spuštění}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[b]
 	\centering
 	\includegraphics[width=14.5cm]{./pictures/app_load_data.png}
 	\caption{Aplikace po nahrání vstupních dat}
 \end{figure}
-\vspace{2cm}
+\clearpage
 
-\begin{figure}[b]
+\begin{figure}[t]
 	\centering
 	\includegraphics[width=14.5cm]{./pictures/app_intersection.png}
 	\caption{Průnik polygonů $A \cap B$}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[b]
 	\centering
 	\includegraphics[width=14.5cm]{./pictures/app_union.png}
 	\caption{Sjednocení polygonů $A \cup B$}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=14.5cm]{./pictures/app_diffAB.png}
-	\caption{Rozdíl polygonů $A$\textbackslash$B$}
 \end{figure}
 \clearpage
 
 \begin{figure}[t!]
 	\centering
+	\includegraphics[width=14.5cm]{./pictures/app_diffAB.png}
+	\caption{Rozdíl polygonů $A$\textbackslash$B$}
+\end{figure}
+
+\begin{figure}[b]
+	\centering
 	\includegraphics[width=14.5cm]{./pictures/app_diffBA.png}
 	\caption{Rozdíl polygonů $B$\textbackslash$A$}
 \end{figure}
-~\\
+
 \clearpage
 
 
